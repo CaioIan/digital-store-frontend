@@ -16,10 +16,7 @@ export default function App() {
   return (
     <div className="flex flex-col gap-4 p-8">
       <div>Testando Componentes do Shadcnui</div>
-      <Button
-        variant="default"
-        className="w-[114px] h-10 opacity-100 bg-primary hover:bg-tertiary cursor-pointer rounded-[8px] font-bold"
-      >
+      <Button variant="default" className="w-[114px] rounded-lg font-bold">
         Botão de Teste
       </Button>
 
@@ -31,10 +28,7 @@ export default function App() {
 
       <Sheet>
         <SheetTrigger asChild>
-          <Button
-            variant="outline"
-            className="w-[114px] h-10 opacity-100 text-white bg-primary hover:bg-tertiary hover:text-white cursor-pointer"
-          >
+          <Button variant="default" className="w-[114px]">
             Open Sheet
           </Button>
         </SheetTrigger>
