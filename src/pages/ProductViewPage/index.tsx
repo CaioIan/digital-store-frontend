@@ -9,7 +9,7 @@ export default function ProductViewPage() {
         <>
             <h1>Você está na Product View Page</h1>
             {id && <p>ID do Produto: {id}</p>}
-            <Button>Voltar para {''} <RouterLink to='/'>Home</RouterLink></Button>
+            <Button>Voltar para <RouterLink to='/'>Home</RouterLink></Button>
         </>
     )
 }
