@@ -30,6 +30,8 @@ const Footer = () => {
     { text: '(85) 3051-3411', link: 'tel:+558530513411' }
   ]
 
+  const currentYear = new Date().getFullYear()
+
   return (
     <footer className="bg-dark-gray text-white">
       <div className="max-w-[1440px] mx-auto px-[100px] py-12">
@@ -77,7 +79,9 @@ const Footer = () => {
 
         <hr className="border-t border-white/20 my-6" />
 
-        <p className="text-white text-sm text-center">© 2024 Digital Store</p>
+        <p className="text-white text-sm text-center">
+          © {currentYear} Digital Store
+        </p>
       </div>
     </footer>
   )

@@ -1,6 +1,6 @@
 import { Search } from 'lucide-react'
 import { useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import miniCart from '@/assets/mini-cart.svg'
 import Logo from '../Logo'
 
@@ -14,6 +14,13 @@ const Header = () => {
       navigate(`/products?filter=${encodeURIComponent(searchTerm)}`)
     }
   }
+
+  const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
+    `relative inline-block py-6 text-base font-normal text-[#474747] no-underline hover:text-primary transition-colors ${
+      isActive
+        ? 'text-primary font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-primary'
+        : ''
+    }`
 
   return (
     <header className="bg-white shadow-sm">
@@ -42,18 +49,18 @@ const Header = () => {
           </form>
 
           <div className="flex items-center gap-6">
-            <a
-              href="/cadastro"
+            <Link
+              to="/cadastro"
               className="text-base text-[#474747] underline font-normal hover:text-primary transition-colors"
             >
               Cadastre-se
-            </a>
-            <a
-              href="/login"
+            </Link>
+            <Link
+              to="/login"
               className="w-[114px] h-10 bg-primary text-white text-sm font-bold rounded flex items-center justify-center no-underline hover:bg-tertiary transition-colors"
             >
               Entrar
-            </a>
+            </Link>
             <div className="relative cursor-pointer hover:opacity-80 transition-opacity">
               <img src={miniCart} alt="Carrinho" className="w-6 h-6" />
               <span className="absolute -top-2 -right-3 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
@@ -66,52 +73,16 @@ const Header = () => {
 
       <nav className="border-t border-[#F5F5F5] bg-white">
         <div className="max-w-[1440px] mx-auto px-[100px] flex gap-[60px]">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `relative inline-block py-6 text-base font-normal text-[#474747] no-underline hover:text-primary transition-colors ${
-                isActive
-                  ? 'text-primary font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-primary'
-                  : ''
-              }`
-            }
-          >
+          <NavLink to="/" className={navLinkClassName}>
             Home
           </NavLink>
-          <NavLink
-            to="/products"
-            className={({ isActive }) =>
-              `relative inline-block py-6 text-base font-normal text-[#474747] no-underline hover:text-primary transition-colors ${
-                isActive
-                  ? 'text-primary font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-primary'
-                  : ''
-              }`
-            }
-          >
+          <NavLink to="/products" className={navLinkClassName}>
             Produtos
           </NavLink>
-          <NavLink
-            to="/categorias"
-            className={({ isActive }) =>
-              `relative inline-block py-6 text-base font-normal text-[#474747] no-underline hover:text-primary transition-colors ${
-                isActive
-                  ? 'text-primary font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-primary'
-                  : ''
-              }`
-            }
-          >
+          <NavLink to="/categorias" className={navLinkClassName}>
             Categorias
           </NavLink>
-          <NavLink
-            to="/meus-pedidos"
-            className={({ isActive }) =>
-              `relative inline-block py-6 text-base font-normal text-[#474747] no-underline hover:text-primary transition-colors ${
-                isActive
-                  ? 'text-primary font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-primary'
-                  : ''
-              }`
-            }
-          >
+          <NavLink to="/meus-pedidos" className={navLinkClassName}>
             Meus Pedidos
           </NavLink>
         </div>
