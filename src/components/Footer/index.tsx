@@ -48,24 +48,27 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:opacity-80 transition-opacity"
+                aria-label="Facebook (abre em nova aba)"
               >
-                <img src={facebookIcon} alt="Facebook" className="w-6 h-6" />
+                <img src={facebookIcon} alt="" className="w-6 h-6" />
               </a>
               <a
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:opacity-80 transition-opacity"
+                aria-label="Instagram (abre em nova aba)"
               >
-                <img src={instagramIcon} alt="Instagram" className="w-6 h-6" />
+                <img src={instagramIcon} alt="" className="w-6 h-6" />
               </a>
               <a
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:opacity-80 transition-opacity"
+                aria-label="Twitter (abre em nova aba)"
               >
-                <img src={twitterIcon} alt="Twitter" className="w-6 h-6" />
+                <img src={twitterIcon} alt="" className="w-6 h-6" />
               </a>
             </div>
           </div>

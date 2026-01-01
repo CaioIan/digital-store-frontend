@@ -61,12 +61,19 @@ const Header = () => {
             >
               Entrar
             </Link>
-            <div className="relative cursor-pointer hover:opacity-80 transition-opacity">
-              <img src={miniCart} alt="Carrinho" className="w-6 h-6" />
-              <span className="absolute -top-2 -right-3 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+            <Link
+              to="/carrinho"
+              className="relative hover:opacity-80 transition-opacity"
+              aria-label="Carrinho de compras - 2 itens"
+            >
+              <img src={miniCart} alt="" className="w-6 h-6" />
+              <span
+                className="absolute -top-2 -right-3 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center"
+                aria-hidden="true"
+              >
                 2
               </span>
-            </div>
+            </Link>
           </div>
         </div>
       </div>
