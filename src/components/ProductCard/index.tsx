@@ -28,6 +28,8 @@ export default function ProductCard({
     return Math.round(((price - priceDiscount) / price) * 100)
   }
 
+  const discountPercentage = calculateDiscount()
+
   return (
     <Link
       to={`/product/${id}`}
@@ -43,13 +45,13 @@ export default function ProductCard({
         />
 
         {/* Badge de Desconto (só aparece se tiver desconto) */}
-        {priceDiscount && (
+        {discountPercentage > 0 && (
           <span
             className="absolute left-3 top-3 rounded-full bg-warning px-4 py-1.5 text-sm font-bold text-dark-gray"
             role="img"
-            aria-label={`${calculateDiscount()} percent discount`}
+            aria-label={`${discountPercentage} percent discount`}
           >
-            {calculateDiscount()}% OFF
+            {discountPercentage}% OFF
           </span>
         )}
       </div>
