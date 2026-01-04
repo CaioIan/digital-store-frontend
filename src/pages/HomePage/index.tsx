@@ -6,12 +6,20 @@ import type { Product } from '@/types/Product'
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const data = await getProducts()
-      setProducts(data.slice(0, 8)) // Primeiros 8 produtos
-      setLoading(false)
+      try {
+        const data = await getProducts()
+        setProducts(data.slice(0, 8)) // Primeiros 8 produtos
+        setError(null)
+      } catch (err) {
+        setError('Erro ao carregar produtos. Tente novamente mais tarde.')
+        console.error('Erro ao buscar produtos:', err)
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchProducts()
@@ -26,6 +34,10 @@ export default function HomePage() {
       {loading ? (
         <div className="flex items-center justify-center py-20">
           <p className="text-lg text-light-gray">Carregando produtos...</p>
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center py-20">
+          <p className="text-lg text-error">{error}</p>
         </div>
       ) : (
         <div className="flex flex-wrap justify-center gap-x-[24px] gap-y-6">

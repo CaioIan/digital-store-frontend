@@ -24,7 +24,7 @@ export default function ProductCard({
   category = 'Tênis'
 }: ProductCardProps) {
   const calculateDiscount = () => {
-    if (!priceDiscount) return 0
+    if (!priceDiscount || priceDiscount >= price || price <= 0) return 0
     return Math.round(((price - priceDiscount) / price) * 100)
   }
 
