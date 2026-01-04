@@ -9,20 +9,20 @@ interface ProductCardProps {
   category?: string
 }
 
-export const ProductCard = ({
+const formatPrice = (value: number) =>
+  new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(value)
+
+export default function ProductCard({
   id,
   name,
   image,
   price,
   priceDiscount,
   category = 'Tênis'
-}: ProductCardProps) => {
-  const formatPrice = (value: number) =>
-    new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value)
-
+}: ProductCardProps) {
   const calculateDiscount = () => {
     if (!priceDiscount) return 0
     return Math.round(((price - priceDiscount) / price) * 100)
@@ -32,6 +32,7 @@ export const ProductCard = ({
     <Link
       to={`/product/${id}`}
       className="group block w-[310px] rounded-lg transition-shadow hover:shadow-sm"
+      aria-label={`Ver detalhes de ${name}`}
     >
       {/* Container da Imagem com Badge de Desconto */}
       <div className="relative flex h-[321px] w-full items-center justify-center p-2">
@@ -43,7 +44,11 @@ export const ProductCard = ({
 
         {/* Badge de Desconto (só aparece se tiver desconto) */}
         {priceDiscount && (
-          <span className="absolute left-3 top-3 rounded-full bg-warning px-4 py-1.5 text-sm font-bold text-dark-gray">
+          <span
+            className="absolute left-3 top-3 rounded-full bg-warning px-4 py-1.5 text-sm font-bold text-dark-gray"
+            role="img"
+            aria-label={`${calculateDiscount()} percent discount`}
+          >
             {calculateDiscount()}% OFF
           </span>
         )}
@@ -88,5 +93,3 @@ export const ProductCard = ({
     </Link>
   )
 }
-
-export default ProductCard

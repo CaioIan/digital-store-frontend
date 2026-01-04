@@ -9,7 +9,6 @@ export default function HomePage() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      setLoading(true)
       const data = await getProducts()
       setProducts(data.slice(0, 8)) // Primeiros 8 produtos
       setLoading(false)
