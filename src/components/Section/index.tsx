@@ -11,7 +11,7 @@ interface SectionProps {
   children: ReactNode
 }
 
-export const Section = ({
+const Section = ({
   title,
   titleAlign = 'left',
   link,
@@ -19,24 +19,39 @@ export const Section = ({
 }: SectionProps) => {
   return (
     <section className="w-full my-10">
-      <div
-        className={`flex items-center mb-5 ${
-          titleAlign === 'center' ? 'justify-center' : 'justify-between'
-        }`}
-      >
-        <h2 className="text-2xl font-bold text-dark-gray-2">{title}</h2>
-
-        {link && (
-          <RouterLink
-            to={link.href}
-            className="text-lg text-primary font-medium hover:underline"
-          >
-            {link.text} &rarr;
-          </RouterLink>
-        )}
-      </div>
+      {titleAlign === 'center' ? (
+        <>
+          <div className="flex justify-center mb-3">
+            <h2 className="text-2xl font-bold text-dark-gray-2">{title}</h2>
+          </div>
+          {link && (
+            <div className="flex justify-center mb-5">
+              <RouterLink
+                to={link.href}
+                className="text-lg text-primary font-medium hover:underline"
+              >
+                {link.text} <span aria-hidden="true">&rarr;</span>
+              </RouterLink>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-2xl font-bold text-dark-gray-2">{title}</h2>
+          {link && (
+            <RouterLink
+              to={link.href}
+              className="text-lg text-primary font-medium hover:underline"
+            >
+              {link.text} <span aria-hidden="true">&rarr;</span>
+            </RouterLink>
+          )}
+        </div>
+      )}
 
       <div className="w-full">{children}</div>
     </section>
   )
 }
+
+export default Section

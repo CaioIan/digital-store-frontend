@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import ProductCard from '@/components/ProductCard'
-import { Section } from '@/components/Section'
+import Section from '@/components/Section'
 import { getProducts } from '@/services/productService'
 import type { Product } from '@/types/Product'
 
@@ -41,7 +41,7 @@ export default function HomePage() {
             <p className="text-lg text-error">{error}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-[32px] gap-y-6">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-8 gap-y-6">
             {products.map((product) => (
               <ProductCard
                 key={product.id}

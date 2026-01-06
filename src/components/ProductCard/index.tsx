@@ -33,11 +33,11 @@ export default function ProductCard({
   return (
     <Link
       to={`/product/${id}`}
-      className="group block w-[292px] rounded-lg transition-shadow hover:shadow-sm"
+      className="group block rounded-lg transition-shadow hover:shadow-sm"
       aria-label={`Ver detalhes de ${name}`}
     >
       {/* Container da Imagem com Badge de Desconto */}
-      <div className="relative flex h-[321px] w-[292px] items-center justify-center p-2">
+      <div className="relative flex h-[321px] w-full items-center justify-center p-2">
         <img
           src={image}
           alt={name}
