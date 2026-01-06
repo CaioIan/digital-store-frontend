@@ -17,6 +17,20 @@ const Section = ({
   link,
   children
 }: SectionProps) => {
+  const renderLink = () => {
+    if (!link) return null
+
+    return (
+      <RouterLink
+        to={link.href}
+        className="text-lg text-primary font-medium hover:underline"
+        aria-label={`${link.text}: ${title}`}
+      >
+        {link.text} <span aria-hidden="true">&rarr;</span>
+      </RouterLink>
+    )
+  }
+
   return (
     <section className="w-full my-10">
       {titleAlign === 'center' ? (
@@ -25,27 +39,13 @@ const Section = ({
             <h2 className="text-2xl font-bold text-dark-gray-2">{title}</h2>
           </div>
           {link && (
-            <div className="flex justify-center mb-5">
-              <RouterLink
-                to={link.href}
-                className="text-lg text-primary font-medium hover:underline"
-              >
-                {link.text} <span aria-hidden="true">&rarr;</span>
-              </RouterLink>
-            </div>
+            <div className="flex justify-center mb-5">{renderLink()}</div>
           )}
         </>
       ) : (
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-2xl font-bold text-dark-gray-2">{title}</h2>
-          {link && (
-            <RouterLink
-              to={link.href}
-              className="text-lg text-primary font-medium hover:underline"
-            >
-              {link.text} <span aria-hidden="true">&rarr;</span>
-            </RouterLink>
-          )}
+          {renderLink()}
         </div>
       )}
 

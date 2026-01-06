@@ -30,7 +30,7 @@ export default function HomePage() {
     <div className="max-w-7xl mx-auto px-8">
       <Section
         title="Produtos em Alta"
-        link={{ text: 'Ver Todos', href: '/produtos' }}
+        link={{ text: 'Ver Todos', href: '/products' }}
       >
         {loading ? (
           <div className="flex items-center justify-center py-20">
