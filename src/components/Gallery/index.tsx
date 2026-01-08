@@ -60,9 +60,21 @@ export function Gallery({
 
     setCurrent(api.selectedScrollSnap())
 
-    api.on('select', () => {
+    const onSelect = () => {
       setCurrent(api.selectedScrollSnap())
-    })
+    }
+
+    const onReInit = () => {
+      setCurrent(api.selectedScrollSnap())
+    }
+
+    api.on('select', onSelect)
+    api.on('reInit', onReInit)
+
+    return () => {
+      api.off('select', onSelect)
+      api.off('reInit', onReInit)
+    }
   }, [api])
 
   const scrollTo = (index: number) => {
@@ -131,11 +143,11 @@ export function Gallery({
                 className={cn(
                   'h-3 w-3 rounded-full transition-all duration-300',
                   current === index
-                    ? 'bg-primary w-8'
+                    ? 'w-8 bg-primary'
                     : 'bg-light-gray-2 hover:bg-light-gray'
                 )}
                 aria-label={`Ir para slide ${index + 1}`}
-                aria-current={current === index ? 'true' : 'false'}
+                aria-current={current === index ? true : undefined}
               />
             ))}
           </div>
@@ -161,7 +173,7 @@ export function Gallery({
                 borderRadius: radius
               }}
               aria-label={`Ver imagem ${index + 1}`}
-              aria-current={current === index ? 'true' : 'false'}
+              aria-current={current === index ? true : undefined}
             >
               <img
                 src={slide.src}

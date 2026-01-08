@@ -50,7 +50,7 @@ export function HeroSlide({
         <div className="relative flex items-center justify-center">
           <div className="relative">
             {/* Círculo decorativo de fundo */}
-            <div className="absolute inset-0 -right-20 -top-10 h-[120%] w-[120%] rounded-full bg-linear-to-br from-light-gray-3/50 to-transparent" />
+            <div className="absolute inset-0 -right-20 -top-10 h-[120%] w-[120%] rounded-full bg-gradient-to-br from-light-gray-3/50 to-transparent" />
 
             {/* Pontos decorativos */}
             <div className="absolute -right-8 top-8 grid grid-cols-6 gap-2 opacity-40">
