@@ -17,7 +17,7 @@ const heroSlides = [
       'Consequat culpa exercitation mollit nisi excepteur do do tempor laboris eiusmod irure consectetur.',
     buttonText: 'Ver Ofertas',
     buttonLink: '/products',
-    imageSrc: '/produc-image-5.jpeg'
+    imageSrc: '/tenis-nike.png'
   },
   {
     src: '/home-slide-2.jpeg',
@@ -28,7 +28,7 @@ const heroSlides = [
       'Descubra as últimas tendências em calçados esportivos com design moderno e conforto incomparável.',
     buttonText: 'Comprar Agora',
     buttonLink: '/products',
-    imageSrc: '/produc-image-5.jpeg'
+    imageSrc: '/home-slide-4.jpeg'
   },
   {
     src: '/home-slide-3.jpeg',

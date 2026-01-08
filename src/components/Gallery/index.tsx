@@ -53,6 +53,24 @@ export function Gallery({
       ]
     : []
 
+  // Converter radius para classes Tailwind quando possível
+  const getRadiusClass = (radiusValue: string) => {
+    const radiusMap: Record<string, string> = {
+      '0px': 'rounded-none',
+      '2px': 'rounded-sm',
+      '4px': 'rounded',
+      '6px': 'rounded-md',
+      '8px': 'rounded-lg',
+      '12px': 'rounded-xl',
+      '16px': 'rounded-2xl',
+      '24px': 'rounded-3xl',
+      '9999px': 'rounded-full'
+    }
+    return radiusMap[radiusValue] || 'rounded'
+  }
+
+  const radiusClass = getRadiusClass(radius)
+
   useEffect(() => {
     if (!api) {
       return
@@ -97,11 +115,13 @@ export function Gallery({
           {slides.map((slide, index) => (
             <CarouselItem key={`slide-${slide.src}-${index}`}>
               <div
-                className="relative overflow-hidden bg-light-gray-3"
+                className={cn(
+                  'relative overflow-hidden bg-light-gray-3',
+                  radiusClass
+                )}
                 style={{
                   width: width || '100%',
-                  height: height || 'auto',
-                  borderRadius: radius
+                  height: height || 'auto'
                 }}
               >
                 {children ? (
@@ -165,13 +185,11 @@ export function Gallery({
               className={cn(
                 'cursor-pointer overflow-hidden transition-all duration-200',
                 'h-24 w-24 shrink-0',
+                radiusClass,
                 current === index
                   ? 'border-2 border-primary ring-2 ring-primary/20'
                   : 'border-2 border-transparent hover:border-light-gray-2'
               )}
-              style={{
-                borderRadius: radius
-              }}
               aria-label={`Ver imagem ${index + 1}`}
               aria-current={current === index ? true : undefined}
             >
