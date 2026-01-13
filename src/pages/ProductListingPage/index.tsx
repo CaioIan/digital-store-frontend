@@ -6,7 +6,7 @@ export default function ProductListingPage() {
   const filter = searchParams.get('filter') || ''
 
   // TODO: Replace with actual product count from backend/API
-  const productCount = 0
+  const productCount: number = 0
 
   return (
     <div className="container mx-auto px-4 py-8">
