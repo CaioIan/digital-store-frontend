@@ -89,7 +89,7 @@ export default function ProductListingPage() {
               <p className="text-lg text-light-gray">Carregando produtos...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-[repeat(3,minmax(280px,1fr))] gap-x-8 gap-y-6">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-8 gap-y-6">
               {products.map((product) => (
                 <ProductCard
                   key={product.id}
