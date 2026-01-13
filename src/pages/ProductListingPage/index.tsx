@@ -5,6 +5,9 @@ export default function ProductListingPage() {
   const [searchParams] = useSearchParams()
   const filter = searchParams.get('filter') || ''
 
+  // TODO: Replace with actual product count from backend/API
+  const productCount = 0
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-[308px_1fr] gap-8">
@@ -56,7 +59,8 @@ export default function ProductListingPage() {
             {filter ? `Resultados para "${filter}"` : 'Todos os produtos'}
           </h1>
           <p className="text-dark-gray-2">
-            389 produtos encontrados (listagem de produtos aqui)
+            {productCount}{' '}
+            {productCount === 1 ? 'produto encontrado' : 'produtos encontrados'}
           </p>
         </main>
       </div>
