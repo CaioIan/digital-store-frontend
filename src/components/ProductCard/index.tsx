@@ -37,7 +37,7 @@ export default function ProductCard({
       aria-label={`Ver detalhes de ${name}`}
     >
       {/* Container da Imagem com Badge de Desconto */}
-      <div className="relative flex h-[321px] w-full items-center justify-center p-2">
+      <div className="relative flex h-80.25 w-full items-center justify-center p-2">
         <img
           src={image}
           alt={name}
@@ -65,7 +65,7 @@ export default function ProductCard({
 
         {/* Nome do Produto (limitado a 2 linhas) */}
         <h3
-          className="mb-2 line-clamp-2 text-[24px] font-normal leading-[38px] tracking-[0.75px] text-dark-gray-2"
+          className="mb-2 line-clamp-2 text-[24px] font-normal leading-9.5 tracking-[0.75px] text-dark-gray-2"
           title={name}
         >
           {name}
