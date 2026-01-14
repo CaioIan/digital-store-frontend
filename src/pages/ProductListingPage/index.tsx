@@ -109,6 +109,7 @@ export default function ProductListingPage() {
             <div className="flex flex-col items-center justify-center py-20 space-y-4">
               <p className="text-lg text-error font-semibold">{error}</p>
               <button
+                type="button"
                 onClick={() => window.location.reload()}
                 className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-tertiary transition-colors"
               >

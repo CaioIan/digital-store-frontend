@@ -1,5 +1,5 @@
 import Autoplay from 'embla-carousel-autoplay'
-import { type ReactNode, useEffect, useState } from 'react'
+import { type CSSProperties, type ReactNode, useEffect, useState } from 'react'
 import {
   Carousel,
   type CarouselApi,
@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils'
 export interface GallerySlide {
   src: string
   alt?: string
+  style?: CSSProperties
 }
 
 interface GalleryProps {
@@ -26,6 +27,9 @@ interface GalleryProps {
   autoplay?: boolean
   autoplayDelay?: number
   children?: (slide: GallerySlide, index: number) => ReactNode
+  onApiReady?: (api: CarouselApi) => void // Callback para expor a API
+  objectFit?: 'contain' | 'cover' // Estratégia de ajuste da imagem
+  imagePadding?: string // Padding ao redor da imagem (ex: 'p-8', 'p-0')
 }
 
 export function Gallery({
@@ -33,12 +37,15 @@ export function Gallery({
   showThumbs = false,
   showDots = false,
   className,
-  width,
-  height,
+  width = '100%',
+  height = 'auto',
   radius = '4px',
   autoplay = false,
   autoplayDelay = 3000,
-  children
+  children,
+  onApiReady,
+  objectFit = 'cover',
+  imagePadding = 'p-0'
 }: GalleryProps) {
   const [api, setApi] = useState<CarouselApi>()
   const [current, setCurrent] = useState(0)
@@ -78,6 +85,11 @@ export function Gallery({
 
     setCurrent(api.selectedScrollSnap())
 
+    // Expõe a API para o componente pai
+    if (onApiReady) {
+      onApiReady(api)
+    }
+
     const onSelect = () => {
       setCurrent(api.selectedScrollSnap())
     }
@@ -93,7 +105,7 @@ export function Gallery({
       api.off('select', onSelect)
       api.off('reInit', onReInit)
     }
-  }, [api])
+  }, [api, onApiReady])
 
   const scrollTo = (index: number) => {
     api?.scrollTo(index)
@@ -116,12 +128,14 @@ export function Gallery({
             <CarouselItem key={`slide-${slide.src}-${index}`}>
               <div
                 className={cn(
-                  'relative overflow-hidden bg-light-gray-3',
+                  'relative overflow-hidden flex items-center justify-center',
                   radiusClass
                 )}
                 style={{
-                  width: width || '100%',
-                  height: height || 'auto'
+                  width: width,
+                  height: height,
+                  backgroundColor: slide.style?.backgroundColor || '#F5F5F5',
+                  ...slide.style
                 }}
               >
                 {children ? (
@@ -130,7 +144,7 @@ export function Gallery({
                   <img
                     src={slide.src}
                     alt={slide.alt || `Slide ${index + 1}`}
-                    className="h-full w-full object-cover"
+                    className={`max-w-full max-h-full object-${objectFit} ${imagePadding}`}
                   />
                 )}
               </div>
@@ -183,20 +197,23 @@ export function Gallery({
               type="button"
               onClick={() => scrollTo(index)}
               className={cn(
-                'cursor-pointer overflow-hidden transition-all duration-200',
+                'cursor-pointer overflow-hidden transition-all duration-200 flex items-center justify-center',
                 'h-24 w-24 shrink-0',
                 radiusClass,
                 current === index
                   ? 'border-2 border-primary ring-2 ring-primary/20'
                   : 'border-2 border-transparent hover:border-light-gray-2'
               )}
+              style={{
+                backgroundColor: slide.style?.backgroundColor || '#F5F5F5'
+              }}
               aria-label={`Ver imagem ${index + 1}`}
               aria-current={current === index ? true : undefined}
             >
               <img
                 src={slide.src}
                 alt={slide.alt || `Miniatura ${index + 1}`}
-                className="h-full w-full object-cover"
+                className={`h-full w-full object-${objectFit} p-1`}
               />
             </button>
           ))}
