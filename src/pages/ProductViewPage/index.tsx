@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { BuyBox } from '@/components/BuyBox'
 import { Gallery } from '@/components/Gallery'
 import ProductCard from '@/components/ProductCard'
@@ -88,18 +88,18 @@ export default function ProductViewPage() {
       <nav aria-label="Breadcrumb" className="text-sm text-dark-gray-3">
         <ol className="flex items-center gap-2">
           <li>
-            <a href="/" className="hover:text-primary transition-colors">
+            <Link to="/" className="hover:text-primary transition-colors">
               Home
-            </a>
+            </Link>
           </li>
           <li>/</li>
           <li>
-            <a
-              href="/products"
+            <Link
+              to="/products"
               className="hover:text-primary transition-colors"
             >
               Produtos
-            </a>
+            </Link>
           </li>
           <li>/</li>
           <li className="text-dark-gray-2 font-medium">{product.name}</li>
