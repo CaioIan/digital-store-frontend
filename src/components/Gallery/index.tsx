@@ -28,6 +28,8 @@ interface GalleryProps {
   autoplayDelay?: number
   children?: (slide: GallerySlide, index: number) => ReactNode
   onApiReady?: (api: CarouselApi) => void // Callback para expor a API
+  objectFit?: 'contain' | 'cover' // Estratégia de ajuste da imagem
+  imagePadding?: string // Padding ao redor da imagem (ex: 'p-8', 'p-0')
 }
 
 export function Gallery({
@@ -41,7 +43,9 @@ export function Gallery({
   autoplay = false,
   autoplayDelay = 3000,
   children,
-  onApiReady
+  onApiReady,
+  objectFit = 'cover',
+  imagePadding = 'p-0'
 }: GalleryProps) {
   const [api, setApi] = useState<CarouselApi>()
   const [current, setCurrent] = useState(0)
@@ -140,7 +144,7 @@ export function Gallery({
                   <img
                     src={slide.src}
                     alt={slide.alt || `Slide ${index + 1}`}
-                    className="max-w-full max-h-full object-contain p-8"
+                    className={`max-w-full max-h-full object-${objectFit} ${imagePadding}`}
                   />
                 )}
               </div>
@@ -209,7 +213,7 @@ export function Gallery({
               <img
                 src={slide.src}
                 alt={slide.alt || `Miniatura ${index + 1}`}
-                className="h-full w-full object-contain p-1"
+                className={`h-full w-full object-${objectFit} p-1`}
               />
             </button>
           ))}

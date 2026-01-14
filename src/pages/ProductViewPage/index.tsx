@@ -117,6 +117,8 @@ export default function ProductViewPage() {
           radius="4px"
           className="w-full"
           onApiReady={(api) => setGalleryApi(api)}
+          objectFit="contain"
+          imagePadding="p-8"
         />
 
         {/* BuyBox com ProductOptions integrados */}
