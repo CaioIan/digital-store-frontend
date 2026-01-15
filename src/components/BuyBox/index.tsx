@@ -88,7 +88,7 @@ export function BuyBox({
       <div className="flex items-center gap-3">
         {priceDiscount && priceDiscount < price ? (
           <>
-            <span className="text-base text-light-gray line-through">
+            <span className="text-base text-light-gray-2 line-through">
               {formatPrice(price)}
             </span>
             <span className="text-[32px] font-bold text-dark-gray-2">
@@ -115,10 +115,10 @@ export function BuyBox({
       {/* Opções de Produto (Tamanho/Cor - children) */}
       {children && <div className="space-y-4">{children}</div>}
 
-      {/* Botão Comprar */}
+      {/* Botão Comprar (Call to Action) */}
       <button
         type="button"
-        className="w-[220px] h-12 bg-warning text-white font-bold text-base rounded hover:brightness-90 active:brightness-75 transition-all uppercase tracking-wide"
+        className="w-[220px] h-12 bg-warning text-white font-bold text-base rounded-[8px] hover:brightness-90 active:brightness-75 transition-all uppercase tracking-wide cursor-pointer"
       >
         Comprar
       </button>
