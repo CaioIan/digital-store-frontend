@@ -9,7 +9,6 @@ export default function ProductListingPage() {
   const [searchParams] = useSearchParams()
   const filter = searchParams.get('filter') || ''
   const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   // Remove accents from string for better search matching
@@ -26,8 +25,6 @@ export default function ProductListingPage() {
       } catch (err) {
         setError('Erro ao carregar produtos. Tente novamente mais tarde.')
         console.error('Erro ao buscar produtos:', err)
-      } finally {
-        setLoading(false)
       }
     }
 
@@ -101,11 +98,7 @@ export default function ProductListingPage() {
           </p>
 
           {/* Grid de Produtos */}
-          {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <p className="text-lg text-light-gray">Carregando produtos...</p>
-            </div>
-          ) : error ? (
+          {error ? (
             <div className="flex flex-col items-center justify-center py-20 space-y-4">
               <p className="text-lg text-error font-semibold">{error}</p>
               <button

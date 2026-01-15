@@ -52,7 +52,6 @@ const collections = [
 
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -64,8 +63,6 @@ export default function HomePage() {
       } catch (err) {
         setError('Erro ao carregar produtos. Tente novamente mais tarde.')
         console.error('Erro ao buscar produtos:', err)
-      } finally {
-        setLoading(false)
       }
     }
 
@@ -122,11 +119,7 @@ export default function HomePage() {
           title="Produtos em Alta"
           link={{ text: 'Ver Todos', href: '/products' }}
         >
-          {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <p className="text-lg text-light-gray">Carregando produtos...</p>
-            </div>
-          ) : error ? (
+          {error ? (
             <div className="flex items-center justify-center py-20">
               <p className="text-lg text-error">{error}</p>
             </div>
