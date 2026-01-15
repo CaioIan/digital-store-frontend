@@ -106,18 +106,10 @@ const products: Product[] = [
 ]
 
 export const getProducts = (): Promise<Product[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(products)
-    }, 1000)
-  })
+  return Promise.resolve(products)
 }
 
 export const getProductById = (id: string): Promise<Product | undefined> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const product = products.find((p) => p.id === id)
-      resolve(product)
-    }, 1000)
-  })
+  const product = products.find((p) => p.id === id)
+  return Promise.resolve(product)
 }

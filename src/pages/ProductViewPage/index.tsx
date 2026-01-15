@@ -16,7 +16,6 @@ export default function ProductViewPage() {
   const { id } = useParams<{ id: string }>()
   const [product, setProduct] = useState<Product | null>(null)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
   const [galleryApi, setGalleryApi] = useState<CarouselApi | null>(null)
 
   useEffect(() => {
@@ -37,8 +36,6 @@ export default function ProductViewPage() {
         }
       } catch (error) {
         console.error('Erro ao carregar produto:', error)
-      } finally {
-        setLoading(false)
       }
     }
 
@@ -62,14 +59,6 @@ export default function ProductViewPage() {
       // Navega para o slide correspondente
       galleryApi.scrollTo(index)
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto px-8 py-12 flex items-center justify-center min-h-150">
-        <p className="text-lg text-light-gray">Carregando produto...</p>
-      </div>
-    )
   }
 
   if (!product) {
