@@ -5,16 +5,21 @@ import ProductCard from '@/components/ProductCard'
 import { getProducts } from '@/services/productService'
 import type { Product } from '@/types/Product'
 
+// Remove accents from string for better search matching
+function removeAccents(str: string) {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+}
+
 export default function ProductListingPage() {
   const [searchParams] = useSearchParams()
   const filter = searchParams.get('filter') || ''
   const [products, setProducts] = useState<Product[]>([])
   const [error, setError] = useState<string | null>(null)
-
-  // Remove accents from string for better search matching
-  const removeAccents = (str: string) => {
-    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-  }
+  const [filterBrand, setFilterBrand] = useState<string[]>([])
+  const [filterCategory, setFilterCategory] = useState<string[]>([])
+  const [filterGender, setFilterGender] = useState<string>('')
+  const [sortOrder, setSortOrder] = useState<'lowest' | 'highest'>('lowest')
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -27,18 +32,53 @@ export default function ProductListingPage() {
         console.error('Erro ao buscar produtos:', err)
       }
     }
-
     fetchProducts()
   }, [])
 
-  // Filter products based on search term
-  const filteredProducts = filter
-    ? products.filter((product) => {
-        const normalizedProductName = removeAccents(product.name.toLowerCase())
-        const normalizedFilter = removeAccents(filter.toLowerCase())
-        return normalizedProductName.includes(normalizedFilter)
-      })
-    : products
+  // Derive unique brands, categories, genders from products
+  const brandOptions = Array.from(
+    new Set(products.map((p) => p.brand).filter(Boolean))
+  ).map((b) => ({ label: String(b), value: String(b) }))
+  const categoryOptions = Array.from(
+    new Set(products.map((p) => p.category).filter(Boolean))
+  ).map((c) => ({ label: String(c), value: String(c) }))
+  const genderOptions = Array.from(
+    new Set(products.map((p) => p.gender).filter(Boolean))
+  ).map((g) => ({
+    label: g === 'male' ? 'Masculino' : g === 'female' ? 'Feminino' : 'Unissex',
+    value: String(g)
+  }))
+
+  // Filtering and sorting logic
+  useEffect(() => {
+    let result = [...products]
+
+    // Search param filter
+    if (filter) {
+      const normalizedFilter = removeAccents(filter.toLowerCase())
+      result = result.filter((product) =>
+        removeAccents(product.name.toLowerCase()).includes(normalizedFilter)
+      )
+    }
+    if (filterBrand.length > 0) {
+      result = result.filter((p) => p.brand && filterBrand.includes(p.brand))
+    }
+    if (filterCategory.length > 0) {
+      result = result.filter(
+        (p) => p.category && filterCategory.includes(p.category)
+      )
+    }
+    if (filterGender) {
+      result = result.filter((p) => p.gender === filterGender)
+    }
+    // Sorting
+    if (sortOrder === 'lowest') {
+      result.sort((a, b) => (a.price ?? 0) - (b.price ?? 0))
+    } else if (sortOrder === 'highest') {
+      result.sort((a, b) => (b.price ?? 0) - (a.price ?? 0))
+    }
+    setFilteredProducts(result)
+  }, [products, filter, filterBrand, filterCategory, filterGender, sortOrder])
 
   const productCount: number = filteredProducts.length
 
@@ -53,36 +93,48 @@ export default function ProductListingPage() {
             </h2>
             <div className="border-b border-light-gray-2 mb-6" />
 
+            <label htmlFor="sortOrder" className="block text-dark-gray-2 mb-2">
+              Ordenar por
+            </label>
+            <select
+              id="sortOrder"
+              value={sortOrder}
+              onChange={(e) =>
+                setSortOrder(e.target.value as 'lowest' | 'highest')
+              }
+              className="w-full mb-4 h-12 border border-light-gray-2 rounded px-3"
+            >
+              <option value="lowest">Menor preço</option>
+              <option value="highest">Maior preço</option>
+            </select>
+
             <FilterGroup
               title="Marca"
               inputType="checkbox"
-              options={[
-                { label: 'Adiddas', value: 'adiddas' },
-                { label: 'Calenciaga', value: 'calenciaga' },
-                { label: 'K-Swiss', value: 'k-swiss' },
-                { label: 'Nike', value: 'nike' },
-                { label: 'Puma', value: 'puma' }
-              ]}
+              options={brandOptions}
+              onChange={(val, checked) => {
+                if (checked)
+                  setFilterBrand((s) => Array.from(new Set([...s, val])))
+                else setFilterBrand((s) => s.filter((i) => i !== val))
+              }}
             />
 
             <FilterGroup
               title="Categoria"
               inputType="checkbox"
-              options={[
-                { label: 'Esporte e lazer', value: 'esporte' },
-                { label: 'Casual', value: 'casual' },
-                { label: 'Utilitário', value: 'utilitario' },
-                { label: 'Corrida', value: 'corrida' }
-              ]}
+              options={categoryOptions}
+              onChange={(val, checked) => {
+                if (checked)
+                  setFilterCategory((s) => Array.from(new Set([...s, val])))
+                else setFilterCategory((s) => s.filter((i) => i !== val))
+              }}
             />
 
             <FilterGroup
-              title="Estado"
+              title="Gênero"
               inputType="radio"
-              options={[
-                { label: 'Novo', value: 'novo' },
-                { label: 'Usado', value: 'usado' }
-              ]}
+              options={genderOptions}
+              onChange={(val) => setFilterGender(val)}
             />
           </div>
         </aside>
