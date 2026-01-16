@@ -11,9 +11,15 @@ interface FilterGroupProps {
   title: string
   inputType: 'checkbox' | 'radio'
   options: FilterOption[]
+  onChange?: (value: string, checked?: boolean) => void
 }
 
-export function FilterGroup({ title, inputType, options }: FilterGroupProps) {
+export function FilterGroup({
+  title,
+  inputType,
+  options,
+  onChange
+}: FilterGroupProps) {
   return (
     <div className="mb-8">
       <h3 className="text-dark-gray-2 font-bold text-base mb-4">{title}</h3>
@@ -22,7 +28,10 @@ export function FilterGroup({ title, inputType, options }: FilterGroupProps) {
         {inputType === 'checkbox' ? (
           options.map((opt) => (
             <div key={opt.value} className="flex items-center space-x-2">
-              <Checkbox id={opt.value} />
+              <Checkbox
+                id={opt.value}
+                onCheckedChange={(checked) => onChange?.(opt.value, !!checked)}
+              />
               <Label
                 htmlFor={opt.value}
                 className="text-dark-gray-2 cursor-pointer"
@@ -32,7 +41,10 @@ export function FilterGroup({ title, inputType, options }: FilterGroupProps) {
             </div>
           ))
         ) : (
-          <RadioGroup defaultValue={options[0]?.value}>
+          <RadioGroup
+            onValueChange={(val) => onChange?.(val)}
+            defaultValue={options[0]?.value}
+          >
             {options.map((opt) => (
               <div key={opt.value} className="flex items-center space-x-2">
                 <RadioGroupItem value={opt.value} id={opt.value} />

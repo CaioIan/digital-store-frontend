@@ -9,7 +9,9 @@ const products: Product[] = [
     priceDiscount: 219.9,
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
-    category: 'Tênis',
+    // category duplicada removida
+    brand: 'Nike',
+    gender: 'male',
     reference: '38416711',
     stars: 4.7,
     rating: 90
@@ -22,7 +24,9 @@ const products: Product[] = [
     priceDiscount: 399.9,
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    category: 'Tênis',
+    // category duplicada removida
+    brand: 'Nike',
+    gender: 'male',
     reference: '38416712',
     stars: 4.5,
     rating: 120
@@ -34,7 +38,9 @@ const products: Product[] = [
     price: 599.9,
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque habitant morbi tristique senectus et netus.',
-    category: 'Tênis',
+    // category duplicada removida
+    brand: 'Adidas',
+    gender: 'unisex',
     reference: '38416713',
     stars: 4.8,
     rating: 85
@@ -48,6 +54,8 @@ const products: Product[] = [
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio praesent libero sed cursus ante dapibus diam.',
     category: 'Tênis',
+    brand: 'Puma',
+    gender: 'female',
     reference: '38416714',
     stars: 4.3,
     rating: 65
@@ -58,6 +66,9 @@ const products: Product[] = [
     image: '/tenis-test.png',
     price: 499.9,
     priceDiscount: 429.9,
+    // category duplicada removida
+    brand: 'New Balance',
+    gender: 'unisex',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.',
     category: 'Tênis',
