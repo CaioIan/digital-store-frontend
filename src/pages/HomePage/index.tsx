@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Gallery } from '@/components/Gallery'
 import { HeroSlide } from '@/components/HeroSlide'
 import ProductCard from '@/components/ProductCard'
@@ -114,6 +115,101 @@ export default function HomePage() {
           </div>
         </Section>
 
+        {/* Categorias em Destaque */}
+        <Section title="Coleções em destaque" titleAlign="center">
+          <div className="flex justify-center items-center gap-8 md:gap-12 flex-wrap">
+            {/* Camisetas */}
+            <button
+              type="button"
+              onClick={() => {}}
+              className="flex flex-col items-center gap-3 group cursor-pointer"
+            >
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors">
+                <img
+                  src="/vector_camisa_com_hover.png"
+                  alt="Camisetas"
+                  className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-110 transition-transform"
+                />
+              </div>
+              <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
+                Camisetas
+              </span>
+            </button>
+
+            {/* Calças */}
+            <button
+              type="button"
+              onClick={() => {}}
+              className="flex flex-col items-center gap-3 group cursor-pointer"
+            >
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors">
+                <img
+                  src="/vector_calça.png"
+                  alt="Calças"
+                  className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-110 transition-transform"
+                />
+              </div>
+              <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
+                Calças
+              </span>
+            </button>
+
+            {/* Bonés */}
+            <button
+              type="button"
+              onClick={() => {}}
+              className="flex flex-col items-center gap-3 group cursor-pointer"
+            >
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors">
+                <img
+                  src="/vector_calça-2.png"
+                  alt="Bonés"
+                  className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-110 transition-transform"
+                />
+              </div>
+              <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
+                Bonés
+              </span>
+            </button>
+
+            {/* Headphones */}
+            <button
+              type="button"
+              onClick={() => {}}
+              className="flex flex-col items-center gap-3 group cursor-pointer"
+            >
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors">
+                <img
+                  src="/vector_calça-2.png"
+                  alt="Headphones"
+                  className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-110 transition-transform"
+                />
+              </div>
+              <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
+                Headphones
+              </span>
+            </button>
+
+            {/* Tênis */}
+            <button
+              type="button"
+              onClick={() => {}}
+              className="flex flex-col items-center gap-3 group cursor-pointer"
+            >
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors">
+                <img
+                  src="/vector_tenis.png"
+                  alt="Tênis"
+                  className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-110 transition-transform"
+                />
+              </div>
+              <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
+                Tênis
+              </span>
+            </button>
+          </div>
+        </Section>
+
         {/* Produtos em Alta (Seção 5.3) */}
         <Section
           title="Produtos em Alta"
@@ -139,6 +235,42 @@ export default function HomePage() {
             </div>
           )}
         </Section>
+
+        {/* Seção Oferta Especial - Air Jordan */}
+        <section className="py-16">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+            {/* Imagem do Tênis */}
+            <div className="flex-1 flex justify-center">
+              <img
+                src="/air-jordan-collection-oferta.png"
+                alt="Air Jordan edição de colecionador"
+                className="max-w-full h-auto object-contain"
+              />
+            </div>
+
+            {/* Conteúdo */}
+            <div className="flex-1 space-y-4">
+              <span className="text-primary font-semibold text-sm uppercase tracking-wide">
+                Oferta especial
+              </span>
+              <h2 className="text-3xl lg:text-4xl font-bold leading-tight text-dark-gray">
+                Air Jordan edição de colecionador
+              </h2>
+              <p className="text-dark-gray-2 text-base leading-relaxed">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip
+              </p>
+              <Link
+                to="/products"
+                className="inline-block bg-primary text-white font-bold text-sm px-8 py-3 rounded hover:bg-tertiary transition-colors mt-4"
+              >
+                Ver Oferta
+              </Link>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   )
