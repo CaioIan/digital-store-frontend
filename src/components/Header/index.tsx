@@ -1,33 +1,212 @@
-import { Search } from 'lucide-react'
+import { Menu, Search } from 'lucide-react'
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
+import logoHeader from '@/assets/logo-header.svg'
 import miniCart from '@/assets/mini-cart.svg'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
+} from '@/components/ui/sheet'
 import Logo from '../Logo'
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState('')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const navigate = useNavigate()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchTerm.trim()) {
       navigate(`/products?filter=${encodeURIComponent(searchTerm)}`)
+      setMobileMenuOpen(false)
+      setMobileSearchOpen(false)
     }
   }
 
   const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
-    `relative inline-block py-6 text-base font-normal text-[#474747] no-underline hover:text-primary transition-colors ${
+    `relative inline-block py-3 text-base font-normal text-dark-gray-2 no-underline hover:text-primary transition-colors ${
       isActive
         ? 'text-primary font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-primary'
         : ''
     }`
 
   return (
-    <header className="bg-white shadow-sm">
-      <div className="py-5 bg-white">
-        <div className="max-w-[1440px] mx-auto px-[100px] flex items-center gap-10">
-          <Logo />
+    <header className="bg-white shadow-sm sticky top-0 z-40">
+      {/* Mobile Header - altura 56px */}
+      <div className="lg:hidden h-14 flex items-center justify-between px-4">
+        {/* Menu Hamburger - Esquerda */}
+        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+          <SheetTrigger asChild>
+            <button
+              type="button"
+              className="w-11 h-11 flex items-center justify-center text-dark-gray-2"
+              aria-label="Abrir menu de navegação"
+            >
+              <Menu size={24} />
+            </button>
+          </SheetTrigger>
+          <SheetContent
+            side="left"
+            className="w-[80%] max-w-[320px] bg-white p-0 flex flex-col"
+            aria-label="Menu de navegação"
+          >
+            {/* Cabeçalho do Sheet - Logo e Branding */}
+            <SheetHeader className="p-5 border-b-0">
+              <SheetTitle className="flex items-center gap-3">
+                <img src={logoHeader} alt="" className="h-8 w-auto" />
+              </SheetTitle>
+            </SheetHeader>
 
+            {/* Seção de Navegação */}
+            <nav className="flex-1 px-5 py-4" aria-label="Menu principal">
+              <span className="block text-xs font-medium text-light-gray uppercase tracking-wider mb-4">
+                Páginas
+              </span>
+              <ul className="space-y-2">
+                <li>
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                      `block py-3 text-base min-h-12 flex items-center transition-opacity active:opacity-60 ${
+                        isActive
+                          ? 'text-primary underline underline-offset-4 decoration-primary decoration-2'
+                          : 'text-dark-gray-2'
+                      }`
+                    }
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Home
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/products"
+                    className={({ isActive }) =>
+                      `block py-3 text-base min-h-12 flex items-center transition-opacity active:opacity-60 ${
+                        isActive
+                          ? 'text-primary underline underline-offset-4 decoration-primary decoration-2'
+                          : 'text-dark-gray-2'
+                      }`
+                    }
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Produtos
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/categorias"
+                    className={({ isActive }) =>
+                      `block py-3 text-base min-h-12 flex items-center transition-opacity active:opacity-60 ${
+                        isActive
+                          ? 'text-primary underline underline-offset-4 decoration-primary decoration-2'
+                          : 'text-dark-gray-2'
+                      }`
+                    }
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Categorias
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/meus-pedidos"
+                    className={({ isActive }) =>
+                      `block py-3 text-base min-h-12 flex items-center transition-opacity active:opacity-60 ${
+                        isActive
+                          ? 'text-primary underline underline-offset-4 decoration-primary decoration-2'
+                          : 'text-dark-gray-2'
+                      }`
+                    }
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Meus Pedidos
+                  </NavLink>
+                </li>
+              </ul>
+            </nav>
+
+            {/* Separador Visual */}
+            <div className="mx-5 border-t border-light-gray-3" />
+
+            {/* Área de Autenticação */}
+            <div className="p-5 space-y-4 mt-auto">
+              <Link
+                to="/login"
+                className="w-full h-12 bg-primary text-white text-base font-bold rounded-lg flex items-center justify-center hover:bg-tertiary active:brightness-90 transition-all"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Entrar
+              </Link>
+              <Link
+                to="/cadastro"
+                className="block text-center text-base text-dark-gray-2 underline hover:text-primary transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Cadastre-se
+              </Link>
+            </div>
+          </SheetContent>
+        </Sheet>
+
+        {/* Logo - Centro */}
+        <Link to="/" className="flex-shrink-0">
+          <img src={logoHeader} alt="Digital Store" className="h-7 w-auto" />
+        </Link>
+
+        {/* Ícones - Direita */}
+        <div className="flex items-center">
+          <button
+            type="button"
+            onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+            className="w-11 h-11 flex items-center justify-center text-dark-gray-2"
+            aria-label="Pesquisar"
+          >
+            <Search size={20} />
+          </button>
+          <Link
+            to="/carrinho"
+            className="w-11 h-11 flex items-center justify-center relative"
+            aria-label="Carrinho"
+          >
+            <img src={miniCart} alt="" className="w-5 h-5" />
+            <span className="absolute top-1 right-1 bg-error text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+              2
+            </span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Mobile Search Expandido */}
+      {mobileSearchOpen && (
+        <div className="lg:hidden px-4 pb-3">
+          <form className="relative" onSubmit={handleSearch}>
+            <input
+              type="text"
+              placeholder="Pesquisar produto..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full h-10 px-4 pr-12 rounded-lg bg-light-gray-3 text-sm text-dark-gray-2 placeholder:text-light-gray-2 outline-none"
+            />
+            <button
+              type="submit"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-light-gray"
+              aria-label="Buscar"
+            >
+              <Search size={18} />
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* Desktop Header */}
+      <div className="hidden lg:block py-3 bg-white">
+        <div className="max-w-[1440px] mx-auto px-6 xl:px-[100px] flex items-center gap-10">
+          <Logo />
           <form
             className="flex-1 max-w-[560px] relative"
             onSubmit={handleSearch}
@@ -37,40 +216,32 @@ const Header = () => {
               placeholder="Pesquisar produto..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-[60px] px-5 pr-[50px] rounded-lg bg-[#F5F5F5] text-base text-[#474747] placeholder:text-[#CCCCCC] outline-none focus:bg-[#EEEEEE]"
+              className="w-full h-[60px] px-5 pr-12 rounded-lg bg-light-gray-3 text-base text-dark-gray-2 placeholder:text-light-gray-2 outline-none"
             />
             <button
               type="submit"
-              className="absolute right-[15px] top-1/2 -translate-y-1/2 p-2 text-[#8F8F8F] hover:text-primary transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-light-gray"
               aria-label="Buscar"
             >
               <Search size={20} />
             </button>
           </form>
-
           <div className="flex items-center gap-6">
             <Link
               to="/cadastro"
-              className="text-base text-[#474747] underline font-normal hover:text-primary transition-colors"
+              className="text-base text-dark-gray-2 underline"
             >
               Cadastre-se
             </Link>
             <Link
               to="/login"
-              className="w-[114px] h-10 bg-primary text-white text-sm font-bold rounded flex items-center justify-center no-underline hover:bg-tertiary transition-colors"
+              className="w-[114px] h-10 bg-primary text-white text-sm font-bold rounded flex items-center justify-center"
             >
               Entrar
             </Link>
-            <Link
-              to="/carrinho"
-              className="relative hover:opacity-80 transition-opacity"
-              aria-label="Carrinho de compras - 2 itens"
-            >
+            <Link to="/carrinho" className="relative" aria-label="Carrinho">
               <img src={miniCart} alt="" className="w-6 h-6" />
-              <span
-                className="absolute -top-2 -right-3 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center"
-                aria-hidden="true"
-              >
+              <span className="absolute -top-2 -right-3 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                 2
               </span>
             </Link>
@@ -78,8 +249,9 @@ const Header = () => {
         </div>
       </div>
 
-      <nav className="border-t border-[#F5F5F5] bg-white">
-        <div className="max-w-[1440px] mx-auto px-[100px] flex gap-[60px]">
+      {/* Desktop Navigation */}
+      <nav className="hidden lg:block border-t border-light-gray-3 bg-white">
+        <div className="max-w-[1440px] mx-auto px-6 xl:px-[100px] flex gap-[60px]">
           <NavLink to="/" className={navLinkClassName}>
             Home
           </NavLink>

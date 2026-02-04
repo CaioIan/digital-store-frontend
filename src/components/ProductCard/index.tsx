@@ -37,7 +37,7 @@ export default function ProductCard({
       aria-label={`Ver detalhes de ${name}`}
     >
       {/* Container da Imagem com Badge de Desconto */}
-      <div className="relative flex h-80.25 w-full items-center justify-center p-2">
+      <div className="relative flex aspect-[3/4] w-full items-center justify-center p-1 sm:p-2">
         <img
           src={image}
           alt={name}
@@ -47,7 +47,7 @@ export default function ProductCard({
         {/* Badge de Desconto (só aparece se tiver desconto) */}
         {discountPercentage > 0 && (
           <span
-            className="absolute left-3 top-3 rounded-full bg-warning px-4 py-1.5 text-sm font-bold text-dark-gray"
+            className="absolute left-2 top-2 sm:left-3 sm:top-3 rounded-full bg-warning px-2 sm:px-4 py-1 sm:py-1.5 text-xs sm:text-sm font-bold text-dark-gray"
             role="img"
             aria-label={`${discountPercentage} percent discount`}
           >
@@ -57,7 +57,7 @@ export default function ProductCard({
       </div>
 
       {/* Área de Informações do Produto */}
-      <div className="p-4">
+      <div className="p-2 sm:p-4">
         {/* Categoria */}
         <span className="mb-1 block text-xs font-bold uppercase tracking-wide text-light-gray">
           {category}
@@ -65,28 +65,28 @@ export default function ProductCard({
 
         {/* Nome do Produto (limitado a 2 linhas) */}
         <h3
-          className="mb-2 line-clamp-2 text-[24px] font-normal leading-9.5 tracking-[0.75px] text-dark-gray-2"
+          className="mb-2 line-clamp-2 text-sm md:text-[24px] font-normal leading-tight md:leading-9.5 tracking-[0.75px] text-dark-gray-2"
           title={name}
         >
           {name}
         </h3>
 
         {/* Área de Preços */}
-        <div className="flex items-baseline gap-2">
+        <div className="flex flex-col gap-1">
           {priceDiscount ? (
             <>
               {/* Preço Antigo (riscado) */}
-              <span className="text-xl text-light-gray line-through decoration-light-gray-2 decoration-2">
+              <span className="text-xs md:text-base text-light-gray line-through decoration-light-gray-2 decoration-2">
                 {formatPrice(price)}
               </span>
               {/* Preço com Desconto */}
-              <span className="text-2xl font-bold text-dark-gray">
+              <span className="text-base md:text-xl font-bold text-dark-gray">
                 {formatPrice(priceDiscount)}
               </span>
             </>
           ) : (
             /* Preço Normal (sem desconto) */
-            <span className="text-2xl font-bold text-dark-gray">
+            <span className="text-base md:text-xl font-bold text-dark-gray">
               {formatPrice(price)}
             </span>
           )}
