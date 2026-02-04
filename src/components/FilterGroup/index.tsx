@@ -1,5 +1,4 @@
 import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 
 interface FilterOption {
@@ -21,24 +20,27 @@ export function FilterGroup({
   onChange
 }: FilterGroupProps) {
   return (
-    <div className="mb-8">
-      <h3 className="text-dark-gray-2 font-bold text-base mb-4">{title}</h3>
+    <div className="mb-6 md:mb-8">
+      <h3 className="text-dark-gray-2 font-semibold text-sm md:text-base mb-3 md:mb-4">
+        {title}
+      </h3>
 
-      <div className="space-y-3">
+      <div className="space-y-1">
         {inputType === 'checkbox' ? (
           options.map((opt) => (
-            <div key={opt.value} className="flex items-center space-x-2">
+            <label
+              key={opt.value}
+              htmlFor={`${title}-${opt.value}`}
+              className="flex items-center space-x-3 cursor-pointer min-h-10 md:min-h-0 py-0.5"
+            >
               <Checkbox
-                id={opt.value}
+                id={`${title}-${opt.value}`}
                 onCheckedChange={(checked) => onChange?.(opt.value, !!checked)}
               />
-              <Label
-                htmlFor={opt.value}
-                className="text-dark-gray-2 cursor-pointer"
-              >
+              <span className="text-dark-gray-2 text-sm md:text-base">
                 {opt.label}
-              </Label>
-            </div>
+              </span>
+            </label>
           ))
         ) : (
           <RadioGroup
@@ -46,15 +48,19 @@ export function FilterGroup({
             defaultValue={options[0]?.value}
           >
             {options.map((opt) => (
-              <div key={opt.value} className="flex items-center space-x-2">
-                <RadioGroupItem value={opt.value} id={opt.value} />
-                <Label
-                  htmlFor={opt.value}
-                  className="text-dark-gray-2 cursor-pointer"
-                >
+              <label
+                key={opt.value}
+                htmlFor={`${title}-${opt.value}`}
+                className="flex items-center space-x-3 cursor-pointer min-h-10 md:min-h-0 py-0.5"
+              >
+                <RadioGroupItem
+                  value={opt.value}
+                  id={`${title}-${opt.value}`}
+                />
+                <span className="text-dark-gray-2 text-sm md:text-base">
                   {opt.label}
-                </Label>
-              </div>
+                </span>
+              </label>
             ))}
           </RadioGroup>
         )}

@@ -1,7 +1,15 @@
+import { Filter } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FilterGroup } from '@/components/FilterGroup'
 import ProductCard from '@/components/ProductCard'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
+} from '@/components/ui/sheet'
 import { getProducts } from '@/services/productService'
 import type { Product } from '@/types/Product'
 
@@ -18,8 +26,13 @@ export default function ProductListingPage() {
   const [filterBrand, setFilterBrand] = useState<string[]>([])
   const [filterCategory, setFilterCategory] = useState<string[]>([])
   const [filterGender, setFilterGender] = useState<string>('')
+  // Estado filter state (visual only, filtering logic can be added later)
+  const [filterCondition, setFilterCondition] = useState<string>('new')
   const [sortOrder, setSortOrder] = useState<'lowest' | 'highest'>('lowest')
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
+  const [filterSheetOpen, setFilterSheetOpen] = useState(false)
+  // Suppress unused variable warning (used in UI, logic can be extended later)
+  void filterCondition
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -48,6 +61,14 @@ export default function ProductListingPage() {
     label: g === 'male' ? 'Masculino' : g === 'female' ? 'Feminino' : 'Unissex',
     value: String(g)
   }))
+  const conditionOptions = [
+    { label: 'Novo', value: 'new' },
+    { label: 'Usado', value: 'used' }
+  ]
+
+  // Check if any filter is active (for visual indicator on button)
+  const hasActiveFilters =
+    filterBrand.length > 0 || filterCategory.length > 0 || filterGender !== ''
 
   // Filtering and sorting logic
   useEffect(() => {
@@ -82,73 +103,137 @@ export default function ProductListingPage() {
 
   const productCount: number = filteredProducts.length
 
+  // Render the filter content (reused in both desktop sidebar and mobile sheet)
+  const renderFilterContent = () => (
+    <>
+      <FilterGroup
+        title="Marca"
+        inputType="checkbox"
+        options={brandOptions}
+        onChange={(val, checked) => {
+          if (checked) setFilterBrand((s) => Array.from(new Set([...s, val])))
+          else setFilterBrand((s) => s.filter((i) => i !== val))
+        }}
+      />
+
+      <FilterGroup
+        title="Categoria"
+        inputType="checkbox"
+        options={categoryOptions}
+        onChange={(val, checked) => {
+          if (checked)
+            setFilterCategory((s) => Array.from(new Set([...s, val])))
+          else setFilterCategory((s) => s.filter((i) => i !== val))
+        }}
+      />
+
+      <FilterGroup
+        title="Gênero"
+        inputType="checkbox"
+        options={genderOptions}
+        onChange={(val) => setFilterGender(val)}
+      />
+
+      <FilterGroup
+        title="Estado"
+        inputType="radio"
+        options={conditionOptions}
+        onChange={(val) => setFilterCondition(val)}
+      />
+    </>
+  )
+
   return (
-    <div className="container mx-auto px-4 py-6 md:py-8">
-      <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] lg:grid-cols-[280px_1fr] gap-6 md:gap-8">
-        {/* Sidebar de Filtros */}
-        <aside className="space-y-4 md:space-y-6">
-          <details className="bg-white p-4 md:p-6 rounded-lg md:open" open>
-            <summary className="md:hidden text-dark-gray-2 font-bold text-base cursor-pointer list-none flex items-center justify-between">
-              Filtrar por
-              <span className="text-primary">+</span>
-            </summary>
-            <h2 className="hidden md:block text-dark-gray-2 font-bold text-base mb-6">
+    <div className="container mx-auto px-4 py-6 lg:py-8">
+      {/* Mobile/Tablet: Sort and Filter Bar */}
+      <div className="lg:hidden flex items-center gap-3 mb-6">
+        <div className="flex-1">
+          <label htmlFor="sortOrderMobile" className="sr-only">
+            Ordenar por
+          </label>
+          <select
+            id="sortOrderMobile"
+            value={sortOrder}
+            onChange={(e) =>
+              setSortOrder(e.target.value as 'lowest' | 'highest')
+            }
+            className="w-full h-11 border border-light-gray-2 rounded px-3 text-dark-gray-2 text-sm bg-white"
+          >
+            <option value="lowest">Ordenar por: menor preço</option>
+            <option value="highest">Ordenar por: maior preço</option>
+          </select>
+        </div>
+
+        {/* Mobile Filter Button with Sheet */}
+        <Sheet open={filterSheetOpen} onOpenChange={setFilterSheetOpen}>
+          <SheetTrigger asChild>
+            <button
+              type="button"
+              className={`w-11 h-11 flex items-center justify-center rounded transition-colors ${
+                hasActiveFilters ? 'bg-tertiary' : 'bg-primary'
+              } text-white`}
+              aria-label="Abrir filtros"
+            >
+              <Filter size={20} />
+            </button>
+          </SheetTrigger>
+          <SheetContent
+            side="left"
+            className="w-[85%] max-w-90 bg-white p-0 flex flex-col"
+            aria-label="Filtros de produtos"
+          >
+            {/* Header do Sheet - Sticky */}
+            <SheetHeader className="p-5 border-b border-light-gray-2 sticky top-0 bg-white z-10">
+              <SheetTitle className="text-dark-gray-2 font-bold text-lg text-left">
+                Filtrar por
+              </SheetTitle>
+            </SheetHeader>
+
+            {/* Conteúdo Scrollável dos Filtros */}
+            <div className="flex-1 overflow-y-auto p-5">
+              {renderFilterContent()}
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 lg:gap-8">
+        {/* Desktop Sidebar de Filtros - Hidden on Mobile/Tablet */}
+        <aside className="hidden lg:block space-y-6">
+          <div className="bg-white p-4 md:p-6 rounded-lg">
+            <h2 className="text-dark-gray-2 font-bold text-base mb-6">
               Filtrar por
             </h2>
-            <div className="border-b border-light-gray-2 mb-4 md:mb-6 mt-4 md:mt-0" />
+            <div className="border-b border-light-gray-2 mb-6" />
 
-            <label htmlFor="sortOrder" className="block text-dark-gray-2 mb-2">
+            <label
+              htmlFor="sortOrderDesktop"
+              className="block text-dark-gray-2 mb-2"
+            >
               Ordenar por
             </label>
             <select
-              id="sortOrder"
+              id="sortOrderDesktop"
               value={sortOrder}
               onChange={(e) =>
                 setSortOrder(e.target.value as 'lowest' | 'highest')
               }
-              className="w-full mb-4 h-12 border border-light-gray-2 rounded px-3"
+              className="w-full mb-6 h-12 border border-light-gray-2 rounded px-3"
             >
               <option value="lowest">Menor preço</option>
               <option value="highest">Maior preço</option>
             </select>
 
-            <FilterGroup
-              title="Marca"
-              inputType="checkbox"
-              options={brandOptions}
-              onChange={(val, checked) => {
-                if (checked)
-                  setFilterBrand((s) => Array.from(new Set([...s, val])))
-                else setFilterBrand((s) => s.filter((i) => i !== val))
-              }}
-            />
-
-            <FilterGroup
-              title="Categoria"
-              inputType="checkbox"
-              options={categoryOptions}
-              onChange={(val, checked) => {
-                if (checked)
-                  setFilterCategory((s) => Array.from(new Set([...s, val])))
-                else setFilterCategory((s) => s.filter((i) => i !== val))
-              }}
-            />
-
-            <FilterGroup
-              title="Gênero"
-              inputType="radio"
-              options={genderOptions}
-              onChange={(val) => setFilterGender(val)}
-            />
-          </details>
+            {renderFilterContent()}
+          </div>
         </aside>
 
         {/* Área Principal de Produtos */}
         <main>
-          <h1 className="text-dark-gray-2 text-2xl font-bold mb-4">
+          <h1 className="text-dark-gray-2 text-lg md:text-2xl font-bold mb-2 md:mb-4">
             {filter ? `Resultados para "${filter}"` : 'Todos os produtos'}
           </h1>
-          <p className="text-dark-gray-2 mb-6">
+          <p className="text-dark-gray-2 text-sm md:text-base mb-4 md:mb-6">
             {productCount}{' '}
             {productCount === 1 ? 'produto encontrado' : 'produtos encontrados'}
           </p>
@@ -172,7 +257,7 @@ export default function ProductListingPage() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4 md:gap-6 lg:gap-x-8 lg:gap-y-6">
+            <div className="grid grid-cols-2 min-[426px]:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4 md:gap-6 lg:gap-x-8 lg:gap-y-6">
               {filteredProducts.map((product) => (
                 <ProductCard
                   key={product.id}
