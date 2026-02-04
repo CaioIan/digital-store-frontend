@@ -34,8 +34,8 @@ const Footer = () => {
 
   return (
     <footer className="bg-dark-gray text-white">
-      <div className="max-w-[1440px] mx-auto px-[100px] py-12">
-        <div className="grid grid-cols-4 gap-8 mb-8">
+      <div className="max-w-[1440px] mx-auto px-4 lg:px-[100px] py-8 lg:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           <div className="flex flex-col gap-6">
             <Logo variant="white" />
             <p className="text-white text-base leading-relaxed">

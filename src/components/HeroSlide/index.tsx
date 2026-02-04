@@ -21,9 +21,9 @@ export function HeroSlide({
 }: HeroSlideProps) {
   return (
     <div className="relative h-full w-full bg-light-gray-3">
-      <div className="mx-auto grid h-full max-w-7xl grid-cols-1 items-center gap-8 px-8 lg:grid-cols-2">
+      <div className="mx-auto grid h-full max-w-7xl grid-cols-1 items-center gap-4 lg:gap-8 px-4 lg:px-8 lg:grid-cols-2">
         {/* Conteúdo à esquerda */}
-        <div className="space-y-6 py-12">
+        <div className="space-y-4 lg:space-y-6 py-6 lg:py-12 text-center lg:text-left order-2 lg:order-1">
           {badge && (
             <p className="text-sm font-bold uppercase tracking-wide text-warning">
               {badge}
@@ -47,7 +47,7 @@ export function HeroSlide({
         </div>
 
         {/* Imagem à direita */}
-        <div className="relative flex items-center justify-center">
+        <div className="relative flex items-center justify-center order-1 lg:order-2 pt-4 lg:pt-0">
           <div className="relative">
             {/* Círculo decorativo de fundo */}
             <div className="absolute inset-0 -right-20 -top-10 h-[120%] w-[120%] rounded-full bg-gradient-to-br from-light-gray-3/50 to-transparent" />

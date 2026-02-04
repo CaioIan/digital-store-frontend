@@ -31,7 +31,7 @@ export function BuyBox({
     <div className="space-y-6">
       {/* Cabeçalho: Nome, Referência e Avaliação */}
       <div className="flex flex-col gap-2">
-        <h1 className="text-[32px] font-bold text-dark-gray leading-tight">
+        <h1 className="text-xl lg:text-[32px] font-bold text-dark-gray leading-tight">
           {name}
         </h1>
         <span className="text-xs text-dark-gray-3">
@@ -88,15 +88,15 @@ export function BuyBox({
       <div className="flex items-center gap-3">
         {priceDiscount && priceDiscount < price ? (
           <>
-            <span className="text-base text-light-gray-2 line-through">
+            <span className="text-sm lg:text-base text-light-gray-2 line-through">
               {formatPrice(price)}
             </span>
-            <span className="text-[32px] font-bold text-dark-gray-2">
+            <span className="text-xl lg:text-[32px] font-bold text-dark-gray-2">
               {formatPrice(priceDiscount)}
             </span>
           </>
         ) : (
-          <span className="text-[32px] font-bold text-dark-gray-2">
+          <span className="text-xl lg:text-[32px] font-bold text-dark-gray-2">
             {formatPrice(price)}
           </span>
         )}
@@ -118,7 +118,7 @@ export function BuyBox({
       {/* Botão Comprar (Call to Action) */}
       <button
         type="button"
-        className="w-[220px] h-12 bg-warning text-white font-bold text-base rounded-[8px] hover:brightness-90 active:brightness-75 transition-all uppercase tracking-wide cursor-pointer"
+        className="w-full lg:w-[220px] h-12 bg-warning text-white font-bold text-base rounded-[8px] hover:brightness-90 active:brightness-75 transition-all uppercase tracking-wide cursor-pointer min-h-[44px]"
       >
         Comprar
       </button>

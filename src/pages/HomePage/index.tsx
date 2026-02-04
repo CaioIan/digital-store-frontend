@@ -71,17 +71,17 @@ export default function HomePage() {
   }, [])
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-8 lg:space-y-16">
       {/* Hero Banner com Gallery - Modo Autoplay (Seção 5.1) */}
       <Gallery
         slides={heroSlides.map((slide) => ({ src: slide.src, alt: slide.alt }))}
         width="100%"
-        height="681px"
+        height="auto"
         radius="0px"
         autoplay={true}
         autoplayDelay={4000}
         showDots={true}
-        className="w-full"
+        className="w-full min-h-[70vh] lg:min-h-[681px]"
       >
         {(_slide, index) => (
           <HeroSlide
@@ -96,10 +96,10 @@ export default function HomePage() {
         )}
       </Gallery>
 
-      <div className="max-w-7xl mx-auto px-8 space-y-16">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 space-y-8 lg:space-y-16">
         {/* Coleções em Destaque (Seção 5.2) */}
         <Section title="Coleções em destaque" titleAlign="left">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 min-[500px]:grid-cols-3 gap-4">
             {collections.map((collection) => (
               <div
                 key={`collection-${collection.src}`}
@@ -108,7 +108,7 @@ export default function HomePage() {
                 <img
                   src={collection.src}
                   alt={collection.alt}
-                  className="w-full h-auto object-cover"
+                  className="w-full h-32 min-[500px]:h-24 sm:h-28 md:h-36 lg:h-auto object-cover"
                 />
               </div>
             ))}
@@ -117,7 +117,7 @@ export default function HomePage() {
 
         {/* Categorias em Destaque */}
         <Section title="Coleções em destaque" titleAlign="center">
-          <div className="flex justify-center items-center gap-8 md:gap-12 flex-wrap">
+          <div className="flex justify-start min-[546px]:justify-center items-center gap-6 min-[546px]:gap-12 overflow-x-auto pb-4 -mx-4 px-4 min-[546px]:mx-0 min-[546px]:px-0 min-[546px]:overflow-visible min-[546px]:flex-wrap scrollbar-hide">
             {/* Camisetas */}
             <button
               type="button"
@@ -220,7 +220,7 @@ export default function HomePage() {
               <p className="text-lg text-error">{error}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-8 gap-y-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6 lg:gap-x-8 lg:gap-y-6">
               {products.map((product) => (
                 <ProductCard
                   key={product.id}

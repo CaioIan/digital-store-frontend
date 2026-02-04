@@ -11,11 +11,8 @@ const Logo = ({ variant = 'default' }: LogoProps) => {
   const logoSrc = isWhite ? logoFooter : logoHeader
 
   return (
-    <Link
-      to="/"
-      className="flex items-center gap-2 no-underline w-[253px] h-11"
-    >
-      <img src={logoSrc} alt="Digital Store" className="w-[253px] h-11" />
+    <Link to="/" className="flex items-center gap-2 no-underline flex-shrink-0">
+      <img src={logoSrc} alt="Digital Store" className="h-7 lg:h-11 w-auto" />
     </Link>
   )
 }

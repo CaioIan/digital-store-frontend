@@ -72,10 +72,13 @@ export default function ProductViewPage() {
   const productImages = getProductImages(product.name)
 
   return (
-    <div className="max-w-7xl mx-auto px-8 py-12 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6 lg:py-12 space-y-6 lg:space-y-8">
       {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="text-sm text-dark-gray-3">
-        <ol className="flex items-center gap-2">
+      <nav
+        aria-label="Breadcrumb"
+        className="text-xs lg:text-sm text-dark-gray-3 overflow-x-auto"
+      >
+        <ol className="flex items-center gap-2 whitespace-nowrap">
           <li>
             <Link to="/" className="hover:text-primary transition-colors">
               Home
@@ -96,18 +99,18 @@ export default function ProductViewPage() {
       </nav>
 
       {/* Área do Produto */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
         {/* Gallery com Thumbnails - Modo Produto (Seção 7.1) */}
         <Gallery
           slides={productImages}
           showThumbs={true}
-          width="701px"
-          height="571px"
+          width="100%"
+          height="auto"
           radius="4px"
           className="w-full"
           onApiReady={(api) => setGalleryApi(api)}
           objectFit="contain"
-          imagePadding="p-8"
+          imagePadding="p-4 lg:p-8"
         />
 
         {/* BuyBox com ProductOptions integrados */}
@@ -150,7 +153,7 @@ export default function ProductViewPage() {
         titleAlign="left"
         link={{ text: 'Ver todos', href: '/products' }}
       >
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-8 gap-y-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6 lg:gap-x-8 lg:gap-y-6">
           {relatedProducts.map((relatedProduct) => (
             <ProductCard
               key={relatedProduct.id}

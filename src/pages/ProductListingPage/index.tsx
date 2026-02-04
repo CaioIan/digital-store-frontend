@@ -83,15 +83,19 @@ export default function ProductListingPage() {
   const productCount: number = filteredProducts.length
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-[308px_1fr] gap-8">
+    <div className="container mx-auto px-4 py-6 md:py-8">
+      <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] lg:grid-cols-[280px_1fr] gap-6 md:gap-8">
         {/* Sidebar de Filtros */}
-        <aside className="space-y-6">
-          <div className="bg-white p-6 rounded-lg">
-            <h2 className="text-dark-gray-2 font-bold text-base mb-6">
+        <aside className="space-y-4 md:space-y-6">
+          <details className="bg-white p-4 md:p-6 rounded-lg md:open" open>
+            <summary className="md:hidden text-dark-gray-2 font-bold text-base cursor-pointer list-none flex items-center justify-between">
+              Filtrar por
+              <span className="text-primary">+</span>
+            </summary>
+            <h2 className="hidden md:block text-dark-gray-2 font-bold text-base mb-6">
               Filtrar por
             </h2>
-            <div className="border-b border-light-gray-2 mb-6" />
+            <div className="border-b border-light-gray-2 mb-4 md:mb-6 mt-4 md:mt-0" />
 
             <label htmlFor="sortOrder" className="block text-dark-gray-2 mb-2">
               Ordenar por
@@ -136,7 +140,7 @@ export default function ProductListingPage() {
               options={genderOptions}
               onChange={(val) => setFilterGender(val)}
             />
-          </div>
+          </details>
         </aside>
 
         {/* Área Principal de Produtos */}
@@ -168,7 +172,7 @@ export default function ProductListingPage() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-8 gap-y-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4 md:gap-6 lg:gap-x-8 lg:gap-y-6">
               {filteredProducts.map((product) => (
                 <ProductCard
                   key={product.id}
