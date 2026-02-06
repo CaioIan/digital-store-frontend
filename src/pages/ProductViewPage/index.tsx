@@ -115,6 +115,7 @@ export default function ProductViewPage() {
 
         {/* BuyBox com ProductOptions integrados */}
         <BuyBox
+          productId={product.id}
           name={product.name}
           reference={product.reference || 'N/A'}
           stars={product.stars || 0}

@@ -1,6 +1,8 @@
 import { type ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface BuyBoxProps {
+  productId: string
   name: string
   reference: string
   stars: number
@@ -18,6 +20,7 @@ const formatPrice = (value: number) =>
   }).format(value)
 
 export function BuyBox({
+  productId,
   name,
   reference,
   stars,
@@ -27,6 +30,12 @@ export function BuyBox({
   description,
   children
 }: BuyBoxProps) {
+  const navigate = useNavigate()
+
+  const handleBuyClick = () => {
+    navigate(`/checkout/${productId}`)
+  }
+
   return (
     <div className="space-y-6">
       {/* Cabeçalho: Nome, Referência e Avaliação */}
@@ -118,6 +127,7 @@ export function BuyBox({
       {/* Botão Comprar (Call to Action) */}
       <button
         type="button"
+        onClick={handleBuyClick}
         className="w-full lg:w-[220px] h-12 bg-warning text-white font-bold text-base rounded-[8px] hover:brightness-90 active:brightness-75 transition-all uppercase tracking-wide cursor-pointer min-h-[44px]"
       >
         Comprar
