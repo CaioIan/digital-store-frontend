@@ -18,8 +18,8 @@ export function NotFoundPage() {
 
         {/* Descrição */}
         <p className="text-lg text-[#666666] mb-8 leading-relaxed">
-          Desculpe, a página que você está procurando não existe ou foi removida.
-          Verifique a URL e tente novamente.
+          Desculpe, a página que você está procurando não existe ou foi
+          removida. Verifique a URL e tente novamente.
         </p>
 
         {/* Botões de ação */}
