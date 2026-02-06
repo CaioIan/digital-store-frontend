@@ -81,7 +81,9 @@ export default function HomePage() {
         autoplay={true}
         autoplayDelay={4000}
         showDots={true}
-        className="w-full min-h-[70vh] lg:min-h-[681px]"
+        dotsPosition="relative"
+        dotsClassName="pb-6"
+        className="w-full bg-light-gray-3"
       >
         {(_slide, index) => (
           <HeroSlide

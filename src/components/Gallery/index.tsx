@@ -30,6 +30,8 @@ interface GalleryProps {
   onApiReady?: (api: CarouselApi) => void // Callback para expor a API
   objectFit?: 'contain' | 'cover' // Estratégia de ajuste da imagem
   imagePadding?: string // Padding ao redor da imagem (ex: 'p-8', 'p-0')
+  dotsPosition?: 'absolute' | 'relative' // Posição dos dots: absolute (sobre o conteúdo) ou relative (abaixo)
+  dotsClassName?: string // Classes customizadas para os dots container
 }
 
 export function Gallery({
@@ -45,7 +47,9 @@ export function Gallery({
   children,
   onApiReady,
   objectFit = 'cover',
-  imagePadding = 'p-0'
+  imagePadding = 'p-0',
+  dotsPosition = 'absolute',
+  dotsClassName
 }: GalleryProps) {
   const [api, setApi] = useState<CarouselApi>()
   const [current, setCurrent] = useState(0)
@@ -168,7 +172,15 @@ export function Gallery({
 
         {/* Indicadores de Slide (Dots) */}
         {showDots && slides.length > 1 && (
-          <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+          <div
+            className={cn(
+              'z-20 flex gap-2',
+              dotsPosition === 'absolute'
+                ? 'absolute bottom-6 left-1/2 -translate-x-1/2'
+                : 'relative mt-6 justify-center',
+              dotsClassName
+            )}
+          >
             {slides.map((slide, index) => (
               <button
                 key={`dot-${slide.src}-${index}`}
@@ -177,7 +189,7 @@ export function Gallery({
                 className={cn(
                   'h-3 w-3 rounded-full transition-all duration-300',
                   current === index
-                    ? 'w-8 bg-primary'
+                    ? 'bg-primary'
                     : 'bg-light-gray-2 hover:bg-light-gray'
                 )}
                 aria-label={`Ir para slide ${index + 1}`}
