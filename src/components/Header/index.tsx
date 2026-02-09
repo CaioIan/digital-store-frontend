@@ -10,6 +10,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet'
+import { useCart } from '@/contexts/CartContext'
 import Logo from '../Logo'
 
 const Header = () => {
@@ -17,6 +18,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const navigate = useNavigate()
+  const { itemCount } = useCart()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -174,9 +176,11 @@ const Header = () => {
             aria-label="Carrinho"
           >
             <img src={miniCart} alt="" className="w-5 h-5" />
-            <span className="absolute top-1 right-1 bg-error text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-              2
-            </span>
+            {itemCount > 0 && (
+              <span className="absolute top-1 right-1 bg-error text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                {itemCount}
+              </span>
+            )}
           </Link>
         </div>
       </div>
@@ -241,9 +245,11 @@ const Header = () => {
             </Link>
             <Link to="/carrinho" className="relative" aria-label="Carrinho">
               <img src={miniCart} alt="" className="w-6 h-6" />
-              <span className="absolute -top-2 -right-3 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                2
-              </span>
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-3 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                  {itemCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>

@@ -1,16 +1,22 @@
-import { type ReactNode } from 'react'
+import { ShoppingCart } from 'lucide-react'
+import { type ReactNode, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useCart } from '@/contexts/CartContext'
+import type { Product } from '@/types/Product'
 
 interface BuyBoxProps {
   productId: string
   name: string
+  image: string
   reference: string
   stars: number
   rating: number
   price: number
   priceDiscount?: number
   description: string
-  children?: ReactNode // Aqui entrarão os ProductOptions
+  selectedColor?: string
+  selectedSize?: string
+  children?: ReactNode
 }
 
 const formatPrice = (value: number) =>
@@ -22,18 +28,55 @@ const formatPrice = (value: number) =>
 export function BuyBox({
   productId,
   name,
+  image,
   reference,
   stars,
   rating,
   price,
   priceDiscount,
   description,
+  selectedColor,
+  selectedSize,
   children
 }: BuyBoxProps) {
   const navigate = useNavigate()
+  const { addToCart } = useCart()
+  const [addedFeedback, setAddedFeedback] = useState(false)
+  const [validationError, setValidationError] = useState<string | null>(null)
+
+  const buildProduct = (): Product => ({
+    id: productId,
+    name,
+    image,
+    price,
+    priceDiscount,
+    description,
+    reference,
+    stars,
+    rating
+  })
+
+  const validate = (): boolean => {
+    if (!selectedColor || !selectedSize) {
+      setValidationError('Selecione a cor e o tamanho antes de continuar.')
+      setTimeout(() => setValidationError(null), 4000)
+      return false
+    }
+    setValidationError(null)
+    return true
+  }
 
   const handleBuyClick = () => {
-    navigate(`/checkout/${productId}`)
+    if (!validate()) return
+    addToCart(buildProduct(), 1, selectedColor, selectedSize)
+    navigate('/carrinho')
+  }
+
+  const handleAddToCart = () => {
+    if (!validate()) return
+    addToCart(buildProduct(), 1, selectedColor, selectedSize)
+    setAddedFeedback(true)
+    setTimeout(() => setAddedFeedback(false), 2000)
   }
 
   return (
@@ -124,14 +167,34 @@ export function BuyBox({
       {/* Opções de Produto (Tamanho/Cor - children) */}
       {children && <div className="space-y-4">{children}</div>}
 
-      {/* Botão Comprar (Call to Action) */}
-      <button
-        type="button"
-        onClick={handleBuyClick}
-        className="w-full lg:w-[220px] h-12 bg-warning text-white font-bold text-base rounded-[8px] hover:brightness-90 active:brightness-75 transition-all uppercase tracking-wide cursor-pointer min-h-[44px]"
-      >
-        Comprar
-      </button>
+      {/* Notificação de validação */}
+      {validationError && (
+        <div className="bg-error/10 border border-error/30 text-error text-sm font-medium px-4 py-3 rounded-lg">
+          {validationError}
+        </div>
+      )}
+
+      {/* Botões de Ação */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        {/* Comprar → adiciona ao carrinho e navega */}
+        <button
+          type="button"
+          onClick={handleBuyClick}
+          className="w-full sm:w-auto sm:min-w-45 h-12 bg-warning text-white font-bold text-base rounded-xl hover:brightness-90 active:brightness-75 transition-all uppercase tracking-wide cursor-pointer min-h-11"
+        >
+          Comprar
+        </button>
+
+        {/* Adicionar ao carrinho → adiciona e permanece na página */}
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          className="w-full sm:w-auto sm:min-w-45 h-12 border-2 border-warning text-warning font-bold text-sm rounded-xl hover:bg-warning/10 active:brightness-75 transition-all uppercase tracking-wide cursor-pointer min-h-11 flex items-center justify-center gap-2"
+        >
+          <ShoppingCart size={18} />
+          {addedFeedback ? 'Adicionado ✓' : 'Adicionar ao carrinho'}
+        </button>
+      </div>
     </div>
   )
 }
