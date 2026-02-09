@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import Section from '@/components/Section' // Certifique-se que o caminho está correto para o seu projeto
+import { useNavigate, useParams } from 'react-router-dom'
+import Section from '@/components/Section'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { useCart } from '@/contexts/CartContext'
 import { getProductById } from '@/services/productService'
 import type { Product } from '@/types/Product'
 
@@ -16,59 +17,105 @@ const formatPrice = (value: number) =>
 
 export default function CheckoutPage() {
   const { id } = useParams<{ id: string }>()
-  const [product, setProduct] = useState<Product | null>(null)
+  const navigate = useNavigate()
+  const cart = useCart()
+  const [singleProduct, setSingleProduct] = useState<Product | null>(null)
   const [paymentMethod, setPaymentMethod] = useState('credit-card')
 
+  // Se vier com id na URL, busca produto individual (compra direta)
   useEffect(() => {
     const fetchProduct = async () => {
       if (!id) return
-
       try {
         const productData = await getProductById(id)
         if (productData) {
-          setProduct(productData)
+          setSingleProduct(productData)
         }
       } catch (error) {
         console.error('Erro ao carregar produto:', error)
       }
     }
-
     fetchProduct()
   }, [id])
 
-  if (!product) {
+  // Determina quais itens exibir: carrinho ou produto individual
+  const cartItems = id
+    ? singleProduct
+      ? [{ product: singleProduct, quantity: 1 }]
+      : []
+    : cart.items
+
+  const isLoading = id ? !singleProduct : false
+
+  if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-8 py-12 flex items-center justify-center min-h-[400px]">
+      <div className="max-w-7xl mx-auto px-8 py-12 flex items-center justify-center min-h-100">
         <p className="text-lg text-dark-gray-2">Carregando...</p>
       </div>
     )
   }
 
-  // Calculate order values
-  const subtotal = product.priceDiscount || product.price
-  const shipping = 0
-  const discount = product.priceDiscount
-    ? product.price - product.priceDiscount
-    : 0
-  const total = subtotal
+  if (cartItems.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto px-8 py-12 flex flex-col items-center justify-center min-h-100">
+        <p className="text-lg text-dark-gray-2 mb-4">
+          Nenhum item para checkout.
+        </p>
+        <Button
+          onClick={() => navigate('/carrinho')}
+          className="bg-primary hover:bg-tertiary text-white font-bold px-8 h-12 rounded-lg"
+        >
+          Ir para o Carrinho
+        </Button>
+      </div>
+    )
+  }
 
-  const installmentValue = (total / 10).toFixed(2).replace('.', ',')
+  // Calculate order values from items
+  const subtotal = cartItems.reduce((acc, item) => {
+    const price = item.product.priceDiscount || item.product.price
+    return acc + price * item.quantity
+  }, 0)
+
+  const shipping = id ? 0 : cart.shipping
+  const discount = id
+    ? cartItems.reduce((acc, item) => {
+        if (item.product.priceDiscount && item.product.priceDiscount < item.product.price) {
+          return acc + (item.product.price - item.product.priceDiscount) * item.quantity
+        }
+        return acc
+      }, 0)
+    : cart.discount
+  const total = subtotal - (id ? 0 : discount) + shipping
+
+  const installmentValue = total > 0 ? (total / 10).toFixed(2).replace('.', ',') : '0,00'
 
   // Componente de Resumo reutilizável para Mobile e Desktop
   const SummaryContent = () => (
     <>
-      {/* Product Info */}
-      <div className="flex items-start gap-4 mb-6 pb-6 border-b border-light-gray-3">
-        <div className="w-16 h-16 bg-[#E2E3FF] rounded px-1 shrink-0 flex items-center justify-center overflow-hidden">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-auto object-contain mix-blend-multiply"
-          />
-        </div>
-        <p className="text-sm font-bold text-dark-gray-2 leading-snug">
-          {product.name}
-        </p>
+      {/* Product Info - lista todos os itens */}
+      <div className="mb-6 pb-6 border-b border-light-gray-3 space-y-4">
+        {cartItems.map((item) => (
+          <div key={item.product.id} className="flex items-start gap-4">
+            <div className="w-16 h-16 bg-[#E2E3FF] rounded px-1 shrink-0 flex items-center justify-center overflow-hidden">
+              <img
+                src={item.product.image}
+                alt={item.product.name}
+                className="w-full h-auto object-contain mix-blend-multiply"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-dark-gray-2 leading-snug">
+                {item.product.name}
+              </p>
+              {item.quantity > 1 && (
+                <p className="text-xs text-light-gray mt-1">
+                  Qtd: {item.quantity}
+                </p>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Order Values */}

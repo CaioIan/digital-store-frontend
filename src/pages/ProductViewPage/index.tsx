@@ -12,11 +12,21 @@ import type { Product } from '@/types/Product'
 // Cores de fundo para as variações da galeria (as cores que aparecem nas thumbs e no seletor)
 const colorOptions = ['#E2E3FF', '#FFE8BC', '#DEC699', '#E8DFCF']
 
+// Mapeamento de cor hex → nome legível para exibição no carrinho
+const colorNames: Record<string, string> = {
+  '#E2E3FF': 'Vermelho / Branco',
+  '#FFE8BC': 'Laranja / Branco',
+  '#DEC699': 'Bege / Marrom',
+  '#E8DFCF': 'Cinza / Branco'
+}
+
 export default function ProductViewPage() {
   const { id } = useParams<{ id: string }>()
   const [product, setProduct] = useState<Product | null>(null)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
   const [galleryApi, setGalleryApi] = useState<CarouselApi | null>(null)
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined)
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,11 +64,16 @@ export default function ProductViewPage() {
   }
 
   const handleColorChange = (color: string) => {
+    setSelectedColor(colorNames[color] || color)
     const index = colorOptions.indexOf(color)
     if (index !== -1 && galleryApi) {
       // Navega para o slide correspondente
       galleryApi.scrollTo(index)
     }
+  }
+
+  const handleSizeChange = (size: string) => {
+    setSelectedSize(size)
   }
 
   if (!product) {
@@ -117,12 +132,15 @@ export default function ProductViewPage() {
         <BuyBox
           productId={product.id}
           name={product.name}
+          image={product.image}
           reference={product.reference || 'N/A'}
           stars={product.stars || 0}
           rating={product.rating || 0}
           price={product.price}
           priceDiscount={product.priceDiscount}
           description={product.description || 'Descrição não disponível'}
+          selectedColor={selectedColor}
+          selectedSize={selectedSize}
         >
           {/* Seletor de Tamanho */}
           <div className="space-y-2">
@@ -132,6 +150,7 @@ export default function ProductViewPage() {
               radius="4px"
               shape="square"
               type="text"
+              onSelect={handleSizeChange}
             />
           </div>
 
