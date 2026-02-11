@@ -25,12 +25,21 @@ export default function ProductViewPage() {
   const [product, setProduct] = useState<Product | null>(null)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
   const [galleryApi, setGalleryApi] = useState<CarouselApi | null>(null)
-  const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined)
-  const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined)
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(
+    undefined
+  )
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(
+    undefined
+  )
 
   useEffect(() => {
     const fetchData = async () => {
       if (!id) return
+
+      // Reseta seleções ao trocar de produto
+      setSelectedSize(undefined)
+      setSelectedColor(undefined)
+      setGalleryApi(null)
 
       try {
         const [productData, allProducts] = await Promise.all([
@@ -150,6 +159,7 @@ export default function ProductViewPage() {
               radius="4px"
               shape="square"
               type="text"
+              selected={selectedSize}
               onSelect={handleSizeChange}
             />
           </div>
@@ -161,6 +171,11 @@ export default function ProductViewPage() {
               options={colorOptions}
               shape="circle"
               type="color"
+              selected={
+                selectedColor
+                  ? colorOptions.find((c) => colorNames[c] === selectedColor)
+                  : undefined
+              }
               onSelect={handleColorChange}
             />
           </div>

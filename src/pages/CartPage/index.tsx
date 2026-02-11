@@ -73,7 +73,8 @@ export default function CartPage() {
     navigate('/checkout')
   }
 
-  const installmentValue = total > 0 ? (total / 10).toFixed(2).replace('.', ',') : '0,00'
+  const installmentValue =
+    total > 0 ? (total / 10).toFixed(2).replace('.', ',') : '0,00'
 
   // ─── Resumo reutilizável ──────────────────────────────────────
   const SummaryContent = () => (
@@ -209,8 +210,8 @@ export default function CartPage() {
                     item.product.priceDiscount || item.product.price
                   const itemTotal = unitPrice * item.quantity
                   const hasDiscount =
-                    item.product.priceDiscount &&
-                    item.product.priceDiscount < item.product.price
+                    item.product.priceDiscount
+                    && item.product.priceDiscount < item.product.price
 
                   return (
                     <div key={item.product.id}>
@@ -428,18 +429,14 @@ export default function CartPage() {
           {/* ═══════ DESKTOP: Itens do carrinho ═══════ */}
           <div className="hidden lg:block divide-y divide-light-gray-3">
             {items.map((item) => {
-              const unitPrice =
-                item.product.priceDiscount || item.product.price
+              const unitPrice = item.product.priceDiscount || item.product.price
               const itemTotal = unitPrice * item.quantity
               const hasDiscount =
-                item.product.priceDiscount &&
-                item.product.priceDiscount < item.product.price
+                item.product.priceDiscount
+                && item.product.priceDiscount < item.product.price
 
               return (
-                <div
-                  key={item.product.id}
-                  className="py-5 first:pt-0"
-                >
+                <div key={item.product.id} className="py-5 first:pt-0">
                   <div className="grid grid-cols-[1fr_140px_120px_120px] gap-4 items-center">
                     {/* Produto info */}
                     <div className="flex items-start gap-4">
