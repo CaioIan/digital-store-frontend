@@ -1,13 +1,16 @@
 import {
-  type ReactNode,
   createContext,
+  type ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState
 } from 'react'
 import type { CartItem } from '@/types/CartItem'
 import type { Product } from '@/types/Product'
+
+const CART_STORAGE_KEY = 'digital-store-cart'
 
 interface CartContextType {
   items: CartItem[]
@@ -42,10 +45,26 @@ const VALID_COUPONS: Record<string, number> = {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([])
+  const [items, setItems] = useState<CartItem[]>(() => {
+    try {
+      const stored = localStorage.getItem(CART_STORAGE_KEY)
+      return stored ? (JSON.parse(stored) as CartItem[]) : []
+    } catch {
+      return []
+    }
+  })
   const [couponCode, setCouponCode] = useState<string | null>(null)
   const [couponDiscount, setCouponDiscount] = useState(0)
   const [shipping, setShipping] = useState(0)
+
+  // Sincroniza items com localStorage sempre que mudar
+  useEffect(() => {
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items))
+    } catch {
+      // Silently fail if localStorage is full or unavailable
+    }
+  }, [items])
 
   const addToCart = useCallback(
     (
@@ -63,7 +82,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
           updated[existingIndex] = {
             ...updated[existingIndex],
             quantity: updated[existingIndex].quantity + quantity,
-            selectedColor: selectedColor ?? updated[existingIndex].selectedColor,
+            selectedColor:
+              selectedColor ?? updated[existingIndex].selectedColor,
             selectedSize: selectedSize ?? updated[existingIndex].selectedSize
           }
           return updated
@@ -165,7 +185,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       applyCoupon,
       removeCoupon,
       couponCode,
-      setShipping,
       total
     ]
   )

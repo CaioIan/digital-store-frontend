@@ -80,15 +80,22 @@ export default function CheckoutPage() {
   const shipping = id ? 0 : cart.shipping
   const discount = id
     ? cartItems.reduce((acc, item) => {
-        if (item.product.priceDiscount && item.product.priceDiscount < item.product.price) {
-          return acc + (item.product.price - item.product.priceDiscount) * item.quantity
+        if (
+          item.product.priceDiscount
+          && item.product.priceDiscount < item.product.price
+        ) {
+          return (
+            acc
+            + (item.product.price - item.product.priceDiscount) * item.quantity
+          )
         }
         return acc
       }, 0)
     : cart.discount
   const total = subtotal - (id ? 0 : discount) + shipping
 
-  const installmentValue = total > 0 ? (total / 10).toFixed(2).replace('.', ',') : '0,00'
+  const installmentValue =
+    total > 0 ? (total / 10).toFixed(2).replace('.', ',') : '0,00'
 
   // Componente de Resumo reutilizável para Mobile e Desktop
   const SummaryContent = () => (

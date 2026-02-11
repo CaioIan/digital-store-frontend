@@ -1,8 +1,9 @@
 import { Menu, Search } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import logoHeader from '@/assets/logo-header.svg'
 import miniCart from '@/assets/mini-cart.svg'
+import CartModal from '@/components/CartModal'
 import {
   Sheet,
   SheetContent,
@@ -17,8 +18,17 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
+  const [cartModalOpen, setCartModalOpen] = useState(false)
   const navigate = useNavigate()
   const { itemCount } = useCart()
+
+  const toggleCartModal = useCallback(() => {
+    setCartModalOpen((prev) => !prev)
+  }, [])
+
+  const closeCartModal = useCallback(() => {
+    setCartModalOpen(false)
+  }, [])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -170,18 +180,26 @@ const Header = () => {
           >
             <Search size={20} />
           </button>
-          <Link
-            to="/carrinho"
-            className="w-11 h-11 flex items-center justify-center relative"
-            aria-label="Carrinho"
-          >
-            <img src={miniCart} alt="" className="w-5 h-5" />
-            {itemCount > 0 && (
-              <span className="absolute top-1 right-1 bg-error text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                {itemCount}
-              </span>
-            )}
-          </Link>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                toggleCartModal()
+              }}
+              className="w-11 h-11 flex items-center justify-center relative cursor-pointer bg-transparent border-none"
+              aria-label="Abrir carrinho"
+              aria-expanded={cartModalOpen}
+            >
+              <img src={miniCart} alt="" className="w-5 h-5" />
+              {itemCount > 0 && (
+                <span className="absolute top-1 right-1 bg-error text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {itemCount}
+                </span>
+              )}
+            </button>
+            <CartModal isOpen={cartModalOpen} onClose={closeCartModal} />
+          </div>
         </div>
       </div>
 
@@ -243,14 +261,26 @@ const Header = () => {
             >
               Entrar
             </Link>
-            <Link to="/carrinho" className="relative" aria-label="Carrinho">
-              <img src={miniCart} alt="" className="w-6 h-6" />
-              {itemCount > 0 && (
-                <span className="absolute -top-2 -right-3 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                  {itemCount}
-                </span>
-              )}
-            </Link>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  toggleCartModal()
+                }}
+                className="relative cursor-pointer bg-transparent border-none"
+                aria-label="Abrir carrinho"
+                aria-expanded={cartModalOpen}
+              >
+                <img src={miniCart} alt="" className="w-6 h-6" />
+                {itemCount > 0 && (
+                  <span className="absolute -top-2 -right-3 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                    {itemCount}
+                  </span>
+                )}
+              </button>
+              <CartModal isOpen={cartModalOpen} onClose={closeCartModal} />
+            </div>
           </div>
         </div>
       </div>

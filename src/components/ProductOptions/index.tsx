@@ -1,10 +1,9 @@
-import { useState } from 'react'
-
 interface ProductOptionsProps {
   options: string[] // Ex: ["38", "39"] ou ["#FF0000", "#00FF00"]
   radius?: string // Ex: "4px" (CSS value)
   shape?: 'square' | 'circle'
   type?: 'text' | 'color'
+  selected?: string | null // Valor selecionado (controlado externamente)
   onSelect?: (value: string) => void // Callback quando uma opção é selecionada
 }
 
@@ -13,12 +12,10 @@ export function ProductOptions({
   radius = '0px',
   shape = 'square',
   type = 'text',
+  selected = null,
   onSelect
 }: ProductOptionsProps) {
-  const [selected, setSelected] = useState<string | null>(null)
-
   const handleSelect = (option: string) => {
-    setSelected(option)
     if (onSelect) {
       onSelect(option)
     }
