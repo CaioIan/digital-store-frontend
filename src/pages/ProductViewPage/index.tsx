@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import RouterLink from '@/components/RouterLink'
 import { BuyBox } from '@/components/BuyBox'
 import { Gallery } from '@/components/Gallery'
 import ProductCard from '@/components/ProductCard'
@@ -104,18 +105,18 @@ export default function ProductViewPage() {
       >
         <ol className="flex items-center gap-2 whitespace-nowrap">
           <li>
-            <Link to="/" className="hover:text-primary transition-colors">
+            <RouterLink to="/" className="hover:text-primary transition-colors">
               Home
-            </Link>
+            </RouterLink>
           </li>
           <li>/</li>
           <li>
-            <Link
+            <RouterLink
               to="/products"
               className="hover:text-primary transition-colors"
             >
               Produtos
-            </Link>
+            </RouterLink>
           </li>
           <li>/</li>
           <li className="text-dark-gray-2 font-medium">{product.name}</li>

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import RouterLink from '@/components/RouterLink'
 import { useCart } from '@/contexts/CartContext'
 
 const formatPrice = (value: number) =>
@@ -117,13 +117,13 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
         {isEmpty ? (
           <div className="flex-1 flex flex-col items-center justify-center px-5 py-10 gap-4">
             <p className="text-sm text-light-gray">Seu carrinho está vazio</p>
-            <Link
+            <RouterLink
               to="/products"
               onClick={onClose}
               className="h-10 px-6 bg-primary text-white text-sm font-semibold rounded-full flex items-center justify-center hover:bg-tertiary transition-colors"
             >
               Continuar comprando
-            </Link>
+            </RouterLink>
           </div>
         ) : (
           <>
@@ -160,7 +160,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 >
                   Esvaziar
                 </button>
-                <Link
+                <RouterLink
                   to="/carrinho"
                   onClick={(e) => {
                     e.stopPropagation()
@@ -169,7 +169,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                   className="h-10 px-6 bg-primary text-white text-sm font-semibold rounded-[5px] flex items-center justify-center hover:bg-tertiary transition-colors"
                 >
                   Ver Carrinho
-                </Link>
+                </RouterLink>
               </div>
             </div>
           </>

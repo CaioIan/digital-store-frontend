@@ -1,18 +1,18 @@
 import { useState } from 'react'
 import RouterLink from '@/components/RouterLink'
 
-const RegisterPage = () => {
-  const [email, setEmail] = useState('')
+const LoginPage = () => {
+  const [login, setLogin] = useState('')
+  const [senha, setSenha] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: implement registration logic
-    console.log('Register with:', email)
+    console.log('Login with:', { login, senha })
   }
 
   return (
     <section className="flex-1 relative overflow-hidden">
-      {/* Background gradient */}
+      {/* Fundo gradiente — idêntico ao RegisterPage */}
       <div
         className="absolute inset-0"
         style={{
@@ -21,65 +21,96 @@ const RegisterPage = () => {
         }}
       />
 
-      {/* Content */}
+      {/* Conteúdo centralizado */}
       <div className="relative z-10 max-w-360 mx-auto px-4 lg:px-25 flex items-center min-h-0 lg:min-h-135 py-12 lg:py-20">
-        {/* Grid: 2 columns */}
+        {/* Grid de duas colunas — idêntico ao RegisterPage */}
         <div className="w-full grid grid-cols-1 lg:grid-cols-[40%_60%] items-center gap-8">
-          {/* Left Column - Form Card */}
+          {/* Coluna esquerda — Card de Login */}
           <div className="bg-white rounded-lg p-8 w-full max-w-115 mx-auto lg:mx-0 shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
-            {/* Title */}
+            {/* Título */}
             <h1 className="text-2xl font-bold text-dark-gray mb-2">
-              Crie sua conta
+              Acesse sua conta
             </h1>
 
-            {/* Subtitle */}
+            {/* Subtítulo com link para cadastro */}
             <p className="text-sm text-dark-gray-3 mb-6">
-              Já possui uma conta?{' '}
+              Novo cliente? Então registre-se{' '}
               <RouterLink
-                to="/login"
-                className="text-primary font-medium hover:underline"
+                to="/cadastro"
+                className="underline text-dark-gray-3 hover:text-dark-gray transition-colors"
               >
-                Entre aqui.
+                aqui
               </RouterLink>
+              .
             </p>
 
-            {/* Form */}
+            {/* Formulário de login */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-              {/* Email field */}
+              {/* Campo Login */}
               <div className="flex flex-col gap-1.5">
                 <label
-                  htmlFor="register-email"
+                  htmlFor="login-field"
                   className="text-[13px] font-medium text-dark-gray"
                 >
-                  Email <span className="text-primary">*</span>
+                  Login <span className="text-primary">*</span>
                 </label>
                 <input
-                  id="register-email"
-                  type="email"
+                  id="login-field"
+                  type="text"
                   required
-                  placeholder="Insira seu email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Insira seu login ou email"
+                  value={login}
+                  onChange={(e) => setLogin(e.target.value)}
                   className="h-11 rounded-md bg-light-gray-3 border-none px-3 text-sm text-dark-gray placeholder:text-light-gray outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                 />
               </div>
 
-              {/* Submit button */}
+              {/* Campo Senha */}
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor="senha-field"
+                  className="text-[13px] font-medium text-dark-gray"
+                >
+                  Senha <span className="text-primary">*</span>
+                </label>
+                <input
+                  id="senha-field"
+                  type="password"
+                  required
+                  placeholder="Insira sua senha"
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
+                  className="h-11 rounded-md bg-light-gray-3 border-none px-3 text-sm text-dark-gray placeholder:text-light-gray outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                />
+              </div>
+
+              {/* Link "Esqueci minha senha" */}
+              <RouterLink
+                to="#"
+                className="text-xs text-dark-gray-3 underline hover:text-dark-gray transition-colors w-fit"
+              >
+                Esqueci minha senha
+              </RouterLink>
+
+              {/* Botão principal de login */}
               <button
                 type="submit"
                 className="h-11 w-full bg-primary text-white font-semibold rounded-md hover:brightness-90 transition-all cursor-pointer"
               >
-                <RouterLink to="/register-form-page">Criar Conta</RouterLink>
+                Acessar Conta
               </button>
             </form>
 
-            {/* Social login */}
+            {/* Divisor e login social */}
             <div className="mt-5 flex flex-col items-center gap-3">
+              {/* Texto divisor */}
               <span className="text-[13px] text-dark-gray-3">
                 Ou faça login com
               </span>
+
+              {/* Ícones de login social */}
               <div className="flex items-center gap-4">
-                {/* Google icon */}
+                {/* Ícone Google */}
                 <a
                   href="#google"
                   className="w-8 h-8 flex items-center justify-center cursor-pointer hover:opacity-70 transition-opacity"
@@ -112,7 +143,7 @@ const RegisterPage = () => {
                   </svg>
                 </a>
 
-                {/* Facebook icon */}
+                {/* Ícone Facebook */}
                 <a
                   href="#facebook"
                   className="w-8 h-8 flex items-center justify-center cursor-pointer hover:opacity-70 transition-opacity"
@@ -133,15 +164,15 @@ const RegisterPage = () => {
             </div>
           </div>
 
-          {/* Right Column - Visual Area (shoes) */}
+          {/* Coluna direita — Imagens de tênis (idêntico ao RegisterPage) */}
           <div className="hidden lg:flex items-center justify-center relative h-100">
-            {/* Shoe 1 - larger, front */}
+            {/* Tênis 1 — maior, em destaque na frente */}
             <img
               src="/tenis-1-tela-de-cadastro.png"
               alt="Tênis em destaque"
               className="absolute w-80 right-4 bottom-4 drop-shadow-lg z-10 -rotate-15"
             />
-            {/* Shoe 2 - smaller, behind */}
+            {/* Tênis 2 — menor, atrás */}
             <img
               src="/tenis-2-tela-de-cadastro.png"
               alt="Tênis em destaque"
@@ -154,4 +185,4 @@ const RegisterPage = () => {
   )
 }
 
-export default RegisterPage
+export default LoginPage
