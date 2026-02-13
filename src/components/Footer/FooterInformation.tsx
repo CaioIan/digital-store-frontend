@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import RouterLink from '@/components/RouterLink'
 
 interface Information {
   text: string
@@ -34,12 +34,12 @@ const FooterInformation = ({ title, informations }: FooterInformationProps) => {
                 {info.text}
               </a>
             ) : (
-              <Link
+              <RouterLink
                 to={info.link}
                 className="text-white text-base font-normal hover:text-primary transition-colors no-underline"
               >
                 {info.text}
-              </Link>
+              </RouterLink>
             )}
           </li>
         ))}

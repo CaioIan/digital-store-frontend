@@ -4,6 +4,7 @@ import CartPage from '@/pages/CartPage'
 import CheckoutPage from '@/pages/CheckoutPage'
 import HomePage from '@/pages/HomePage'
 import Layout from '@/pages/Layout'
+import LoginPage from '@/pages/LoginPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import ProductListingPage from '@/pages/ProductListingPage'
 import ProductViewPage from '@/pages/ProductViewPage'
@@ -23,6 +24,7 @@ export function MainRouter() {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/checkout/:id" element={<CheckoutPage />} />
           <Route path="/cadastro" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/register-form-page" element={<RegisterFormPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

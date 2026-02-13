@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import RouterLink from '@/components/RouterLink'
 
 const RegisterFormPage = () => {
   const [formData, setFormData] = useState({
@@ -39,12 +39,12 @@ const RegisterFormPage = () => {
         {/* Subtitle */}
         <p className="text-sm text-dark-gray-3 mb-6">
           Já possui uma conta?{' '}
-          <Link
+          <RouterLink
             to="/login"
             className="text-primary font-medium hover:underline"
           >
             Entre aqui.
-          </Link>
+          </RouterLink>
         </p>
 
         {/* Form Card */}

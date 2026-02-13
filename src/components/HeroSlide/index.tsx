@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import RouterLink from '@/components/RouterLink'
 
 interface HeroSlideProps {
   badge?: string
@@ -68,12 +68,12 @@ export function HeroSlide({
           </p>
 
           {/* Botão CTA - quadrado, largo no mobile */}
-          <Link
+          <RouterLink
             to={buttonLink}
             className="mt-2 w-full max-w-xs rounded-md bg-primary px-8 py-4 text-center text-base font-bold text-white transition-all duration-200 hover:bg-tertiary hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 sm:max-w-sm md:w-auto md:px-12 md:py-4"
           >
             {buttonText}
-          </Link>
+          </RouterLink>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { Menu, Search } from 'lucide-react'
 import { useCallback, useState } from 'react'
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import RouterLink from '@/components/RouterLink'
 import logoHeader from '@/assets/logo-header.svg'
 import miniCart from '@/assets/mini-cart.svg'
 import CartModal from '@/components/CartModal'
@@ -59,19 +60,19 @@ const Header = () => {
         {isAuthPage ? (
           <>
             {/* Auth page: Logo left + Entrar right */}
-            <Link to="/" className="flex-shrink-0">
+            <RouterLink to="/" className="flex-shrink-0">
               <img
                 src={logoHeader}
                 alt="Digital Store"
                 className="h-7 w-auto"
               />
-            </Link>
-            <Link
+            </RouterLink>
+            <RouterLink
               to="/login"
               className="h-10 px-6 bg-primary text-white text-sm font-bold rounded flex items-center justify-center"
             >
               Entrar
-            </Link>
+            </RouterLink>
           </>
         ) : (
           <>
@@ -172,32 +173,32 @@ const Header = () => {
 
                 {/* Área de Autenticação */}
                 <div className="p-5 space-y-4 mt-auto">
-                  <Link
+                  <RouterLink
                     to="/login"
                     className="w-full h-12 bg-primary text-white text-base font-bold rounded-lg flex items-center justify-center hover:bg-tertiary active:brightness-90 transition-all"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Entrar
-                  </Link>
-                  <Link
+                  </RouterLink>
+                  <RouterLink
                     to="/cadastro"
                     className="block text-center text-base text-dark-gray-2 underline hover:text-primary transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Cadastre-se
-                  </Link>
+                  </RouterLink>
                 </div>
               </SheetContent>
             </Sheet>
 
             {/* Logo - Centro */}
-            <Link to="/" className="flex-shrink-0">
+            <RouterLink to="/" className="flex-shrink-0">
               <img
                 src={logoHeader}
                 alt="Digital Store"
                 className="h-7 w-auto"
               />
-            </Link>
+            </RouterLink>
 
             {/* Ícones - Direita */}
             <div className="flex items-center">
@@ -283,27 +284,27 @@ const Header = () => {
           )}
           {isAuthPage ? (
             <div className="ml-auto">
-              <Link
+              <RouterLink
                 to="/login"
                 className="w-[114px] h-10 bg-primary text-white text-sm font-bold rounded flex items-center justify-center"
               >
                 Entrar
-              </Link>
+              </RouterLink>
             </div>
           ) : (
             <div className="flex items-center gap-6">
-              <Link
+              <RouterLink
                 to="/cadastro"
                 className="text-base text-dark-gray-2 underline"
               >
                 Cadastre-se
-              </Link>
-              <Link
+              </RouterLink>
+              <RouterLink
                 to="/login"
                 className="w-[114px] h-10 bg-primary text-white text-sm font-bold rounded flex items-center justify-center"
               >
                 Entrar
-              </Link>
+              </RouterLink>
               <div className="relative">
                 <button
                   type="button"

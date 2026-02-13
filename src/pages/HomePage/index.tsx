@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import RouterLink from '@/components/RouterLink'
 import { Gallery } from '@/components/Gallery'
 import { HeroSlide } from '@/components/HeroSlide'
 import ProductCard from '@/components/ProductCard'
@@ -264,12 +264,12 @@ export default function HomePage() {
                 enim ad minim veniam, quis nostrud exercitation ullamco laboris
                 nisi ut aliquip
               </p>
-              <Link
+              <RouterLink
                 to="/products"
                 className="inline-block bg-primary text-white font-bold text-sm px-8 py-3 rounded hover:bg-tertiary transition-colors mt-4"
               >
                 Ver Oferta
-              </Link>
+              </RouterLink>
             </div>
           </div>
         </section>

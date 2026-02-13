@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import RouterLink from '@/components/RouterLink'
 
 interface ProductCardProps {
   id: string
@@ -31,7 +31,7 @@ export default function ProductCard({
   const discountPercentage = calculateDiscount()
 
   return (
-    <Link
+    <RouterLink
       to={`/product/${id}`}
       className="group block rounded-lg transition-shadow hover:shadow-sm"
       aria-label={`Ver detalhes de ${name}`}
@@ -92,6 +92,6 @@ export default function ProductCard({
           )}
         </div>
       </div>
-    </Link>
+    </RouterLink>
   )
 }
