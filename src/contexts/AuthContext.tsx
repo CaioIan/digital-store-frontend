@@ -7,6 +7,11 @@ export interface User {
   cpf: string
   phone: string
   email: string
+  address?: string
+  neighborhood?: string
+  city?: string
+  cep?: string
+  complement?: string
 }
 
 interface AuthContextType {

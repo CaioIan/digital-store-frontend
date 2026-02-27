@@ -34,6 +34,7 @@ interface CartContextType {
   couponCode: string | null
   setShipping: (value: number) => void
   total: number
+  fetchCart: () => Promise<void>
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -264,7 +265,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeCoupon,
       couponCode,
       setShipping,
-      total
+      total,
+      fetchCart
     }),
     [
       items,
@@ -280,7 +282,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       applyCoupon,
       removeCoupon,
       couponCode,
-      total
+      total,
+      fetchCart
     ]
   )
 
