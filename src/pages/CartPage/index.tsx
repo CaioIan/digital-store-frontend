@@ -1,6 +1,3 @@
-import { Minus, Plus } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import ProductCard from '@/components/ProductCard'
 import Section from '@/components/Section'
 import { Button } from '@/components/ui/button'
@@ -8,6 +5,9 @@ import { Input } from '@/components/ui/input'
 import { useCart } from '@/contexts/CartContext'
 import { getProducts } from '@/services/productService'
 import type { Product } from '@/types/Product'
+import { Minus, Plus } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const formatPrice = (value: number) =>
   new Intl.NumberFormat('pt-BR', {
@@ -214,7 +214,7 @@ export default function CartPage() {
                     && item.product.priceDiscount < item.product.price
 
                   return (
-                    <div key={item.product.id}>
+                    <div key={item.id}>
                       {/* Produto: imagem + nome + atributos */}
                       <div className="flex gap-4 items-start mb-5">
                         <div className="w-25 h-25 bg-[#E0D6F6]/40 rounded-lg shrink-0 flex items-center justify-center overflow-hidden p-2">
@@ -250,7 +250,7 @@ export default function CartPage() {
                           <button
                             type="button"
                             onClick={() =>
-                              updateQuantity(item.product.id, item.quantity - 1)
+                              updateQuantity(item.id, item.quantity - 1)
                             }
                             disabled={item.quantity <= 1}
                             className="w-14 h-11 flex items-center justify-center border border-light-gray-2 rounded-md bg-white text-dark-gray-2 hover:bg-light-gray-3 disabled:opacity-40 transition-colors cursor-pointer"
@@ -263,7 +263,7 @@ export default function CartPage() {
                           <button
                             type="button"
                             onClick={() =>
-                              updateQuantity(item.product.id, item.quantity + 1)
+                              updateQuantity(item.id, item.quantity + 1)
                             }
                             className="w-14 h-11 flex items-center justify-center border border-light-gray-2 rounded-md bg-white text-dark-gray-2 hover:bg-light-gray-3 transition-colors cursor-pointer"
                           >
@@ -272,7 +272,7 @@ export default function CartPage() {
                         </div>
                         <button
                           type="button"
-                          onClick={() => removeFromCart(item.product.id)}
+                          onClick={() => removeFromCart(item.id)}
                           className="text-xs text-dark-gray-3 underline hover:text-dark-gray-2 transition-colors cursor-pointer mt-2"
                         >
                           Remover item
@@ -436,7 +436,7 @@ export default function CartPage() {
                 && item.product.priceDiscount < item.product.price
 
               return (
-                <div key={item.product.id} className="py-5 first:pt-0">
+                <div key={item.id} className="py-5 first:pt-0">
                   <div className="grid grid-cols-[1fr_140px_120px_120px] gap-4 items-center">
                     {/* Produto info */}
                     <div className="flex items-start gap-4">
@@ -470,7 +470,7 @@ export default function CartPage() {
                         <button
                           type="button"
                           onClick={() =>
-                            updateQuantity(item.product.id, item.quantity - 1)
+                            updateQuantity(item.id, item.quantity - 1)
                           }
                           disabled={item.quantity <= 1}
                           className="w-8 h-8 flex items-center justify-center border border-light-gray-2 rounded-l text-dark-gray-2 hover:bg-light-gray-3 disabled:opacity-40 transition-colors cursor-pointer"
@@ -483,7 +483,7 @@ export default function CartPage() {
                         <button
                           type="button"
                           onClick={() =>
-                            updateQuantity(item.product.id, item.quantity + 1)
+                            updateQuantity(item.id, item.quantity + 1)
                           }
                           className="w-8 h-8 flex items-center justify-center border border-light-gray-2 rounded-r text-dark-gray-2 hover:bg-light-gray-3 transition-colors cursor-pointer"
                         >
@@ -492,7 +492,7 @@ export default function CartPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => removeFromCart(item.product.id)}
+                        onClick={() => removeFromCart(item.id)}
                         className="text-xs text-dark-gray-3 underline hover:text-dark-gray-2 transition-colors cursor-pointer"
                       >
                         Remover item

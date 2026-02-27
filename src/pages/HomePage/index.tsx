@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react'
 import { Gallery } from '@/components/Gallery'
 import { HeroSlide } from '@/components/HeroSlide'
 import ProductCard from '@/components/ProductCard'
+import { ProductCardSkeleton } from '@/components/ProductCardSkeleton'
 import RouterLink from '@/components/RouterLink'
 import Section from '@/components/Section'
+import { Skeleton } from '@/components/ui/skeleton'
 import { getProducts } from '@/services/productService'
 import type { Product } from '@/types/Product'
+import { useEffect, useState } from 'react'
 
 // Dados do Hero Banner (Seção 5.1)
 const heroSlides = [
@@ -54,6 +56,7 @@ const collections = [
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -64,6 +67,9 @@ export default function HomePage() {
       } catch (err) {
         setError('Erro ao carregar produtos. Tente novamente mais tarde.')
         console.error('Erro ao buscar produtos:', err)
+      } finally {
+        // Small artificial delay to show the nice skeleton in dev
+        setTimeout(() => setIsLoading(false), 300)
       }
     }
 
@@ -72,31 +78,37 @@ export default function HomePage() {
 
   return (
     <div className="space-y-8 lg:space-y-16">
-      {/* Hero Banner com Gallery - Modo Autoplay (Seção 5.1) */}
-      <Gallery
-        slides={heroSlides.map((slide) => ({ src: slide.src, alt: slide.alt }))}
-        width="100%"
-        height="auto"
-        radius="0px"
-        autoplay={true}
-        autoplayDelay={4000}
-        showDots={true}
-        dotsPosition="relative"
-        dotsClassName="pb-6"
-        className="w-full bg-light-gray-3"
-      >
-        {(_slide, index) => (
-          <HeroSlide
-            badge={heroSlides[index].badge}
-            title={heroSlides[index].title}
-            description={heroSlides[index].description}
-            buttonText={heroSlides[index].buttonText}
-            buttonLink={heroSlides[index].buttonLink}
-            imageSrc={heroSlides[index].imageSrc}
-            imageAlt={heroSlides[index].alt}
-          />
-        )}
-      </Gallery>
+      {/* Hero Banner Skeleton (while loading) or Gallery */}
+      {isLoading ? (
+        <div className="w-full h-[500px] md:h-[600px] lg:h-[700px]">
+          <Skeleton className="w-full h-full rounded-none" />
+        </div>
+      ) : (
+        <Gallery
+          slides={heroSlides.map((slide) => ({ src: slide.src, alt: slide.alt }))}
+          width="100%"
+          height="auto"
+          radius="0px"
+          autoplay={true}
+          autoplayDelay={4000}
+          showDots={true}
+          dotsPosition="relative"
+          dotsClassName="pb-6"
+          className="w-full bg-light-gray-3"
+        >
+          {(_slide, index) => (
+            <HeroSlide
+              badge={heroSlides[index].badge}
+              title={heroSlides[index].title}
+              description={heroSlides[index].description}
+              buttonText={heroSlides[index].buttonText}
+              buttonLink={heroSlides[index].buttonLink}
+              imageSrc={heroSlides[index].imageSrc}
+              imageAlt={heroSlides[index].alt}
+            />
+          )}
+        </Gallery>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 lg:px-8 space-y-8 lg:space-y-16">
         {/* Coleções em Destaque (Seção 5.2) */}
@@ -220,6 +232,14 @@ export default function HomePage() {
           {error ? (
             <div className="flex items-center justify-center py-20">
               <p className="text-lg text-error">{error}</p>
+            </div>
+          ) : isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6 lg:gap-x-8 lg:gap-y-6">
+              {Array.from({ length: 8 }).map((_, index) => (
+                 <div key={index} className="h-full w-full">
+                    <ProductCardSkeleton />
+                 </div>
+              ))}
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6 lg:gap-x-8 lg:gap-y-6">

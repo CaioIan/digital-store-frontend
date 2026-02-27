@@ -1,14 +1,14 @@
+import { useCart } from '@/contexts/CartContext'
+import type { Product } from '@/types/Product'
 import { ShoppingCart } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useCart } from '@/contexts/CartContext'
-import type { Product } from '@/types/Product'
 
 interface BuyBoxProps {
   productId: string
   name: string
   image: string
-  reference: string
+  reference?: string
   stars: number
   rating: number
   price: number
@@ -86,10 +86,12 @@ export function BuyBox({
         <h1 className="text-xl lg:text-[32px] font-bold text-dark-gray leading-tight">
           {name}
         </h1>
-        <span className="text-xs text-dark-gray-3">
-          Casual | {reference.split(':')[0]} | REF:
-          {reference.split(':')[1] || reference}
-        </span>
+        {reference && (
+          <span className="text-xs text-dark-gray-3">
+            Casual | {reference.split(':')[0]} | REF:
+            {reference.split(':')[1] || reference}
+          </span>
+        )}
 
         <div className="flex items-center gap-3 mt-2">
           {/* Estrelas de Avaliação */}
