@@ -105,7 +105,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       selectedSize?: string
     ) => {
       if (!isAuthenticated) {
-        alert('Você precisa estar logado para adicionar itens ao carrinho.')
+        window.location.href = '/login'
         return
       }
 

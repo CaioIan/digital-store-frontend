@@ -34,6 +34,7 @@ const RegisterFormPage = () => {
       endereco: '',
       bairro: '',
       cidade: '',
+      estado: '',
       cep: '',
       complemento: ''
     }
@@ -61,11 +62,12 @@ const RegisterFormPage = () => {
       }
 
       const hasAnyAddressField =
-        data.endereco || data.bairro || data.cidade || data.cep
+        data.endereco || data.bairro || data.cidade || data.estado || data.cep
       if (hasAnyAddressField) {
         if (data.endereco) payload.endereco = data.endereco
         if (data.bairro) payload.bairro = data.bairro
         if (data.cidade) payload.cidade = data.cidade
+        if (data.estado) payload.estado = data.estado
         if (data.cep) payload.cep = data.cep
         if (data.complemento) payload.complemento = data.complemento
       }
@@ -392,6 +394,29 @@ const RegisterFormPage = () => {
                     {errors.cidade && (
                       <span className="text-xs text-[#C92071]">
                         {errors.cidade.message}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label
+                      htmlFor="estado"
+                      className="text-xs font-medium text-dark-gray-2"
+                    >
+                      Estado (Sigla)
+                    </label>
+                    <input
+                      id="estado"
+                      type="text"
+                      maxLength={2}
+                      placeholder="Ex: SP"
+                      disabled={loading}
+                      className={getInputStyle('estado')}
+                      {...register('estado')}
+                    />
+                    {errors.estado && (
+                      <span className="text-xs text-[#C92071]">
+                        {errors.estado.message}
                       </span>
                     )}
                   </div>

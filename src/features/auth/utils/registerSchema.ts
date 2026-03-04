@@ -39,6 +39,11 @@ export const registerSchema = z
       .max(100, 'Cidade muito longa')
       .optional()
       .or(z.literal('')),
+    estado: z
+      .string()
+      .max(2, 'A sigla do estado deve ter 2 caracteres')
+      .optional()
+      .or(z.literal('')),
     cep: z.string().max(9, 'CEP muito longo').optional().or(z.literal('')),
     complemento: z
       .string()
@@ -56,6 +61,7 @@ export const registerSchema = z
       data.endereco
       || data.bairro
       || data.cidade
+      || data.estado
       || data.cep
     )
 
@@ -82,6 +88,14 @@ export const registerSchema = z
           message:
             'Cidade é obrigatória quando outros campos de endereço são preenchidos',
           path: ['cidade']
+        })
+      }
+      if (!data.estado) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            'Estado é obrigatório quando outros campos de endereço são preenchidos',
+          path: ['estado']
         })
       }
       if (!data.cep) {

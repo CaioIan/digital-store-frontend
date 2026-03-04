@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { api } from '@/lib/api'
+import axios from 'axios'
 
 export interface RegisterUserPayload {
   firstname: string
@@ -12,6 +12,7 @@ export interface RegisterUserPayload {
   endereco?: string
   bairro?: string
   cidade?: string
+  estado?: string
   cep?: string
   complemento?: string
 }
