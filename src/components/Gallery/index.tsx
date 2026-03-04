@@ -53,6 +53,23 @@ export function Gallery({
   const [api, setApi] = useState<CarouselApi>()
   const [current, setCurrent] = useState(0)
   const thumbContainerRef = useRef<HTMLDivElement>(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(true) // Assumindo verdadeiro inicialmente se houver muitas
+
+  const checkScroll = () => {
+    if (thumbContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = thumbContainerRef.current
+      setCanScrollLeft(scrollLeft > 0)
+      setCanScrollRight(Math.ceil(scrollLeft + clientWidth) < scrollWidth)
+    }
+  }
+
+  // Verificar o scroll na inicialização e resize
+  useEffect(() => {
+    checkScroll()
+    window.addEventListener('resize', checkScroll)
+    return () => window.removeEventListener('resize', checkScroll)
+  }, [slides.length])
 
   const scrollThumbs = (direction: 'left' | 'right') => {
     if (thumbContainerRef.current) {
@@ -198,20 +215,24 @@ export function Gallery({
 
       {/* Thumbnails (Modo Produto - Seção 7.1) */}
       {showThumbs && slides.length > 1 && (
-        <div className="relative group mt-2">
-          <button
-            type="button"
-            onClick={() => scrollThumbs('left')}
-            disabled={!thumbContainerRef.current || thumbContainerRef.current.scrollLeft === 0}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -ml-3 lg:-ml-5 z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white shadow flex items-center justify-center text-dark-gray-2 hover:text-primary hover:bg-light-gray-3 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-0 disabled:pointer-events-none"
-            aria-label="Rolar miniaturas para esquerda"
-          >
-            <ChevronLeft size={20} />
-          </button>
+        <div className="relative group mt-2 flex items-center">
+          {canScrollLeft && (
+            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-ui-background via-ui-background/80 to-transparent pointer-events-none flex items-center justify-start z-10 pb-4">
+              <button
+                type="button"
+                onClick={() => scrollThumbs('left')}
+                className="pointer-events-auto h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-white shadow flex items-center justify-center text-dark-gray-2 hover:text-primary hover:bg-light-gray-3 transition-colors ml-1 lg:-ml-2"
+                aria-label="Rolar miniaturas para esquerda"
+              >
+                <ChevronLeft size={20} />
+              </button>
+            </div>
+          )}
 
           <div 
             ref={thumbContainerRef}
-            className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth px-1"
+            onScroll={checkScroll}
+            className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth px-1 w-full"
             style={{ 
               scrollbarWidth: 'thin', 
               scrollbarColor: '#cccccc transparent' 
@@ -245,14 +266,18 @@ export function Gallery({
             ))}
           </div>
 
-          <button
-            type="button"
-            onClick={() => scrollThumbs('right')}
-            className="absolute right-0 top-1/2 -translate-y-1/2 -mr-3 lg:-mr-5 z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white shadow flex items-center justify-center text-dark-gray-2 hover:text-primary hover:bg-light-gray-3 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-0 disabled:pointer-events-none"
-            aria-label="Rolar miniaturas para direita"
-          >
-            <ChevronRight size={20} />
-          </button>
+          {canScrollRight && (
+            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-ui-background via-ui-background/80 to-transparent pointer-events-none flex items-center justify-end z-10 pb-4">
+              <button
+                type="button"
+                onClick={() => scrollThumbs('right')}
+                className="pointer-events-auto h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-white shadow flex items-center justify-center text-dark-gray-2 hover:text-primary hover:bg-light-gray-3 transition-colors mr-1 lg:-mr-2"
+                aria-label="Rolar miniaturas para direita"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
