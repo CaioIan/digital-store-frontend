@@ -1,14 +1,13 @@
-import Autoplay from 'embla-carousel-autoplay'
-import { type CSSProperties, type ReactNode, useEffect, useState } from 'react'
 import {
-  Carousel,
-  type CarouselApi,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious
+    Carousel,
+    type CarouselApi,
+    CarouselContent,
+    CarouselItem
 } from '@/components/ui/carousel'
 import { cn } from '@/lib/utils'
+import Autoplay from 'embla-carousel-autoplay'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 'react'
 
 export interface GallerySlide {
   src: string
@@ -53,6 +52,17 @@ export function Gallery({
 }: GalleryProps) {
   const [api, setApi] = useState<CarouselApi>()
   const [current, setCurrent] = useState(0)
+  const thumbContainerRef = useRef<HTMLDivElement>(null)
+
+  const scrollThumbs = (direction: 'left' | 'right') => {
+    if (thumbContainerRef.current) {
+      const scrollAmount = 250 // Scroll distance in pixels
+      thumbContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      })
+    }
+  }
 
   // Configurar plugin de autoplay se necessário
   const plugins = autoplay
@@ -156,20 +166,6 @@ export function Gallery({
           ))}
         </CarouselContent>
 
-        {/* Setas de navegação */}
-        <CarouselPrevious
-          className={cn(
-            'left-4 h-12 w-12 border-2 border-white bg-white/80 backdrop-blur-sm hover:bg-white disabled:opacity-50',
-            'text-dark-gray-2 hover:text-primary'
-          )}
-        />
-        <CarouselNext
-          className={cn(
-            'right-4 h-12 w-12 border-2 border-white bg-white/80 backdrop-blur-sm hover:bg-white disabled:opacity-50',
-            'text-dark-gray-2 hover:text-primary'
-          )}
-        />
-
         {/* Indicadores de Slide (Dots) */}
         {showDots && slides.length > 1 && (
           <div
@@ -202,33 +198,61 @@ export function Gallery({
 
       {/* Thumbnails (Modo Produto - Seção 7.1) */}
       {showThumbs && slides.length > 1 && (
-        <div className="flex gap-4 justify-center flex-wrap">
-          {slides.map((slide, index) => (
-            <button
-              key={`thumb-${slide.src}-${index}`}
-              type="button"
-              onClick={() => scrollTo(index)}
-              className={cn(
-                'cursor-pointer overflow-hidden transition-all duration-200 flex items-center justify-center',
-                'h-24 w-24 shrink-0',
-                radiusClass,
-                current === index
-                  ? 'border-2 border-primary ring-2 ring-primary/20'
-                  : 'border-2 border-transparent hover:border-light-gray-2'
-              )}
-              style={{
-                backgroundColor: slide.style?.backgroundColor || '#F5F5F5'
-              }}
-              aria-label={`Ver imagem ${index + 1}`}
-              aria-current={current === index ? true : undefined}
-            >
-              <img
-                src={slide.src}
-                alt={slide.alt || `Miniatura ${index + 1}`}
-                className={`h-full w-full object-${objectFit} p-1`}
-              />
-            </button>
-          ))}
+        <div className="relative group mt-2">
+          <button
+            type="button"
+            onClick={() => scrollThumbs('left')}
+            disabled={!thumbContainerRef.current || thumbContainerRef.current.scrollLeft === 0}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -ml-3 lg:-ml-5 z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white shadow flex items-center justify-center text-dark-gray-2 hover:text-primary hover:bg-light-gray-3 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-0 disabled:pointer-events-none"
+            aria-label="Rolar miniaturas para esquerda"
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          <div 
+            ref={thumbContainerRef}
+            className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth px-1"
+            style={{ 
+              scrollbarWidth: 'thin', 
+              scrollbarColor: '#cccccc transparent' 
+            }}
+          >
+            {slides.map((slide, index) => (
+              <button
+                key={`thumb-${slide.src}-${index}`}
+                type="button"
+                onClick={() => scrollTo(index)}
+                className={cn(
+                  'cursor-pointer overflow-hidden transition-all duration-200 flex items-center justify-center snap-center',
+                  'h-20 w-20 sm:h-24 sm:w-24 shrink-0',
+                  radiusClass,
+                  current === index
+                    ? 'border-2 border-primary ring-2 ring-primary/20'
+                    : 'border-2 border-transparent hover:border-light-gray-2'
+                )}
+                style={{
+                  backgroundColor: slide.style?.backgroundColor || '#F5F5F5'
+                }}
+                aria-label={`Ver imagem ${index + 1}`}
+                aria-current={current === index ? true : undefined}
+              >
+                <img
+                  src={slide.src}
+                  alt={slide.alt || `Miniatura ${index + 1}`}
+                  className={`h-full w-full object-${objectFit} p-1`}
+                />
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => scrollThumbs('right')}
+            className="absolute right-0 top-1/2 -translate-y-1/2 -mr-3 lg:-mr-5 z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white shadow flex items-center justify-center text-dark-gray-2 hover:text-primary hover:bg-light-gray-3 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-0 disabled:pointer-events-none"
+            aria-label="Rolar miniaturas para direita"
+          >
+            <ChevronRight size={20} />
+          </button>
         </div>
       )}
     </div>
