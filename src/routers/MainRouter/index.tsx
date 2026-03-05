@@ -1,3 +1,4 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ScrollToTop } from '@/components/ScrollToTop'
 import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute'
 import LoginPage from '@/features/auth/pages/LoginPage'
@@ -15,7 +16,6 @@ import { NotFoundPage } from '@/pages/NotFoundPage'
 import OrderSuccessPage from '@/pages/OrderSuccessPage'
 import ProductListingPage from '@/pages/ProductListingPage'
 import ProductViewPage from '@/pages/ProductViewPage'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 export function MainRouter() {
   return (
@@ -39,7 +39,10 @@ export function MainRouter() {
             <Route path="/order/:id/success" element={<OrderSuccessPage />} />
             <Route path="/meus-pedidos" element={<MyOrdersPage />} />
             <Route path="/minhas-informacoes" element={<MyInfoPage />} />
-            <Route path="/metodos-pagamento" element={<MyPaymentMethodsPage />} />
+            <Route
+              path="/metodos-pagamento"
+              element={<MyPaymentMethodsPage />}
+            />
             <Route path="/perfil" element={<MyProfilePage />} />
           </Route>
 

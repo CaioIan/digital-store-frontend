@@ -1,13 +1,16 @@
-import RouterLink from '@/components/RouterLink'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import { CheckCircle2, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLocation } from 'react-router-dom'
+import RouterLink from '@/components/RouterLink'
 import type { RegisterUserPayload } from '../../api/userService'
 import { useRegisterMutation } from '../../queries/useRegisterMutation'
-import { type RegisterFormData, registerSchema } from '../../utils/registerSchema'
+import {
+  type RegisterFormData,
+  registerSchema
+} from '../../utils/registerSchema'
 
 const RegisterFormPage = () => {
   const location = useLocation()

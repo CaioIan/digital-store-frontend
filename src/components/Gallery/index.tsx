@@ -1,13 +1,19 @@
-import {
-    Carousel,
-    type CarouselApi,
-    CarouselContent,
-    CarouselItem
-} from '@/components/ui/carousel'
-import { cn } from '@/lib/utils'
 import Autoplay from 'embla-carousel-autoplay'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 'react'
+import {
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
+import {
+  Carousel,
+  type CarouselApi,
+  CarouselContent,
+  CarouselItem
+} from '@/components/ui/carousel'
+import { cn } from '@/lib/utils'
 
 export interface GallerySlide {
   src: string
@@ -229,13 +235,13 @@ export function Gallery({
             </div>
           )}
 
-          <div 
+          <div
             ref={thumbContainerRef}
             onScroll={checkScroll}
             className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth px-1 w-full"
-            style={{ 
-              scrollbarWidth: 'thin', 
-              scrollbarColor: '#cccccc transparent' 
+            style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: '#cccccc transparent'
             }}
           >
             {slides.map((slide, index) => (

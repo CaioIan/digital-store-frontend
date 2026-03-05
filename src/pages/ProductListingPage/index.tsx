@@ -1,18 +1,18 @@
+import { Filter } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { FilterGroup } from '@/components/FilterGroup'
 import ProductCard from '@/components/ProductCard'
 import { ProductCardSkeleton } from '@/components/ProductCardSkeleton'
 import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
 } from '@/components/ui/sheet'
 import { getProducts } from '@/services/productService'
 import type { Product } from '@/types/Product'
-import { Filter } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
 
 // Remove accents from string for better search matching
 function removeAccents(str: string) {
@@ -53,27 +53,42 @@ export default function ProductListingPage() {
   }, [])
 
   // Lista de marcas conhecidas para extrair do nome dos produtos
-  const KNOWN_BRANDS = ['Nike', 'Adidas', 'Puma', 'Reebok', 'New Balance', 'Asics', 'Mizuno', 'Fila', 'Vans', 'Converse']
+  const KNOWN_BRANDS = [
+    'Nike',
+    'Adidas',
+    'Puma',
+    'Reebok',
+    'New Balance',
+    'Asics',
+    'Mizuno',
+    'Fila',
+    'Vans',
+    'Converse'
+  ]
 
   // Derive brand options from product names
   const brandOptions = Array.from(
     new Set(
       products.flatMap((p) =>
         KNOWN_BRANDS.filter((brand) =>
-          removeAccents(p.name.toLowerCase()).includes(removeAccents(brand.toLowerCase()))
+          removeAccents(p.name.toLowerCase()).includes(
+            removeAccents(brand.toLowerCase())
+          )
         )
       )
     )
   ).map((b) => ({ label: b, value: b }))
   const categoryOptions = Array.from(
     new Set(
-      products.flatMap((p) => {
-        // Cada produto pode ter múltiplas categorias
-        if (p.categories && p.categories.length > 0) {
-          return p.categories.map((cat) => cat.name)
-        }
-        return p.category ? [p.category] : []
-      }).filter(Boolean)
+      products
+        .flatMap((p) => {
+          // Cada produto pode ter múltiplas categorias
+          if (p.categories && p.categories.length > 0) {
+            return p.categories.map((cat) => cat.name)
+          }
+          return p.category ? [p.category] : []
+        })
+        .filter(Boolean)
     )
   ).map((c) => ({ label: String(c), value: String(c) }))
   const genderOptions = Array.from(
@@ -105,13 +120,17 @@ export default function ProductListingPage() {
     if (filterBrand.length > 0) {
       result = result.filter((p) =>
         filterBrand.some((brand) =>
-          removeAccents(p.name.toLowerCase()).includes(removeAccents(brand.toLowerCase()))
+          removeAccents(p.name.toLowerCase()).includes(
+            removeAccents(brand.toLowerCase())
+          )
         )
       )
     }
     if (filterCategory.length > 0) {
       result = result.filter((p) => {
-        const productCategories = p.categories?.map((cat) => cat.name) || (p.category ? [p.category] : [])
+        const productCategories =
+          p.categories?.map((cat) => cat.name)
+          || (p.category ? [p.category] : [])
         return productCategories.some((cat) => filterCategory.includes(cat))
       })
     }
@@ -276,9 +295,9 @@ export default function ProductListingPage() {
           ) : isLoading ? (
             <div className="grid grid-cols-2 min-[426px]:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-2 sm:gap-4 md:gap-6 lg:gap-x-8 lg:gap-y-6">
               {Array.from({ length: 12 }).map((_, index) => (
-                 <div key={index} className="h-full w-full">
-                    <ProductCardSkeleton />
-                 </div>
+                <div key={index} className="h-full w-full">
+                  <ProductCardSkeleton />
+                </div>
               ))}
             </div>
           ) : filteredProducts.length === 0 ? (

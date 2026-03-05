@@ -1,8 +1,8 @@
+import { useQuery } from '@tanstack/react-query'
+import { NavLink } from 'react-router-dom'
 import ProfileLayout from '@/components/ProfileLayout'
 import { useAuth } from '@/contexts/AuthContext'
 import { api } from '@/lib/api'
-import { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
 
 /* ─── Tipos ─── */
 
@@ -89,7 +89,8 @@ function OrderRow({ order }: { order: Order }) {
             {firstItem?.product_name ?? 'Pedido'}
             {order.items.length > 1 && (
               <span className="text-light-gray font-normal">
-                {' '}e mais {order.items.length - 1}{' '}
+                {' '}
+                e mais {order.items.length - 1}{' '}
                 {order.items.length - 1 === 1 ? 'item' : 'itens'}
               </span>
             )}
@@ -102,7 +103,9 @@ function OrderRow({ order }: { order: Order }) {
         <span className="text-[11px] font-bold text-dark-gray-2 uppercase tracking-wide md:hidden">
           Status
         </span>
-        <span className={`text-[13px] md:text-sm whitespace-nowrap ${statusInfo.className}`}>
+        <span
+          className={`text-[13px] md:text-sm whitespace-nowrap ${statusInfo.className}`}
+        >
           {statusInfo.label}
         </span>
       </div>
@@ -114,33 +117,27 @@ function OrderRow({ order }: { order: Order }) {
 
 export default function MyOrdersPage() {
   const { isAuthenticated } = useAuth()
-  const [orders, setOrders] = useState<Order[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      if (!isAuthenticated) return
+  const {
+    data: orders = [],
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['orders'],
+    queryFn: async () => {
+      const { data } = await api.get<Order[]>('/orders')
 
-      try {
-        setIsLoading(true)
-        const { data } = await api.get<Order[]>('/orders')
-        
-        const ordersArray = Array.isArray(data) ? [...data] : []
-        // O usuário pediu que fique logo abaixo do ultimo comprado (ordem cronológica crescente)
-        ordersArray.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-        
-        setOrders(ordersArray)
-      } catch (err: any) {
-        console.error('Erro ao carregar pedidos:', err)
-        setError('Não foi possível carregar seus pedidos.')
-      } finally {
-        setIsLoading(false)
-      }
-    }
+      const ordersArray = Array.isArray(data) ? [...data] : []
+      // Ordem cronológica crescente
+      ordersArray.sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      )
 
-    fetchOrders()
-  }, [isAuthenticated])
+      return ordersArray
+    },
+    enabled: isAuthenticated
+  })
 
   return (
     <ProfileLayout>
@@ -173,7 +170,7 @@ export default function MyOrdersPage() {
       {/* Error */}
       {!isLoading && error && (
         <div className="py-12 text-center">
-          <p className="text-error font-medium mb-4">{error}</p>
+          <p className="text-error font-medium mb-4">{error.message}</p>
           <button
             type="button"
             onClick={() => window.location.reload()}

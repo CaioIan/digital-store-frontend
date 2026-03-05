@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { BuyBox } from '@/components/BuyBox'
 import { Gallery } from '@/components/Gallery'
 import ProductCard from '@/components/ProductCard'
@@ -7,8 +9,6 @@ import Section from '@/components/Section'
 import type { CarouselApi } from '@/components/ui/carousel'
 import { getProductById, getProducts } from '@/services/productService'
 import type { Product } from '@/types/Product'
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 
 export default function ProductViewPage() {
   const { id } = useParams<{ id: string }>()
@@ -66,7 +66,12 @@ export default function ProductViewPage() {
       }))
     }
     // Fallback caso não tenha imagens
-    return [{ src: product?.image || '/placeholder.png', alt: product?.name || 'Produto' }]
+    return [
+      {
+        src: product?.image || '/placeholder.png',
+        alt: product?.name || 'Produto'
+      }
+    ]
   }
 
   const handleColorChange = (color: string) => {

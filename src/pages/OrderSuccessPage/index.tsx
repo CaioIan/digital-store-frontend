@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
-import { api } from '@/lib/api'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { api } from '@/lib/api'
 
 const formatPrice = (value: number) =>
   new Intl.NumberFormat('pt-BR', {
@@ -101,24 +101,27 @@ export default function OrderSuccessPage() {
   // Bloco reuitilizável para exibir linhas de dados
   const InfoRow = ({ label, value }: { label: string; value: string }) => (
     <div className="flex flex-col mb-1 last:mb-0">
-       <span className="text-dark-gray-2 font-bold text-sm leading-tight">{label}</span>
-       <span className="text-light-gray-2 text-xs leading-tight mt-0.5">{value}</span>
+      <span className="text-dark-gray-2 font-bold text-sm leading-tight">
+        {label}
+      </span>
+      <span className="text-light-gray-2 text-xs leading-tight mt-0.5">
+        {value}
+      </span>
     </div>
   )
 
   return (
     <div className="min-h-screen bg-[#F9F8FE] py-8 lg:py-16 px-4">
       <div className="max-w-2xl mx-auto">
-        
         {/* Receipt Card */}
         <div className="bg-white rounded-[4px] px-6 py-8 lg:p-10 flex flex-col items-center">
-          
           {/* Header */}
           <div className="mb-4">
             <span className="text-4xl text-[#F6AA1C]">🎉</span>
           </div>
           <h1 className="text-[28px] lg:text-[32px] font-bold text-dark-gray-2 mb-8 text-center leading-tight">
-            Compra Realizada<br className="lg:hidden" /> com sucesso!
+            Compra Realizada
+            <br className="lg:hidden" /> com sucesso!
           </h1>
 
           <div className="w-full text-left">
@@ -141,8 +144,14 @@ export default function OrderSuccessPage() {
                 Informações de Entrega
               </h2>
               <div className="space-y-3">
-                <InfoRow label="Endereço" value={order.delivery_address.address} />
-                <InfoRow label="Bairro" value={order.delivery_address.neighborhood} />
+                <InfoRow
+                  label="Endereço"
+                  value={order.delivery_address.address}
+                />
+                <InfoRow
+                  label="Bairro"
+                  value={order.delivery_address.neighborhood}
+                />
                 <InfoRow label="Cidade" value={order.delivery_address.city} />
                 <InfoRow label="CEP" value={order.delivery_address.cep} />
               </div>
@@ -154,13 +163,21 @@ export default function OrderSuccessPage() {
                 Informações de Pagamento
               </h2>
               <div className="space-y-3">
-                <InfoRow 
-                  label="Método" 
-                  value={order.payment_info.method === 'credit-card' ? 'Cartão de Crédito (Simulação)' : 'Boleto Bancário'} 
+                <InfoRow
+                  label="Método"
+                  value={
+                    order.payment_info.method === 'credit-card'
+                      ? 'Cartão de Crédito (Simulação)'
+                      : 'Boleto Bancário'
+                  }
                 />
-                {order.payment_info.method === 'credit-card' && order.payment_info.installments && (
-                   <InfoRow label="Parcelas" value={`${order.payment_info.installments}x`} />
-                )}
+                {order.payment_info.method === 'credit-card'
+                  && order.payment_info.installments && (
+                    <InfoRow
+                      label="Parcelas"
+                      value={`${order.payment_info.installments}x`}
+                    />
+                  )}
               </div>
             </div>
 
@@ -180,7 +197,7 @@ export default function OrderSuccessPage() {
                       />
                     </div>
                     <p className="text-sm font-bold text-dark-gray-2 flex-1 leading-snug">
-                       {item.product_name}
+                      {item.product_name}
                     </p>
                   </div>
                 ))}
@@ -189,37 +206,42 @@ export default function OrderSuccessPage() {
 
             {/* Total Box */}
             <div className="bg-[#F6AA1C]/10 rounded-xl p-6 w-full mb-10 text-center">
-               <span className="block text-light-gray-2 text-[15px] mb-1">Total</span>
-               <span className="block text-2xl font-bold text-dark-gray-2 mb-1">
-                 {formatPrice(order.summary.total)}
-               </span>
-               {order.payment_info.method === 'credit-card' && order.payment_info.installments && (
-                 <span className="block text-xs text-light-gray-2">
-                   ou {order.payment_info.installments}x de {formatPrice(order.summary.total / order.payment_info.installments)} sem juros
-                 </span>
-               )}
+              <span className="block text-light-gray-2 text-[15px] mb-1">
+                Total
+              </span>
+              <span className="block text-2xl font-bold text-dark-gray-2 mb-1">
+                {formatPrice(order.summary.total)}
+              </span>
+              {order.payment_info.method === 'credit-card'
+                && order.payment_info.installments && (
+                  <span className="block text-xs text-light-gray-2">
+                    ou {order.payment_info.installments}x de{' '}
+                    {formatPrice(
+                      order.summary.total / order.payment_info.installments
+                    )}{' '}
+                    sem juros
+                  </span>
+                )}
             </div>
 
             {/* Actions */}
             <div className="flex flex-col items-center justify-center gap-6 w-full">
-               <button 
-                  onClick={() => window.print()}
-                  className="text-light-gray text-sm underline hover:text-dark-gray-2 transition-colors cursor-pointer"
-               >
-                 Imprimir Recibo
-               </button>
-               
-               <Button 
-                 onClick={() => navigate('/')}
-                 className="w-full max-w-[400px] h-[50px] bg-[#F6AA1C] hover:bg-[#F6AA1C]/90 text-white font-bold text-base rounded-lg transition-colors cursor-pointer"
-               >
-                 Voltar para Home
-               </Button>
-            </div>
+              <button
+                onClick={() => window.print()}
+                className="text-light-gray text-sm underline hover:text-dark-gray-2 transition-colors cursor-pointer"
+              >
+                Imprimir Recibo
+              </button>
 
+              <Button
+                onClick={() => navigate('/')}
+                className="w-full max-w-[400px] h-[50px] bg-[#F6AA1C] hover:bg-[#F6AA1C]/90 text-white font-bold text-base rounded-lg transition-colors cursor-pointer"
+              >
+                Voltar para Home
+              </Button>
+            </div>
           </div>
         </div>
-
       </div>
     </div>
   )

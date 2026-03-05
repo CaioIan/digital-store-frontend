@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Gallery } from '@/components/Gallery'
 import { HeroSlide } from '@/components/HeroSlide'
 import ProductCard from '@/components/ProductCard'
@@ -7,7 +8,6 @@ import Section from '@/components/Section'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getProducts } from '@/services/productService'
 import type { Product } from '@/types/Product'
-import { useEffect, useState } from 'react'
 
 // Dados do Hero Banner (Seção 5.1)
 const heroSlides = [
@@ -85,7 +85,10 @@ export default function HomePage() {
         </div>
       ) : (
         <Gallery
-          slides={heroSlides.map((slide) => ({ src: slide.src, alt: slide.alt }))}
+          slides={heroSlides.map((slide) => ({
+            src: slide.src,
+            alt: slide.alt
+          }))}
           width="100%"
           height="auto"
           radius="0px"
@@ -236,9 +239,9 @@ export default function HomePage() {
           ) : isLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6 lg:gap-x-8 lg:gap-y-6">
               {Array.from({ length: 8 }).map((_, index) => (
-                 <div key={index} className="h-full w-full">
-                    <ProductCardSkeleton />
-                 </div>
+                <div key={index} className="h-full w-full">
+                  <ProductCardSkeleton />
+                </div>
               ))}
             </div>
           ) : (

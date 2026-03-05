@@ -20,7 +20,8 @@ export default function ProfileLayout({ children }: { children: ReactNode }) {
 
   const checkScroll = () => {
     if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
+      const { scrollLeft, scrollWidth, clientWidth } =
+        scrollContainerRef.current
       setCanScrollLeft(scrollLeft > 0)
       setCanScrollRight(Math.ceil(scrollLeft + clientWidth) < scrollWidth)
     }

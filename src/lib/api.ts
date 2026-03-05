@@ -11,8 +11,19 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('@DigitalStore:user')
-      window.location.href = '/login'
+      try {
+        localStorage.removeItem('@DigitalStore:user')
+      } catch (e) {
+        // Ignora erro se não conseguir remover
+      }
+
+      const currentPath = window.location.pathname
+      const publicPaths = ['/login', '/cadastro', '/register-form-page', '/']
+
+      // Só redireciona para login se o usuário não estiver em uma página pública/auth
+      if (!publicPaths.includes(currentPath)) {
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }

@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useState
+} from 'react'
 
 export interface User {
   id: string
@@ -39,20 +45,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   })
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem('@DigitalStore:user', JSON.stringify(user))
-    } else {
-      localStorage.removeItem('@DigitalStore:user')
+    try {
+      if (user) {
+        localStorage.setItem('@DigitalStore:user', JSON.stringify(user))
+      } else {
+        localStorage.removeItem('@DigitalStore:user')
+      }
+    } catch (e) {
+      console.warn('Erro ao acessar localStorage', e)
     }
   }, [user])
 
   const logout = () => {
     setUser(null)
-    localStorage.removeItem('@DigitalStore:user')
+    try {
+      localStorage.removeItem('@DigitalStore:user')
+    } catch (e) {
+      // Ignora erro
+    }
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser, isAuthenticated: !!user, logout }}>
+    <AuthContext.Provider
+      value={{ user, setUser, isAuthenticated: !!user, logout }}
+    >
       {children}
     </AuthContext.Provider>
   )

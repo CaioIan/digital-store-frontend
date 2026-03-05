@@ -1,6 +1,6 @@
+import { useEffect, useRef } from 'react'
 import RouterLink from '@/components/RouterLink'
 import { useCart } from '@/contexts/CartContext'
-import { useEffect, useRef } from 'react'
 
 const formatPrice = (value: number) =>
   new Intl.NumberFormat('pt-BR', {

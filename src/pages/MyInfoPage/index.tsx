@@ -8,7 +8,9 @@ import { useEffect, useState } from 'react';
 function InfoRow({ label, value }: { label: string; value?: string }) {
   return (
     <div className="flex items-baseline gap-2 py-0.5">
-      <span className="text-sm font-medium text-[#8F8F8F] shrink-0">{label}:</span>
+      <span className="text-sm font-medium text-[#8F8F8F] shrink-0">
+        {label}:
+      </span>
       <span className="text-sm font-semibold text-[#474747]">
         {value || '—'}
       </span>
@@ -40,6 +42,10 @@ function AddressEditForm({
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  useEffect(() => {
+    setForm(initialData)
+  }, [initialData])
+
   const handleChange = (field: keyof AddressFormData, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
@@ -48,7 +54,13 @@ function AddressEditForm({
     e.preventDefault()
     setError(null)
 
-    if (!form.address || !form.neighborhood || !form.city || !form.state || !form.cep) {
+    if (
+      !form.address
+      || !form.neighborhood
+      || !form.city
+      || !form.state
+      || !form.cep
+    ) {
       setError('Preencha todos os campos obrigatórios.')
       return
     }
@@ -63,7 +75,11 @@ function AddressEditForm({
     }
   }
 
-  const fields: { key: keyof AddressFormData; label: string; required: boolean }[] = [
+  const fields: {
+    key: keyof AddressFormData
+    label: string
+    required: boolean
+  }[] = [
     { key: 'address', label: 'Endereço', required: true },
     { key: 'neighborhood', label: 'Bairro', required: true },
     { key: 'city', label: 'Cidade', required: true },
@@ -73,13 +89,19 @@ function AddressEditForm({
   ]
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#F4F3FF] border border-[#E0DEFF] rounded-lg p-5 mt-4 space-y-4 animate-pulse-form">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-[#F4F3FF] border border-[#E0DEFF] rounded-lg p-5 mt-4 space-y-4 animate-pulse-form"
+    >
       <p className="text-xs text-dark-gray-3 mb-1">
         ✏️ Editando endereço de entrega
       </p>
       {fields.map(({ key, label, required }) => (
         <div key={key} className="flex flex-col gap-1">
-          <label htmlFor={`addr-${key}`} className="text-xs font-medium text-dark-gray-2">
+          <label
+            htmlFor={`addr-${key}`}
+            className="text-xs font-medium text-dark-gray-2"
+          >
             {label} {required && <span className="text-primary">*</span>}
           </label>
           <input
@@ -93,9 +115,7 @@ function AddressEditForm({
         </div>
       ))}
 
-      {error && (
-        <p className="text-xs text-error">{error}</p>
-      )}
+      {error && <p className="text-xs text-error">{error}</p>}
 
       <div className="flex gap-3 pt-2">
         <button
@@ -240,7 +260,14 @@ export default function MyInfoPage() {
               <div className="space-y-4">
                 <InfoRow label="Endereço" value={user.address} />
                 <InfoRow label="Bairro" value={user.neighborhood} />
-                <InfoRow label="Cidade" value={user.city ? `${user.city}${user.state ? `, ${user.state}` : ''}` : undefined} />
+                <InfoRow
+                  label="Cidade"
+                  value={
+                    user.city
+                      ? `${user.city}${user.state ? `, ${user.state}` : ''}`
+                      : undefined
+                  }
+                />
                 <InfoRow label="CEP" value={user.cep} />
                 {user.complement && (
                   <InfoRow label="Complemento" value={user.complement} />

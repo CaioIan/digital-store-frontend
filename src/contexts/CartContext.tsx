@@ -1,16 +1,16 @@
+import {
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react'
 import { api } from '@/lib/api'
-import { mapApiProduct, type ApiProduct } from '@/services/productService'
+import { type ApiProduct, mapApiProduct } from '@/services/productService'
 import type { CartItem } from '@/types/CartItem'
 import type { Product } from '@/types/Product'
-import {
-    createContext,
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useState,
-    type ReactNode
-} from 'react'
 import { useAuth } from './AuthContext'
 
 interface CartContextType {
@@ -114,9 +114,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
         // Find if this exact combination already exists locally
         const existingInfo = prev.find(
           (item) =>
-            item.product.id === product.id &&
-            item.selectedColor === selectedColor &&
-            item.selectedSize === selectedSize
+            item.product.id === product.id
+            && item.selectedColor === selectedColor
+            && item.selectedSize === selectedSize
         )
         if (existingInfo) {
           return prev.map((item) =>

@@ -1,26 +1,29 @@
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog'
-import { useAuth } from '@/contexts/AuthContext'
-import { useLogoutMutation } from '@/features/auth/queries/useLogoutMutation'
 import { LogOut } from 'lucide-react'
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog'
+import { useAuth } from '@/contexts/AuthContext'
+import { useLogoutMutation } from '@/features/auth/queries/useLogoutMutation'
 
 interface MobileUserProfileMenuProps {
   onCloseMobileMenu: () => void
 }
 
-export const MobileUserProfileMenu = ({ onCloseMobileMenu }: MobileUserProfileMenuProps) => {
+export const MobileUserProfileMenu = ({
+  onCloseMobileMenu
+}: MobileUserProfileMenuProps) => {
   const { user, logout } = useAuth()
-  const { mutateAsync: performLogout, isPending: isLoggingOut } = useLogoutMutation()
+  const { mutateAsync: performLogout, isPending: isLoggingOut } =
+    useLogoutMutation()
   const navigate = useNavigate()
-  
+
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
 
   const handleOpenLogoutModal = () => {
@@ -50,7 +53,7 @@ export const MobileUserProfileMenu = ({ onCloseMobileMenu }: MobileUserProfileMe
             {user?.email}
           </p>
         </div>
-        
+
         <div className="space-y-1">
           <NavLink
             to="/minhas-informacoes"
@@ -92,9 +95,12 @@ export const MobileUserProfileMenu = ({ onCloseMobileMenu }: MobileUserProfileMe
       <Dialog open={isLogoutModalOpen} onOpenChange={setIsLogoutModalOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle className="text-title-medium-bold">Sair da Conta</DialogTitle>
+            <DialogTitle className="text-title-medium-bold">
+              Sair da Conta
+            </DialogTitle>
             <DialogDescription className="text-body-medium">
-              Você tem certeza que deseja sair de sua conta? Você precisará fazer login novamente para acessar seus pedidos e carrinho.
+              Você tem certeza que deseja sair de sua conta? Você precisará
+              fazer login novamente para acessar seus pedidos e carrinho.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0 mt-4">

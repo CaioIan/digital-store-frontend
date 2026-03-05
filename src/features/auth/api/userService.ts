@@ -1,5 +1,5 @@
-import { api } from '@/lib/api'
 import axios from 'axios'
+import { api } from '@/lib/api'
 
 export interface RegisterUserPayload {
   firstname: string

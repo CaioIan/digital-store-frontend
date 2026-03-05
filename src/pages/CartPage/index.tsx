@@ -1,3 +1,6 @@
+import { Minus, Plus } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ProductCard from '@/components/ProductCard'
 import Section from '@/components/Section'
 import { Button } from '@/components/ui/button'
@@ -5,9 +8,6 @@ import { Input } from '@/components/ui/input'
 import { useCart } from '@/contexts/CartContext'
 import { getProducts } from '@/services/productService'
 import type { Product } from '@/types/Product'
-import { Minus, Plus } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 const formatPrice = (value: number) =>
   new Intl.NumberFormat('pt-BR', {

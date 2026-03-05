@@ -1,25 +1,26 @@
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog'
-import { useAuth } from '@/contexts/AuthContext'
-import { useLogoutMutation } from '@/features/auth/queries/useLogoutMutation'
 import { LogOut, User } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog'
+import { useAuth } from '@/contexts/AuthContext'
+import { useLogoutMutation } from '@/features/auth/queries/useLogoutMutation'
 
 export const UserProfileMenu = () => {
   const { user, logout } = useAuth()
-  const { mutateAsync: performLogout, isPending: isLoggingOut } = useLogoutMutation()
+  const { mutateAsync: performLogout, isPending: isLoggingOut } =
+    useLogoutMutation()
   const navigate = useNavigate()
-  
+
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
-  
+
   const menuRef = useRef<HTMLDivElement>(null)
 
   // Fecha o menu se clicar fora
@@ -55,7 +56,11 @@ export const UserProfileMenu = () => {
 
   return (
     <>
-      <div className="relative flex items-center gap-2 cursor-pointer" ref={menuRef} onClick={() => setIsMenuOpen(!isMenuOpen)}>
+      <div
+        className="relative flex items-center gap-2 cursor-pointer"
+        ref={menuRef}
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
         {/* User Icon + Greeting */}
         <User size={22} className="text-primary" />
         <span className="text-sm font-medium text-dark-gray-2 whitespace-nowrap">
@@ -73,9 +78,9 @@ export const UserProfileMenu = () => {
                 {user?.email}
               </p>
             </div>
-            
+
             <div className="border-t border-light-gray-3" />
-            
+
             <div className="p-1">
               <button
                 type="button"
@@ -96,7 +101,8 @@ export const UserProfileMenu = () => {
           <DialogHeader>
             <DialogTitle>Sair da Conta</DialogTitle>
             <DialogDescription>
-              Você tem certeza que deseja sair de sua conta? Você precisará fazer login novamente para acessar seus pedidos e carrinho.
+              Você tem certeza que deseja sair de sua conta? Você precisará
+              fazer login novamente para acessar seus pedidos e carrinho.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0 mt-4">

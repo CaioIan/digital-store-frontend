@@ -1,3 +1,6 @@
+import { Menu, Search } from 'lucide-react'
+import { useCallback, useState } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
 import logoHeader from '@/assets/logo-header.svg'
 import miniCart from '@/assets/mini-cart.svg'
 import CartModal from '@/components/CartModal'
@@ -11,19 +14,16 @@ import {
 } from '@/components/ui/sheet'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
-import { Menu, Search } from 'lucide-react'
-import { useCallback, useState } from 'react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import Logo from '../Logo'
+import { DesktopSearch } from './DesktopSearch'
+import { MobileSearch } from './MobileSearch'
 import { MobileUserProfileMenu } from './MobileUserProfileMenu'
 import { UserProfileMenu } from './UserProfileMenu'
 
 const Header = () => {
-  const [searchTerm, setSearchTerm] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const [cartModalOpen, setCartModalOpen] = useState(false)
-  const navigate = useNavigate()
   const location = useLocation()
   const { itemCount } = useCart()
   const { user, isAuthenticated } = useAuth()
@@ -40,15 +40,6 @@ const Header = () => {
   const closeCartModal = useCallback(() => {
     setCartModalOpen(false)
   }, [])
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchTerm.trim()) {
-      navigate(`/products?filter=${encodeURIComponent(searchTerm)}`)
-      setMobileMenuOpen(false)
-      setMobileSearchOpen(false)
-    }
-  }
 
   const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
     `relative inline-block py-3 text-base font-normal text-dark-gray-2 no-underline hover:text-primary transition-colors ${
@@ -178,7 +169,9 @@ const Header = () => {
                 {/* Área de Autenticação */}
                 <div className="p-5 space-y-4 mt-auto">
                   {isAuthenticated ? (
-                    <MobileUserProfileMenu onCloseMobileMenu={() => setMobileMenuOpen(false)} />
+                    <MobileUserProfileMenu
+                      onCloseMobileMenu={() => setMobileMenuOpen(false)}
+                    />
                   ) : (
                     <>
                       <RouterLink
@@ -247,51 +240,19 @@ const Header = () => {
 
       {/* Mobile Search Expandido */}
       {!isAuthPage && mobileSearchOpen && (
-        <div className="lg:hidden px-4 pb-3">
-          <form className="relative" onSubmit={handleSearch}>
-            <input
-              type="text"
-              placeholder="Pesquisar produto..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-10 px-4 pr-12 rounded-lg bg-light-gray-3 text-sm text-dark-gray-2 placeholder:text-light-gray-2 outline-none"
-            />
-            <button
-              type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-light-gray"
-              aria-label="Buscar"
-            >
-              <Search size={18} />
-            </button>
-          </form>
-        </div>
+        <MobileSearch
+          onSearchComplete={() => {
+            setMobileMenuOpen(false)
+            setMobileSearchOpen(false)
+          }}
+        />
       )}
 
       {/* Desktop Header */}
       <div className="hidden lg:block py-6 bg-white">
         <div className="max-w-[1440px] mx-auto px-6 xl:px-[100px] flex items-center gap-10">
           <Logo />
-          {!isAuthPage && (
-            <form
-              className="flex-1 max-w-[560px] relative"
-              onSubmit={handleSearch}
-            >
-              <input
-                type="text"
-                placeholder="Procurar produto..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full h-[60px] px-6 pr-14 rounded-lg bg-light-gray-3 text-base text-dark-gray-2 placeholder:text-light-gray-2 outline-none"
-              />
-              <button
-                type="submit"
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-light-gray"
-                aria-label="Buscar"
-              >
-                <Search size={20} />
-              </button>
-            </form>
-          )}
+          {!isAuthPage && <DesktopSearch />}
           {isAuthPage ? (
             <div className="ml-auto">
               <RouterLink
