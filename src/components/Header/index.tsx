@@ -3,11 +3,11 @@ import miniCart from '@/assets/mini-cart.svg'
 import CartModal from '@/components/CartModal'
 import RouterLink from '@/components/RouterLink'
 import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
 } from '@/components/ui/sheet'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
@@ -15,6 +15,7 @@ import { Menu, Search } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import Logo from '../Logo'
+import { MobileUserProfileMenu } from './MobileUserProfileMenu'
 import { UserProfileMenu } from './UserProfileMenu'
 
 const Header = () => {
@@ -92,7 +93,7 @@ const Header = () => {
               </SheetTrigger>
               <SheetContent
                 side="left"
-                className="w-[80%] max-w-[320px] bg-white p-0 flex flex-col"
+                className="w-[80%] max-w-[320px] bg-white p-0 flex flex-col overflow-y-auto"
                 aria-label="Menu de navegação"
               >
                 {/* Cabeçalho do Sheet - Logo e Branding */}
@@ -177,17 +178,7 @@ const Header = () => {
                 {/* Área de Autenticação */}
                 <div className="p-5 space-y-4 mt-auto">
                   {isAuthenticated ? (
-                    <div className="flex flex-col gap-4">
-                      <span className="block text-center text-base text-dark-gray-2 font-medium">
-                        Olá, {user?.firstname}!
-                      </span>
-                      {/* Note: The main logout logic is now only inside UserProfileMenu.
-                          For mobile, we will simply use the Desktop's UserProfileMenu or mimic its visual
-                          for now, we'll mount the complete UserProfileMenu inside this container. */}
-                      <div className="flex justify-center">
-                        <UserProfileMenu />
-                      </div>
-                    </div>
+                    <MobileUserProfileMenu onCloseMobileMenu={() => setMobileMenuOpen(false)} />
                   ) : (
                     <>
                       <RouterLink
@@ -287,10 +278,10 @@ const Header = () => {
             >
               <input
                 type="text"
-                placeholder="Tênis"
+                placeholder="Procurar produto..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full h-[52px] px-5 pr-12 rounded-lg bg-light-gray-3 text-base text-dark-gray-2 placeholder:text-light-gray-2 outline-none"
+                className="w-full h-[60px] px-6 pr-14 rounded-lg bg-light-gray-3 text-base text-dark-gray-2 placeholder:text-light-gray-2 outline-none"
               />
               <button
                 type="submit"
@@ -311,7 +302,7 @@ const Header = () => {
               </RouterLink>
             </div>
           ) : (
-            <div className="flex items-center gap-5">
+            <div className="flex items-center ml-[232px] gap-[29px]">
               <div className="relative">
                 <button
                   type="button"

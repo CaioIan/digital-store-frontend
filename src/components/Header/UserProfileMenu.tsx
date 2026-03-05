@@ -57,7 +57,7 @@ export const UserProfileMenu = () => {
     <>
       <div className="relative flex items-center gap-2 cursor-pointer" ref={menuRef} onClick={() => setIsMenuOpen(!isMenuOpen)}>
         {/* User Icon + Greeting */}
-        <User size={22} className="text-dark-gray-2" />
+        <User size={22} className="text-primary" />
         <span className="text-sm font-medium text-dark-gray-2 whitespace-nowrap">
           Olá {user?.firstname}
         </span>

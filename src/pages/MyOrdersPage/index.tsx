@@ -27,27 +27,27 @@ interface Order {
 const statusMap: Record<string, { label: string; className: string }> = {
   pending: {
     label: 'Produto em trânsito',
-    className: 'text-primary font-bold'
+    className: 'text-warning font-bold'
   },
   in_transit: {
     label: 'Produto em trânsito',
-    className: 'text-primary font-bold'
+    className: 'text-warning font-bold'
   },
   completed: {
     label: 'Finalizado',
-    className: 'text-dark-gray-2 font-medium'
+    className: 'text-[#8F8F8F] font-semibold'
   },
   cancelled: {
     label: 'Cancelado',
-    className: 'text-primary font-bold'
+    className: 'text-error font-bold'
   }
 }
 
 function getStatusInfo(status: string) {
   return (
     statusMap[status] ?? {
-      label: status,
-      className: 'text-dark-gray-2 font-medium'
+      label: 'Produto em trânsito',
+      className: 'text-warning font-bold'
     }
   )
 }
@@ -64,40 +64,48 @@ function OrderRow({ order }: { order: Order }) {
   const statusInfo = getStatusInfo(order.status)
 
   return (
-    <div className="flex items-center gap-4 py-5 border-b border-light-gray-3 last:border-b-0">
-      {/* Thumbnail */}
-      <div className="w-16 h-16 shrink-0 rounded bg-[#E2E3FF] flex items-center justify-center overflow-hidden p-1">
-        {firstItem ? (
-          <img
-            src={firstItem.image_url}
-            alt={firstItem.product_name}
-            className="w-full h-full object-contain mix-blend-multiply"
-          />
-        ) : (
-          <div className="w-full h-full bg-light-gray-3 rounded" />
-        )}
-      </div>
-
-      {/* Info */}
-      <div className="flex-1 min-w-0">
-        <p className="text-xs text-light-gray mb-0.5">
-          Pedido nº {formatOrderId(order.id)}
-        </p>
-        <p className="text-sm font-bold text-dark-gray-2 leading-snug truncate">
-          {firstItem?.product_name ?? 'Pedido'}
-          {order.items.length > 1 && (
-            <span className="text-light-gray font-normal">
-              {' '}e mais {order.items.length - 1}{' '}
-              {order.items.length - 1 === 1 ? 'item' : 'itens'}
-            </span>
+    <div className="flex flex-col md:flex-row md:items-center py-5 border-b border-light-gray-3 last:border-b-0 gap-4 md:gap-5">
+      {/* Top: Image and Text */}
+      <div className="flex gap-[14px] flex-1 items-start md:items-center min-w-0 w-full">
+        {/* Thumbnail */}
+        <div className="w-[72px] h-[72px] shrink-0 rounded-[4px] bg-[#E2E3FF] flex items-center justify-center p-2">
+          {firstItem ? (
+            <img
+              src={firstItem.image_url}
+              alt={firstItem.product_name}
+              className="w-full h-full object-contain mix-blend-multiply"
+            />
+          ) : (
+            <div className="w-full h-full bg-light-gray-3 rounded-[4px]" />
           )}
-        </p>
+        </div>
+
+        {/* Info */}
+        <div className="flex flex-col flex-1 min-w-0 pt-0.5 md:pt-0">
+          <span className="text-[11px] font-medium text-[#8F8F8F] tracking-wide mb-1 leading-none">
+            Pedido nᵒ {formatOrderId(order.id)}
+          </span>
+          <h3 className="text-[13px] md:text-sm font-bold text-dark-gray leading-[1.3] pt-1">
+            {firstItem?.product_name ?? 'Pedido'}
+            {order.items.length > 1 && (
+              <span className="text-light-gray font-normal">
+                {' '}e mais {order.items.length - 1}{' '}
+                {order.items.length - 1 === 1 ? 'item' : 'itens'}
+              </span>
+            )}
+          </h3>
+        </div>
       </div>
 
-      {/* Status Badge */}
-      <span className={`shrink-0 text-sm whitespace-nowrap ${statusInfo.className}`}>
-        {statusInfo.label}
-      </span>
+      {/* Bottom: Status */}
+      <div className="flex items-center justify-between md:justify-end w-full md:w-auto mt-1 md:mt-0">
+        <span className="text-[11px] font-bold text-dark-gray-2 uppercase tracking-wide md:hidden">
+          Status
+        </span>
+        <span className={`text-[13px] md:text-sm whitespace-nowrap ${statusInfo.className}`}>
+          {statusInfo.label}
+        </span>
+      </div>
     </div>
   )
 }
@@ -117,7 +125,12 @@ export default function MyOrdersPage() {
       try {
         setIsLoading(true)
         const { data } = await api.get<Order[]>('/orders')
-        setOrders(Array.isArray(data) ? data : [])
+        
+        const ordersArray = Array.isArray(data) ? [...data] : []
+        // O usuário pediu que fique logo abaixo do ultimo comprado (ordem cronológica crescente)
+        ordersArray.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+        
+        setOrders(ordersArray)
       } catch (err: any) {
         console.error('Erro ao carregar pedidos:', err)
         setError('Não foi possível carregar seus pedidos.')
@@ -132,11 +145,11 @@ export default function MyOrdersPage() {
   return (
     <ProfileLayout>
       {/* Header */}
-      <div className="flex items-center justify-between mb-2 pb-4 border-b border-light-gray-3">
-        <h1 className="text-base font-bold text-dark-gray-2">
+      <div className="flex items-center justify-between mb-0 pb-4 border-b border-light-gray-3">
+        <h1 className="text-[14px] md:text-base font-bold text-dark-gray">
           Meus Pedidos
         </h1>
-        <span className="text-xs font-bold text-dark-gray-2 uppercase tracking-wide">
+        <span className="text-xs font-bold text-dark-gray-2 uppercase hidden md:inline-block">
           Status
         </span>
       </div>

@@ -16,6 +16,10 @@
   --color-success: #52ca76;
   --color-warning: #f6aa1c;
 
+  /* Gradients */
+  --background-image-primary-g: linear-gradient(180deg, var(--color-primary) 0%, rgba(201, 32, 113, 0.2) 100%);
+  --background-image-secondary-g: linear-gradient(180deg, var(--color-secondary) 0%, rgba(181, 182, 242, 0.2) 100%);
+
   /* Escala de Cinza */
   --color-dark-gray: #1f1f1f;
   --color-dark-gray-2: #474747;
@@ -141,7 +145,117 @@
     @apply border-ui-border outline-ui-ring/50;
   }
   body {
-    @apply bg-ui-background text-ui-foreground;
+    @apply bg-ui-background text-ui-foreground font-sans;
+  }
+
+  /* ==========================================================
+     TYPOGRAPHY SYSTEM (Desktop & Mobile Unified)
+     Baseado nas especificações do Figma
+     As classes alteram de celular para desktop automaticamente
+     ========================================================== */
+
+  /* --- Titles (Displays on Mobile / Titles on Desktop) --- */
+  
+  .text-title-large {
+    @apply text-4xl lg:text-5xl leading-tight tracking-tight text-dark-gray;
+  }
+  .text-title-large-bold {
+    @apply text-4xl lg:text-5xl leading-tight tracking-tight text-dark-gray font-bold;
+  }
+
+  .text-title-medium {
+    @apply text-3xl lg:text-4xl leading-snug tracking-tight text-dark-gray;
+  }
+  .text-title-medium-bold {
+    @apply text-3xl lg:text-4xl leading-snug tracking-tight text-dark-gray font-bold;
+  }
+
+  .text-title-small {
+    @apply text-2xl lg:text-3xl leading-snug tracking-tight text-dark-gray;
+  }
+  .text-title-small-bold {
+    @apply text-2xl lg:text-3xl leading-snug tracking-tight text-dark-gray font-bold;
+  }
+
+  .text-title-xsmall {
+    @apply text-xl lg:text-2xl leading-snug text-dark-gray;
+  }
+  .text-title-xsmall-bold {
+    @apply text-xl lg:text-2xl leading-snug text-dark-gray font-bold;
+  }
+
+  /* --- Body Text (Text & Text Bold) --- */
+
+  .text-body-large {
+    @apply text-base lg:text-lg leading-relaxed text-dark-gray-2;
+  }
+  .text-body-large-bold {
+    @apply text-base lg:text-lg leading-relaxed text-dark-gray-2 font-bold;
+  }
+
+  .text-body-medium {
+    @apply text-sm lg:text-base leading-relaxed text-dark-gray-2;
+  }
+  .text-body-medium-bold {
+    @apply text-sm lg:text-base leading-relaxed text-dark-gray-2 font-bold;
+  }
+
+  .text-body-small {
+    @apply text-sm leading-relaxed text-dark-gray-2;
+  }
+  .text-body-small-bold {
+    @apply text-sm leading-relaxed text-dark-gray-2 font-bold;
+  }
+
+  .text-body-xsmall {
+    @apply text-xs leading-relaxed text-dark-gray-2;
+  }
+  .text-body-xsmall-bold {
+    @apply text-xs leading-relaxed text-dark-gray-2 font-bold;
+  }
+
+  .text-body-tiny {
+    @apply text-[10px] leading-relaxed text-dark-gray-2 tracking-wide;
+  }
+  .text-body-tiny-bold {
+    @apply text-[10px] leading-relaxed text-dark-gray-2 tracking-wide font-bold;
+  }
+
+  /* --- Body Text Inverted (Para fundos escuros, usando White/Light Gray) --- */
+  
+  .text-body-large-inverted {
+    @apply text-base lg:text-lg leading-relaxed text-white;
+  }
+  .text-body-large-bold-inverted {
+    @apply text-base lg:text-lg leading-relaxed text-white font-bold;
+  }
+  
+  .text-body-medium-inverted {
+    @apply text-sm lg:text-base leading-relaxed text-white;
+  }
+  .text-body-medium-bold-inverted {
+    @apply text-sm lg:text-base leading-relaxed text-white font-bold;
+  }
+
+  .text-body-small-inverted {
+    @apply text-sm leading-relaxed text-white;
+  }
+  .text-body-small-bold-inverted {
+    @apply text-sm leading-relaxed text-white font-bold;
+  }
+
+  .text-body-xsmall-inverted {
+    @apply text-xs leading-relaxed text-white;
+  }
+  .text-body-xsmall-bold-inverted {
+    @apply text-xs leading-relaxed text-white font-bold;
+  }
+
+  .text-body-tiny-inverted {
+    @apply text-[10px] leading-relaxed text-white tracking-wide;
+  }
+  .text-body-tiny-bold-inverted {
+    @apply text-[10px] leading-relaxed text-white tracking-wide font-bold;
   }
 }
 
