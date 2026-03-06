@@ -1,16 +1,16 @@
-import {
-  createContext,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState
-} from 'react'
 import { api } from '@/lib/api'
 import { type ApiProduct, mapApiProduct } from '@/services/productService'
 import type { CartItem } from '@/types/CartItem'
 import type { Product } from '@/types/Product'
+import {
+    createContext,
+    type ReactNode,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState
+} from 'react'
 import { useAuth } from './AuthContext'
 
 interface CartContextType {
@@ -37,6 +37,10 @@ interface CartContextType {
   fetchCart: () => Promise<void>
 }
 
+/**
+ * Contexto do Carrinho de Compras.
+ * Gerencia a lista de itens, cálculos de totais, cupons e sincronização com a API.
+ */
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
 // Cupons válidos simulados
@@ -58,6 +62,10 @@ interface CartApiResponse {
   }
 }
 
+/**
+ * Provider que gerencia o estado do carrinho e a comunicação com o endpoint /cart.
+ * Implementa "Optimistic Updates" para uma experiência de usuário instantânea.
+ */
 export function CartProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth()
   const [items, setItems] = useState<CartItem[]>([])
@@ -109,7 +117,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      // Optimistic update
+      // Update Otimista: Adiciona ao estado local antes da resposta da API 
+      // para que o usuário veja a mudança imediatamente.
       setItems((prev) => {
         // Find if this exact combination already exists locally
         const existingInfo = prev.find(
@@ -145,7 +154,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           selected_color: selectedColor,
           selected_size: selectedSize
         })
-        // Sincroniza o estado real do banco (recupera os UUIDs gerados)
+        // Sincroniza o estado real do banco (recupera os UUIDs gerados pela API)
         await fetchCart()
       } catch (error) {
         console.error('Erro ao adicionar produto:', error)
@@ -240,7 +249,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   )
 
   const discount = useMemo(() => {
-    // Desconto do cupom é percentual sobre o subtotal
+    // Desconto do cupom é percentual sobre o subtotal (ex: 10% de 200 = 20)
     return couponDiscount > 0 ? (subtotal * couponDiscount) / 100 : 0
   }, [subtotal, couponDiscount])
 

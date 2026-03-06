@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query'
 import { Gallery } from '@/components/Gallery'
 import { HeroSlide } from '@/components/HeroSlide'
 import ProductCard from '@/components/ProductCard'
@@ -7,6 +6,7 @@ import RouterLink from '@/components/RouterLink'
 import Section from '@/components/Section'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getProducts } from '@/services/productService'
+import { useQuery } from '@tanstack/react-query'
 
 // Dados do Hero Banner (Seção 5.1)
 const heroSlides = [
@@ -19,7 +19,7 @@ const heroSlides = [
       'Consequat culpa exercitation mollit nisi excepteur do do tempor laboris eiusmod irure consectetur.',
     buttonText: 'Ver Ofertas',
     buttonLink: '/products',
-    imageSrc: '/tenis-nike.png'
+    imageSrc: '/tenis-nike.webp'
   },
   {
     src: '/home-slide-2.jpeg',
@@ -30,7 +30,7 @@ const heroSlides = [
       'Descubra as últimas tendências em calçados esportivos com design moderno e conforto incomparável.',
     buttonText: 'Comprar Agora',
     buttonLink: '/products',
-    imageSrc: '/home-slide-4.jpeg'
+    imageSrc: '/tenis-nike.webp'
   },
   {
     src: '/home-slide-3.jpeg',
@@ -41,17 +41,22 @@ const heroSlides = [
       'Tecnologia de ponta para atletas que buscam superar seus limites e alcançar novos recordes.',
     buttonText: 'Conhecer Mais',
     buttonLink: '/products',
-    imageSrc: '/produc-image-5.jpeg'
+    imageSrc: '/tenis-nike.webp'
   }
 ]
 
 // Coleções em destaque (Seção 5.2)
 const collections = [
-  { src: '/collection-1.png', alt: 'Coleção Casual' },
-  { src: '/collection-2.png', alt: 'Coleção Esportiva' },
-  { src: '/collection-3.png', alt: 'Coleção Premium' }
+  { src: '/collection-1.webp', alt: 'Coleção Casual' },
+  { src: '/collection-2.webp', alt: 'Coleção Esportiva' },
+  { src: '/collection-3.webp', alt: 'Coleção Premium' }
 ]
 
+/**
+ * Página Inicial (Home).
+ * Contém o Hero Banner (Gallery), Coleções em Destaque, 
+ * Categorias Rápidas e a vitrine de "Produtos em Alta" buscados via API.
+ */
 export default function HomePage() {
   const {
     data: products = [],
@@ -136,11 +141,11 @@ export default function HomePage() {
               onClick={() => {}}
               className="flex flex-col items-center gap-3 group cursor-pointer"
             >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors overflow-hidden">
                 <img
-                  src="/vector_camisa_com_hover.png"
+                  src="/cat_tshirt_minimal.svg"
                   alt="Camisetas"
-                  className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-110 transition-transform"
+                  className="w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-110 transition-all duration-300"
                 />
               </div>
               <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
@@ -154,11 +159,11 @@ export default function HomePage() {
               onClick={() => {}}
               className="flex flex-col items-center gap-3 group cursor-pointer"
             >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors overflow-hidden">
                 <img
-                  src="/vector_calça.png"
+                  src="/cat_pants_minimal.svg"
                   alt="Calças"
-                  className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-110 transition-transform"
+                  className="w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-110 transition-all duration-300"
                 />
               </div>
               <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
@@ -172,11 +177,11 @@ export default function HomePage() {
               onClick={() => {}}
               className="flex flex-col items-center gap-3 group cursor-pointer"
             >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors overflow-hidden">
                 <img
-                  src="/vector_calça-2.png"
+                  src="/cat_cap_minimal.svg"
                   alt="Bonés"
-                  className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-110 transition-transform"
+                  className="w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-110 transition-all duration-300"
                 />
               </div>
               <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
@@ -190,11 +195,11 @@ export default function HomePage() {
               onClick={() => {}}
               className="flex flex-col items-center gap-3 group cursor-pointer"
             >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors overflow-hidden">
                 <img
-                  src="/vector_calça-2.png"
+                  src="/cat_headphones_minimal.svg"
                   alt="Headphones"
-                  className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-110 transition-transform"
+                  className="w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-110 transition-all duration-300"
                 />
               </div>
               <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
@@ -208,11 +213,11 @@ export default function HomePage() {
               onClick={() => {}}
               className="flex flex-col items-center gap-3 group cursor-pointer"
             >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center group-hover:bg-light-gray-2 transition-colors overflow-hidden">
                 <img
-                  src="/vector_tenis.png"
+                  src="/cat_sneakers_minimal.svg"
                   alt="Tênis"
-                  className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-110 transition-transform"
+                  className="w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-110 transition-all duration-300"
                 />
               </div>
               <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
@@ -263,24 +268,37 @@ export default function HomePage() {
         {/* Seção Oferta Especial - Air Jordan */}
         <section className="py-16">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-            {/* Imagem do Tênis */}
-            <div className="flex-1 flex justify-center">
+            {/* Imagem do Tênis com Eclipse de fundo */}
+            <div className="flex-1 flex justify-center relative">
+              {/* Eclipse de fundo */}
+              <div 
+                className="absolute inset-x-0 -top-4 bottom-0 z-0 flex items-center justify-center opacity-70"
+                aria-hidden="true"
+              >
+                <img
+                  src="/ellipse.webp"
+                  alt=""
+                  className="w-full h-auto max-w-[466px] object-contain"
+                />
+              </div>
+
+              {/* Tênis em destaque */}
               <img
-                src="/air-jordan-collection-oferta.png"
+                src="/air-jordan-collection-oferta.webp"
                 alt="Air Jordan edição de colecionador"
-                className="max-w-full h-auto object-contain"
+                className="relative z-10 max-w-full h-auto object-contain drop-shadow-2xl"
               />
             </div>
 
             {/* Conteúdo */}
-            <div className="flex-1 space-y-4">
+            <div className="flex-1 space-y-4 flex flex-col items-center text-center lg:items-start lg:text-left">
               <span className="text-primary font-semibold text-sm uppercase tracking-wide">
                 Oferta especial
               </span>
               <h2 className="text-3xl lg:text-4xl font-bold leading-tight text-dark-gray">
                 Air Jordan edição de colecionador
               </h2>
-              <p className="text-dark-gray-2 text-base leading-relaxed">
+              <p className="text-dark-gray-2 text-base leading-relaxed text-justify">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
                 enim ad minim veniam, quis nostrud exercitation ullamco laboris

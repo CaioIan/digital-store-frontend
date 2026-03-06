@@ -1,9 +1,9 @@
 import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useEffect,
-  useState
+    createContext,
+    type ReactNode,
+    useContext,
+    useEffect,
+    useState
 } from 'react'
 
 export interface User {
@@ -28,8 +28,16 @@ interface AuthContextType {
   logout: () => void
 }
 
+/**
+ * Contexto de Autenticação da Digital Store.
+ * Centraliza o estado do usuário logado, persistência no localStorage 
+ * e métodos de login/logout para toda a aplicação.
+ */
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+/**
+ * Provider que envolve a aplicação para prover dados de autenticação.
+ */
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(() => {
     // Tenta recuperar os dados do usuário do localStorage ao inicializar
@@ -74,6 +82,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   )
 }
 
+/**
+ * Hook customizado para acessar os dados e funções de autenticação.
+ */
 export const useAuth = () => {
   const context = useContext(AuthContext)
   if (context === undefined) {

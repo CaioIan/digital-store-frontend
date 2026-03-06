@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { api } from '@/lib/api'
+import axios from 'axios'
 
 export interface RegisterUserPayload {
   firstname: string
@@ -17,6 +17,13 @@ export interface RegisterUserPayload {
   complemento?: string
 }
 
+/**
+ * Envia os dados de um novo usuário para o Backend.
+ * 
+ * @param data - Objeto contendo dados pessoais, senha e endereço.
+ * @returns Resposta de sucesso do servidor.
+ * @throws Array de erros de validação vindos do Backend (Zod/Sequelize).
+ */
 export const registerUser = async (data: RegisterUserPayload) => {
   try {
     const response = await api.post('/user', data)

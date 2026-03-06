@@ -1,5 +1,13 @@
 import axios from 'axios'
 
+/**
+ * Instância global do Axios configurada para a Digital Store API.
+ * 
+ * - baseURL: Ponto de entrada das versões v1 da nossa API.
+ * - withCredentials: ESSENCIAL para o funcionamento da segurança via Cookies HTTP-Only.
+ *   Isso garante que o token JWT (armazenado no cookie pelo backend) seja 
+ *   enviado em todas as requisições autenticadas automaticamente.
+ */
 export const api = axios.create({
   baseURL: 'http://localhost:3000/v1',
   withCredentials: true // Permite o tráfego de Cookies HTTP-Only gerados pelo Backend

@@ -1,25 +1,30 @@
-import { Menu, Search } from 'lucide-react'
-import { useCallback, useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
 import logoHeader from '@/assets/logo-header.svg'
 import miniCart from '@/assets/mini-cart.svg'
 import CartModal from '@/components/CartModal'
 import RouterLink from '@/components/RouterLink'
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger
 } from '@/components/ui/sheet'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
+import { Menu, Search } from 'lucide-react'
+import { useCallback, useState } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
 import Logo from '../Logo'
 import { DesktopSearch } from './DesktopSearch'
 import { MobileSearch } from './MobileSearch'
 import { MobileUserProfileMenu } from './MobileUserProfileMenu'
 import { UserProfileMenu } from './UserProfileMenu'
 
+/**
+ * Componente de Cabeçalho (Header) Global.
+ * Gerencia a navegação principal, busca (Desktop e Mobile), 
+ * menus de usuário e acesso rápido ao carrinho.
+ */
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)

@@ -47,6 +47,11 @@ const checkoutSchema = z.object({
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>
 
+/**
+ * Página de Checkout (Finalização de Compra).
+ * Gerencia o formulário de endereço e pagamento usando React Hook Form + Zod.
+ * Suporta tanto a compra do carrinho completo quanto "compre agora" de um produto único.
+ */
 export default function CheckoutPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()

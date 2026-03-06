@@ -3,11 +3,11 @@ import { Pagination } from '@/components/Pagination'
 import ProductCard from '@/components/ProductCard'
 import { ProductCardSkeleton } from '@/components/ProductCardSkeleton'
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger
 } from '@/components/ui/sheet'
 import { getProducts } from '@/services/productService'
 import type { Product } from '@/types/Product'
@@ -16,6 +16,11 @@ import { Filter } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
+/**
+ * Página de Listagem de Produtos.
+ * Implementa filtros dinâmicos de Marca, Categoria e Gênero,
+ * além de ordenação por preço e paginação integrada com o TanStack Query.
+ */
 export default function ProductListingPage() {
   const [searchParams] = useSearchParams()
   const filter = searchParams.get('filter') || ''
@@ -47,28 +52,29 @@ export default function ProductListingPage() {
       sortOrder
     ],
     queryFn: async () => {
-      // Pequeno delay artificial opcional apenas para mostrar o skeleton
+      // Mock de delay para visualização do Skeleton Loading (opcional)
       await new Promise((resolve) => setTimeout(resolve, 300))
 
+      // Objeto de parâmetros dinâmicos para a API
       // biome-ignore lint/suspicious/noExplicitAny: Options can be very dynamic based on backend typing
       const options: any = {
         page: page,
         limit: 12
       }
 
+      // Aplica filtros se existirem
       if (filter) options.match = filter
-
       if (filterGender) {
         options.gender = filterGender === 'Unissex' ? 'Unisex' : filterGender
       }
-
       if (filterBrand.length > 0) {
         options.brand = filterBrand.join(',')
       }
 
+      // Chamada real ao Service que comunica com o Backend
       const res = await getProducts(options)
 
-      // Sorting is still done locally per page if the API doesn't support exact sort orders natively
+      // Ordenação local (Client-side) como fallback ou complemento
       if (sortOrder === 'lowest') {
         res.data.sort((a, b) => (a.price ?? 0) - (b.price ?? 0))
       } else if (sortOrder === 'highest') {
@@ -77,7 +83,7 @@ export default function ProductListingPage() {
 
       return res
     },
-    placeholderData: keepPreviousData
+    placeholderData: keepPreviousData // Mantém dados antigos enquanto busca novos para evitar flickering
   })
 
   const products = response?.data || []

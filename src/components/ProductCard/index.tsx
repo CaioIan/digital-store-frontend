@@ -15,6 +15,11 @@ const formatPrice = (value: number) =>
     currency: 'BRL'
   }).format(value)
 
+/**
+ * Componente de Card de Produto.
+ * Exibe a imagem, categoria, nome e preços (com ou sem desconto).
+ * Calcula automaticamente a porcentagem de desconto para exibição do Badge.
+ */
 export default function ProductCard({
   id,
   name,

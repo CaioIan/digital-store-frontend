@@ -1,4 +1,4 @@
-# 👟 Digital Store - Geração Tech 3.0 Final Project
+# Digital Store - Projeto Final Geração Tech 3.0
 
 <div align="center">
   <img src="public/logo.svg" alt="Digital Store Logo" height="60" />
@@ -6,12 +6,19 @@
 
 <br />
 
-Bem-vindo ao repositório Front-end do projeto **Digital Store**, desenvolvido como Trabalho de Conclusão para o curso Geração Tech 3.0. Este projeto consiste em um E-commerce completo para calçados e artigos esportivos, focado em alta performance, UX moderna e arquitetura escalável.
+> [!IMPORTANT]
+> **ENTREGA FINAL:** Este repositório contém o Front-end do projeto **Digital Store**, desenvolvido como **Trabalho de Conclusão de Curso (TCC)** para o programa **Geração Tech 3.0**. 
 
+Este projeto é um E-commerce completo para calçados e artigos esportivos, focado em alta performance, UX moderna e arquitetura escalável. 
+
+**Nota sobre o Ecossistema:** Este projeto consome uma **API robusta** (Back-end) desenvolvida especificamente para suportar todas as regras de negócio aqui apresentadas, incluindo persistência de usuários, gestão de pedidos e filtros dinâmicos de produtos. 
+
+---
 ## 🚀 Funcionalidades Premium Implementadas
 
 Fugindo do básico, esta aplicação implementou soluções reais e robustas (Nível Pleno), transcendendo as expectativas iniciais do projeto:
 
+- **Otimização de Performance (WebP):** Todos os assets estáticos (tênis, coleções e banners) foram convertidos para o formato **WebP**. Isso garante um carregamento até 30% mais rápido e uma melhor pontuação nos Core Web Vitals do Google.
 - **Filtros e Buscas Dinâmicas:** A [Página de Listagem de Produtos (`/products`)](/src/pages/ProductListingPage/index.tsx) integra os Filtros de Categoria, Marca e Preço **diretamente com a API**, utilizando React Query para cache em tempo real. Ordem e navegação totalmente funcionais sem fakes.
 - **Segurança (Auth & HTTP-Only):** A autenticação não usa `localStorage` para tokens vulneráveis a XSS. Implementado o serviço com *HTTP-Only Cookies*, interceptors completos (`Axios`) e tratamento maduro de refresh hooks.
 - **Gestão de Perfil Real:** O usuário não apenas edita dados; ele gerencia Endereços dinâmicos (`/v1/user/address`), e todas as transações (Pedidos) foram formatadas para refletir status em tempo real do banco de dados na página de "Meus Pedidos".

@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { BuyBox } from '@/components/BuyBox'
 import { Gallery } from '@/components/Gallery'
 import ProductCard from '@/components/ProductCard'
@@ -8,7 +6,14 @@ import RouterLink from '@/components/RouterLink'
 import Section from '@/components/Section'
 import { getProductById, getProducts } from '@/services/productService'
 import type { Product } from '@/types/Product'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
+/**
+ * Página de Detalhes do Produto.
+ * Carrega informações específicas de um produto pelo ID,
+ * gerencia a seleção de variações (cor/tamanho) e exibe produtos relacionados.
+ */
 export default function ProductViewPage() {
   const { id } = useParams<{ id: string }>()
   const [product, setProduct] = useState<Product | null>(null)

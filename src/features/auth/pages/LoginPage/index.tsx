@@ -1,11 +1,11 @@
+import RouterLink from '@/components/RouterLink'
+import { useAuth } from '@/contexts/AuthContext'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import RouterLink from '@/components/RouterLink'
-import { useAuth } from '@/contexts/AuthContext'
 import { useLoginMutation } from '../../queries/useLoginMutation'
 import { type LoginFormData, loginSchema } from '../../utils/loginSchema'
 
@@ -224,13 +224,13 @@ const LoginPage = () => {
           <div className="hidden lg:flex items-center justify-center relative h-100">
             {/* Tênis 1 — maior, em destaque na frente */}
             <img
-              src="/tenis-1-tela-de-cadastro.png"
+              src="/tenis-1-tela-de-cadastro.webp"
               alt="Tênis em destaque"
               className="absolute w-80 right-4 bottom-4 drop-shadow-lg z-10 -rotate-15"
             />
             {/* Tênis 2 — menor, atrás */}
             <img
-              src="/tenis-2-tela-de-cadastro.png"
+              src="/tenis-2-tela-de-cadastro.webp"
               alt="Tênis em destaque"
               className="absolute w-64 right-72 top-16 drop-shadow-md z-0 rotate-10"
             />

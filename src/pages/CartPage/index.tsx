@@ -15,6 +15,11 @@ const formatPrice = (value: number) =>
     currency: 'BRL'
   }).format(value)
 
+/**
+ * Página do Carrinho de Compras.
+ * Exibe os itens adicionados, permite alterar quantidades, remover produtos,
+ * aplicar cupons de desconto e calcular frete (simulado).
+ */
 export default function CartPage() {
   const navigate = useNavigate()
   const {

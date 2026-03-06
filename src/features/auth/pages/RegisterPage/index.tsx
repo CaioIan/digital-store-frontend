@@ -1,6 +1,6 @@
+import RouterLink from '@/components/RouterLink'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import RouterLink from '@/components/RouterLink'
 
 const RegisterPage = () => {
   const [email, setEmail] = useState('')
@@ -139,13 +139,13 @@ const RegisterPage = () => {
           <div className="hidden lg:flex items-center justify-center relative h-100">
             {/* Shoe 1 - larger, front */}
             <img
-              src="/tenis-1-tela-de-cadastro.png"
+              src="/tenis-1-tela-de-cadastro.webp"
               alt="Tênis em destaque"
               className="absolute w-80 right-4 bottom-4 drop-shadow-lg z-10 -rotate-15"
             />
             {/* Shoe 2 - smaller, behind */}
             <img
-              src="/tenis-2-tela-de-cadastro.png"
+              src="/tenis-2-tela-de-cadastro.webp"
               alt="Tênis em destaque"
               className="absolute w-64 right-72 top-16 drop-shadow-md z-0 rotate-10"
             />
