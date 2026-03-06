@@ -130,7 +130,7 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
             {/* Lista de produtos (scroll) */}
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
               {items.map((item) => (
-                <CartItemRow key={item.product.id} item={item} />
+                <CartItemRow key={item.id} item={item} />
               ))}
             </div>
 

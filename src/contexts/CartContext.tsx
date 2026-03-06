@@ -1,16 +1,17 @@
-import {
-  createContext,
-  type ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState
-} from 'react'
+import { api } from '@/lib/api'
+import { type ApiProduct, mapApiProduct } from '@/services/productService'
 import type { CartItem } from '@/types/CartItem'
 import type { Product } from '@/types/Product'
-
-const CART_STORAGE_KEY = 'digital-store-cart'
+import {
+    createContext,
+    type ReactNode,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState
+} from 'react'
+import { useAuth } from './AuthContext'
 
 interface CartContextType {
   items: CartItem[]
@@ -19,10 +20,10 @@ interface CartContextType {
     quantity?: number,
     selectedColor?: string,
     selectedSize?: string
-  ) => void
-  removeFromCart: (productId: string) => void
-  updateQuantity: (productId: string, quantity: number) => void
-  clearCart: () => void
+  ) => Promise<void>
+  removeFromCart: (itemId: string) => Promise<void>
+  updateQuantity: (itemId: string, quantity: number) => Promise<void>
+  clearCart: () => Promise<void>
   itemCount: number
   subtotal: number
   discount: number
@@ -33,8 +34,13 @@ interface CartContextType {
   couponCode: string | null
   setShipping: (value: number) => void
   total: number
+  fetchCart: () => Promise<void>
 }
 
+/**
+ * Contexto do Carrinho de Compras.
+ * Gerencia a lista de itens, cálculos de totais, cupons e sincronização com a API.
+ */
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
 // Cupons válidos simulados
@@ -44,75 +50,174 @@ const VALID_COUPONS: Record<string, number> = {
   OFF30: 30
 }
 
+interface CartApiResponse {
+  cart: {
+    items: {
+      id: string
+      quantity: number
+      selected_color?: string
+      selected_size?: string
+      product: ApiProduct
+    }[]
+  }
+}
+
+/**
+ * Provider que gerencia o estado do carrinho e a comunicação com o endpoint /cart.
+ * Implementa "Optimistic Updates" para uma experiência de usuário instantânea.
+ */
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    try {
-      const stored = localStorage.getItem(CART_STORAGE_KEY)
-      return stored ? (JSON.parse(stored) as CartItem[]) : []
-    } catch {
-      return []
-    }
-  })
+  const { isAuthenticated } = useAuth()
+  const [items, setItems] = useState<CartItem[]>([])
   const [couponCode, setCouponCode] = useState<string | null>(null)
   const [couponDiscount, setCouponDiscount] = useState(0)
   const [shipping, setShipping] = useState(0)
 
-  // Sincroniza items com localStorage sempre que mudar
-  useEffect(() => {
-    try {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items))
-    } catch {
-      // Silently fail if localStorage is full or unavailable
+  // Busca o carrinho da API
+  const fetchCart = useCallback(async () => {
+    if (!isAuthenticated) {
+      setItems([])
+      return
     }
-  }, [items])
+    try {
+      const { data } = await api.get<CartApiResponse>('/cart')
+      if (data?.cart?.items) {
+        setItems(
+          data.cart.items.map((item) => ({
+            id: item.id,
+            quantity: item.quantity,
+            selectedColor: item.selected_color,
+            selectedSize: item.selected_size,
+            product: mapApiProduct(item.product)
+          }))
+        )
+      } else {
+        setItems([])
+      }
+    } catch (error) {
+      console.error('Erro ao buscar carrinho:', error)
+      setItems([])
+    }
+  }, [isAuthenticated])
+
+  // Recarrega o carrinho toda vez que o status de login mudar
+  useEffect(() => {
+    fetchCart()
+  }, [fetchCart])
 
   const addToCart = useCallback(
-    (
+    async (
       product: Product,
       quantity = 1,
       selectedColor?: string,
       selectedSize?: string
     ) => {
+      if (!isAuthenticated) {
+        window.location.href = '/login'
+        return
+      }
+
+      // Update Otimista: Adiciona ao estado local antes da resposta da API 
+      // para que o usuário veja a mudança imediatamente.
       setItems((prev) => {
-        const existingIndex = prev.findIndex(
-          (item) => item.product.id === product.id
+        // Find if this exact combination already exists locally
+        const existingInfo = prev.find(
+          (item) =>
+            item.product.id === product.id
+            && item.selectedColor === selectedColor
+            && item.selectedSize === selectedSize
         )
-        if (existingIndex >= 0) {
-          const updated = [...prev]
-          updated[existingIndex] = {
-            ...updated[existingIndex],
-            quantity: updated[existingIndex].quantity + quantity,
-            selectedColor:
-              selectedColor ?? updated[existingIndex].selectedColor,
-            selectedSize: selectedSize ?? updated[existingIndex].selectedSize
-          }
-          return updated
+        if (existingInfo) {
+          return prev.map((item) =>
+            item.id === existingInfo.id
+              ? { ...item, quantity: item.quantity + quantity }
+              : item
+          )
         }
-        return [...prev, { product, quantity, selectedColor, selectedSize }]
+        // Use a temporary fake ID until fetch returns
+        return [
+          ...prev,
+          {
+            id: `temp-${Date.now()}`,
+            product,
+            quantity,
+            selectedColor,
+            selectedSize
+          }
+        ]
       })
+
+      try {
+        await api.post('/cart/add', {
+          product_id: parseInt(product.id, 10),
+          quantity,
+          selected_color: selectedColor,
+          selected_size: selectedSize
+        })
+        // Sincroniza o estado real do banco (recupera os UUIDs gerados pela API)
+        await fetchCart()
+      } catch (error) {
+        console.error('Erro ao adicionar produto:', error)
+        // Se errar, tenta recuperar do banco para limpar o state otimista
+        await fetchCart()
+      }
     },
-    []
+    [isAuthenticated, fetchCart]
   )
 
-  const removeFromCart = useCallback((productId: string) => {
-    setItems((prev) => prev.filter((item) => item.product.id !== productId))
-  }, [])
+  const removeFromCart = useCallback(
+    async (itemId: string) => {
+      if (!isAuthenticated) return
 
-  const updateQuantity = useCallback((productId: string, quantity: number) => {
-    if (quantity < 1) return
-    setItems((prev) =>
-      prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
+      // Optimistic delete
+      setItems((prev) => prev.filter((item) => item.id !== itemId))
+
+      try {
+        await api.delete(`/cart/remove/${itemId}`)
+        // fetchCart() is not strictly needed after a successful delete if optimism is flawless,
+        // but it's safer to ensure state consistency with database.
+      } catch (error) {
+        console.error('Erro ao remover item:', error)
+        await fetchCart() // revert local changes if API fails
+      }
+    },
+    [isAuthenticated, fetchCart]
+  )
+
+  const updateQuantity = useCallback(
+    async (itemId: string, quantity: number) => {
+      if (!isAuthenticated || quantity < 1) return
+
+      // Optimistic update
+      setItems((prev) =>
+        prev.map((item) => (item.id === itemId ? { ...item, quantity } : item))
       )
-    )
-  }, [])
 
-  const clearCart = useCallback(() => {
+      try {
+        await api.put(`/cart/update/${itemId}`, { quantity })
+      } catch (error) {
+        console.error('Erro ao atualizar quantidade:', error)
+        await fetchCart()
+      }
+    },
+    [isAuthenticated, fetchCart]
+  )
+
+  const clearCart = useCallback(async () => {
+    if (!isAuthenticated) return
+
     setItems([])
     setCouponCode(null)
     setCouponDiscount(0)
     setShipping(0)
-  }, [])
+
+    try {
+      await api.delete('/cart/clear')
+    } catch (error) {
+      console.error('Erro ao limpar carrinho:', error)
+      await fetchCart()
+    }
+  }, [isAuthenticated, fetchCart])
 
   const applyCoupon = useCallback((code: string): boolean => {
     const upper = code.toUpperCase().trim()
@@ -144,7 +249,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   )
 
   const discount = useMemo(() => {
-    // Desconto do cupom é percentual sobre o subtotal
+    // Desconto do cupom é percentual sobre o subtotal (ex: 10% de 200 = 20)
     return couponDiscount > 0 ? (subtotal * couponDiscount) / 100 : 0
   }, [subtotal, couponDiscount])
 
@@ -169,7 +274,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeCoupon,
       couponCode,
       setShipping,
-      total
+      total,
+      fetchCart
     }),
     [
       items,
@@ -185,7 +291,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       applyCoupon,
       removeCoupon,
       couponCode,
-      total
+      total,
+      fetchCart
     ]
   )
 

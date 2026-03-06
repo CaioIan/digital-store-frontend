@@ -1,14 +1,39 @@
+export interface ProductImage {
+  id: number
+  path: string
+  enabled: boolean
+}
+
+export interface ProductOption {
+  id: number
+  title: string
+  shape: 'square' | 'circle'
+  radius: number
+  type: 'text' | 'color'
+  values: string[]
+}
+
+export interface ProductCategory {
+  id: string
+  name: string
+  slug: string
+}
+
 export interface Product {
-  id: string // Necessário para rotas (Seção 7)
-  name: string // Seção 7.4
-  image: string // Seção 7.4
-  price: number // Seção 7.4
-  priceDiscount?: number // Seção 7.4 (Opcional)
-  description?: string // Seção 7.3
-  category?: string // Necessário para filtros da Seção 6.2
-  brand?: string // Marca do produto (filtro)
-  gender?: string // Gênero do produto (filtro)
-  reference?: string // Seção 7.3 - Código de referência
-  stars?: number // Seção 7.3 - Avaliação (0-5)
-  rating?: number // Seção 7.3 - Total de avaliações
+  id: string
+  name: string
+  slug?: string
+  image: string
+  price: number
+  priceDiscount?: number
+  description?: string
+  category?: string
+  brand?: string
+  gender?: string
+  reference?: string
+  stars?: number
+  rating?: number
+  images?: ProductImage[]
+  options?: ProductOption[]
+  categories?: ProductCategory[]
 }

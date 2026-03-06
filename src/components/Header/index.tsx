@@ -1,33 +1,42 @@
-import { Menu, Search } from 'lucide-react'
-import { useCallback, useState } from 'react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import RouterLink from '@/components/RouterLink'
 import logoHeader from '@/assets/logo-header.svg'
 import miniCart from '@/assets/mini-cart.svg'
 import CartModal from '@/components/CartModal'
+import RouterLink from '@/components/RouterLink'
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger
 } from '@/components/ui/sheet'
+import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
+import { Menu, Search } from 'lucide-react'
+import { useCallback, useState } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
 import Logo from '../Logo'
+import { DesktopSearch } from './DesktopSearch'
+import { MobileSearch } from './MobileSearch'
+import { MobileUserProfileMenu } from './MobileUserProfileMenu'
+import { UserProfileMenu } from './UserProfileMenu'
 
+/**
+ * Componente de Cabeçalho (Header) Global.
+ * Gerencia a navegação principal, busca (Desktop e Mobile), 
+ * menus de usuário e acesso rápido ao carrinho.
+ */
 const Header = () => {
-  const [searchTerm, setSearchTerm] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const [cartModalOpen, setCartModalOpen] = useState(false)
-  const navigate = useNavigate()
   const location = useLocation()
   const { itemCount } = useCart()
+  const { isAuthenticated } = useAuth()
 
   const isAuthPage =
-    location.pathname === '/cadastro' ||
-    location.pathname === '/login' ||
-    location.pathname === '/register-form-page'
+    location.pathname === '/cadastro'
+    || location.pathname === '/login'
+    || location.pathname === '/register-form-page'
 
   const toggleCartModal = useCallback(() => {
     setCartModalOpen((prev) => !prev)
@@ -37,15 +46,6 @@ const Header = () => {
     setCartModalOpen(false)
   }, [])
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchTerm.trim()) {
-      navigate(`/products?filter=${encodeURIComponent(searchTerm)}`)
-      setMobileMenuOpen(false)
-      setMobileSearchOpen(false)
-    }
-  }
-
   const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
     `relative inline-block py-3 text-base font-normal text-dark-gray-2 no-underline hover:text-primary transition-colors ${
       isActive
@@ -54,7 +54,7 @@ const Header = () => {
     }`
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-40">
+    <header className="bg-white sticky top-0 z-40 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
       {/* Mobile Header - altura 56px */}
       <div className="lg:hidden h-14 flex items-center justify-between px-4">
         {isAuthPage ? (
@@ -89,7 +89,7 @@ const Header = () => {
               </SheetTrigger>
               <SheetContent
                 side="left"
-                className="w-[80%] max-w-[320px] bg-white p-0 flex flex-col"
+                className="w-[80%] max-w-[320px] bg-white p-0 flex flex-col overflow-y-auto"
                 aria-label="Menu de navegação"
               >
                 {/* Cabeçalho do Sheet - Logo e Branding */}
@@ -173,20 +173,28 @@ const Header = () => {
 
                 {/* Área de Autenticação */}
                 <div className="p-5 space-y-4 mt-auto">
-                  <RouterLink
-                    to="/login"
-                    className="w-full h-12 bg-primary text-white text-base font-bold rounded-lg flex items-center justify-center hover:bg-tertiary active:brightness-90 transition-all"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Entrar
-                  </RouterLink>
-                  <RouterLink
-                    to="/cadastro"
-                    className="block text-center text-base text-dark-gray-2 underline hover:text-primary transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Cadastre-se
-                  </RouterLink>
+                  {isAuthenticated ? (
+                    <MobileUserProfileMenu
+                      onCloseMobileMenu={() => setMobileMenuOpen(false)}
+                    />
+                  ) : (
+                    <>
+                      <RouterLink
+                        to="/login"
+                        className="w-full h-12 bg-primary text-white text-base font-bold rounded-lg flex items-center justify-center hover:bg-tertiary active:brightness-90 transition-all"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Entrar
+                      </RouterLink>
+                      <RouterLink
+                        to="/cadastro"
+                        className="block text-center text-base text-dark-gray-2 underline hover:text-primary transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Cadastre-se
+                      </RouterLink>
+                    </>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>
@@ -237,51 +245,19 @@ const Header = () => {
 
       {/* Mobile Search Expandido */}
       {!isAuthPage && mobileSearchOpen && (
-        <div className="lg:hidden px-4 pb-3">
-          <form className="relative" onSubmit={handleSearch}>
-            <input
-              type="text"
-              placeholder="Pesquisar produto..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-10 px-4 pr-12 rounded-lg bg-light-gray-3 text-sm text-dark-gray-2 placeholder:text-light-gray-2 outline-none"
-            />
-            <button
-              type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-light-gray"
-              aria-label="Buscar"
-            >
-              <Search size={18} />
-            </button>
-          </form>
-        </div>
+        <MobileSearch
+          onSearchComplete={() => {
+            setMobileMenuOpen(false)
+            setMobileSearchOpen(false)
+          }}
+        />
       )}
 
       {/* Desktop Header */}
-      <div className="hidden lg:block py-3 bg-white">
+      <div className="hidden lg:block py-6 bg-white">
         <div className="max-w-[1440px] mx-auto px-6 xl:px-[100px] flex items-center gap-10">
           <Logo />
-          {!isAuthPage && (
-            <form
-              className="flex-1 max-w-[560px] relative"
-              onSubmit={handleSearch}
-            >
-              <input
-                type="text"
-                placeholder="Pesquisar produto..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full h-[60px] px-5 pr-12 rounded-lg bg-light-gray-3 text-base text-dark-gray-2 placeholder:text-light-gray-2 outline-none"
-              />
-              <button
-                type="submit"
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-light-gray"
-                aria-label="Buscar"
-              >
-                <Search size={20} />
-              </button>
-            </form>
-          )}
+          {!isAuthPage && <DesktopSearch />}
           {isAuthPage ? (
             <div className="ml-auto">
               <RouterLink
@@ -292,19 +268,7 @@ const Header = () => {
               </RouterLink>
             </div>
           ) : (
-            <div className="flex items-center gap-6">
-              <RouterLink
-                to="/cadastro"
-                className="text-base text-dark-gray-2 underline"
-              >
-                Cadastre-se
-              </RouterLink>
-              <RouterLink
-                to="/login"
-                className="w-[114px] h-10 bg-primary text-white text-sm font-bold rounded flex items-center justify-center"
-              >
-                Entrar
-              </RouterLink>
+            <div className="flex items-center ml-[232px] gap-[29px]">
               <div className="relative">
                 <button
                   type="button"
@@ -325,6 +289,24 @@ const Header = () => {
                 </button>
                 <CartModal isOpen={cartModalOpen} onClose={closeCartModal} />
               </div>
+              {isAuthenticated ? (
+                <UserProfileMenu />
+              ) : (
+                <>
+                  <RouterLink
+                    to="/cadastro"
+                    className="text-base text-dark-gray-2 underline"
+                  >
+                    Cadastre-se
+                  </RouterLink>
+                  <RouterLink
+                    to="/login"
+                    className="w-[114px] h-10 bg-primary text-white text-sm font-bold rounded flex items-center justify-center"
+                  >
+                    Entrar
+                  </RouterLink>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -332,8 +314,8 @@ const Header = () => {
 
       {/* Desktop Navigation - hidden on auth pages */}
       {!isAuthPage && (
-        <nav className="hidden lg:block border-t border-light-gray-3 bg-white">
-          <div className="max-w-[1440px] mx-auto px-6 xl:px-[100px] flex gap-[60px]">
+        <nav className="hidden lg:block bg-white">
+          <div className="max-w-[1440px] mx-auto px-6 xl:px-[100px] flex gap-8">
             <NavLink to="/" className={navLinkClassName}>
               Home
             </NavLink>

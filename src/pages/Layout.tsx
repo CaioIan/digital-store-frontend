@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
+import { Toaster } from '@/components/ui/sonner'
 
 interface LayoutProps {
   children: ReactNode
@@ -12,6 +13,7 @@ const Layout = ({ children }: LayoutProps) => {
       <Header />
       <main className="layout-content flex-1 flex flex-col">{children}</main>
       <Footer />
+      <Toaster />
     </div>
   )
 }

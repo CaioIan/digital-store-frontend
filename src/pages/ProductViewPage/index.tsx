@@ -1,31 +1,23 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import RouterLink from '@/components/RouterLink'
 import { BuyBox } from '@/components/BuyBox'
 import { Gallery } from '@/components/Gallery'
 import ProductCard from '@/components/ProductCard'
 import { ProductOptions } from '@/components/ProductOptions'
+import RouterLink from '@/components/RouterLink'
 import Section from '@/components/Section'
-import type { CarouselApi } from '@/components/ui/carousel'
 import { getProductById, getProducts } from '@/services/productService'
 import type { Product } from '@/types/Product'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
-// Cores de fundo para as variações da galeria (as cores que aparecem nas thumbs e no seletor)
-const colorOptions = ['#E2E3FF', '#FFE8BC', '#DEC699', '#E8DFCF']
-
-// Mapeamento de cor hex → nome legível para exibição no carrinho
-const colorNames: Record<string, string> = {
-  '#E2E3FF': 'Vermelho / Branco',
-  '#FFE8BC': 'Laranja / Branco',
-  '#DEC699': 'Bege / Marrom',
-  '#E8DFCF': 'Cinza / Branco'
-}
-
+/**
+ * Página de Detalhes do Produto.
+ * Carrega informações específicas de um produto pelo ID,
+ * gerencia a seleção de variações (cor/tamanho) e exibe produtos relacionados.
+ */
 export default function ProductViewPage() {
   const { id } = useParams<{ id: string }>()
   const [product, setProduct] = useState<Product | null>(null)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
-  const [galleryApi, setGalleryApi] = useState<CarouselApi | null>(null)
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     undefined
   )
@@ -40,18 +32,19 @@ export default function ProductViewPage() {
       // Reseta seleções ao trocar de produto
       setSelectedSize(undefined)
       setSelectedColor(undefined)
-      setGalleryApi(null)
 
       try {
         const [productData, allProducts] = await Promise.all([
           getProductById(id),
-          getProducts()
+          getProducts({ limit: 5 })
         ])
 
         if (productData) {
           setProduct(productData)
           // Filtra produtos relacionados (exclui o atual e pega até 4)
-          const related = allProducts.filter((p) => p.id !== id).slice(0, 4)
+          const related = allProducts.data
+            .filter((p) => p.id !== id)
+            .slice(0, 4)
           setRelatedProducts(related)
         }
       } catch (error) {
@@ -62,24 +55,31 @@ export default function ProductViewPage() {
     fetchData()
   }, [id])
 
-  // Gera variações da mesma imagem com diferentes backgrounds na ordem das cores
-  const getProductImages = (productName: string) => {
-    const imageUrl = '/tenis-nike.png' // Imagem fixa
+  // Extrai opções dinâmicas do produto (vindas da API)
+  const sizeOption = product?.options?.find(
+    (o) => o.title === 'Tamanho' || o.type === 'text'
+  )
+  const colorOption = product?.options?.find((o) => o.type === 'color')
 
-    return colorOptions.map((color, index) => ({
-      src: imageUrl,
-      alt: `${productName} - Variação ${index + 1}`,
-      style: { backgroundColor: color }
-    }))
+  // Gera slides da galeria a partir das imagens reais do produto
+  const getProductImages = () => {
+    if (product?.images && product.images.length > 0) {
+      return product.images.map((img, index) => ({
+        src: img.path,
+        alt: `${product.name} - Imagem ${index + 1}`
+      }))
+    }
+    // Fallback caso não tenha imagens
+    return [
+      {
+        src: product?.image || '/placeholder.png',
+        alt: product?.name || 'Produto'
+      }
+    ]
   }
 
   const handleColorChange = (color: string) => {
-    setSelectedColor(colorNames[color] || color)
-    const index = colorOptions.indexOf(color)
-    if (index !== -1 && galleryApi) {
-      // Navega para o slide correspondente
-      galleryApi.scrollTo(index)
-    }
+    setSelectedColor(color)
   }
 
   const handleSizeChange = (size: string) => {
@@ -94,7 +94,7 @@ export default function ProductViewPage() {
     )
   }
 
-  const productImages = getProductImages(product.name)
+  const productImages = getProductImages()
 
   return (
     <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6 lg:py-12 space-y-6 lg:space-y-8">
@@ -125,7 +125,7 @@ export default function ProductViewPage() {
 
       {/* Área do Produto */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
-        {/* Gallery com Thumbnails - Modo Produto (Seção 7.1) */}
+        {/* Gallery com Thumbnails */}
         <Gallery
           slides={productImages}
           showThumbs={true}
@@ -133,7 +133,6 @@ export default function ProductViewPage() {
           height="auto"
           radius="4px"
           className="w-full"
-          onApiReady={(api) => setGalleryApi(api)}
           objectFit="contain"
           imagePadding="p-4 lg:p-8"
         />
@@ -143,7 +142,7 @@ export default function ProductViewPage() {
           productId={product.id}
           name={product.name}
           image={product.image}
-          reference={product.reference || 'N/A'}
+          reference={product.reference}
           stars={product.stars || 0}
           rating={product.rating || 0}
           price={product.price}
@@ -152,44 +151,48 @@ export default function ProductViewPage() {
           selectedColor={selectedColor}
           selectedSize={selectedSize}
         >
-          {/* Seletor de Tamanho */}
-          <div className="space-y-2">
-            <h3 className="text-sm font-bold text-dark-gray-2">Tamanho</h3>
-            <ProductOptions
-              options={['39', '40', '41', '42', '43']}
-              radius="4px"
-              shape="square"
-              type="text"
-              selected={selectedSize}
-              onSelect={handleSizeChange}
-            />
-          </div>
+          {/* Seletor de Tamanho (dinâmico via API) */}
+          {sizeOption && sizeOption.values.length > 0 && (
+            <div className="space-y-2">
+              <h3 className="text-sm font-bold text-dark-gray-2">
+                {sizeOption.title}
+              </h3>
+              <ProductOptions
+                options={sizeOption.values}
+                radius={`${sizeOption.radius}px`}
+                shape={sizeOption.shape}
+                type={sizeOption.type}
+                selected={selectedSize}
+                onSelect={handleSizeChange}
+              />
+            </div>
+          )}
 
-          {/* Seletor de Cor */}
-          <div className="space-y-2">
-            <h3 className="text-sm font-bold text-dark-gray-2">Cor</h3>
-            <ProductOptions
-              options={colorOptions}
-              shape="circle"
-              type="color"
-              selected={
-                selectedColor
-                  ? colorOptions.find((c) => colorNames[c] === selectedColor)
-                  : undefined
-              }
-              onSelect={handleColorChange}
-            />
-          </div>
+          {/* Seletor de Cor (dinâmico via API) */}
+          {colorOption && colorOption.values.length > 0 && (
+            <div className="space-y-2">
+              <h3 className="text-sm font-bold text-dark-gray-2">
+                {colorOption.title}
+              </h3>
+              <ProductOptions
+                options={colorOption.values}
+                shape={colorOption.shape}
+                type={colorOption.type}
+                selected={selectedColor}
+                onSelect={handleColorChange}
+              />
+            </div>
+          )}
         </BuyBox>
       </div>
 
-      {/* Produtos Recomendados (Seção 7.4) */}
+      {/* Produtos Recomendados */}
       <Section
         title="Produtos relacionados"
         titleAlign="left"
         link={{ text: 'Ver todos', href: '/products' }}
       >
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6 lg:gap-x-8 lg:gap-y-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-4 md:gap-6 lg:gap-x-8 lg:gap-y-6">
           {relatedProducts.map((relatedProduct) => (
             <ProductCard
               key={relatedProduct.id}
