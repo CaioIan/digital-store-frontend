@@ -6,6 +6,7 @@ import RouterLink from '@/components/RouterLink'
 import Section from '@/components/Section'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getProducts } from '@/services/productService'
+import { categoriesData } from '@/data/categories'
 import { useQuery } from '@tanstack/react-query'
 
 // Dados do Hero Banner (Seção 5.1)
@@ -135,95 +136,24 @@ export default function HomePage() {
         {/* Categorias em Destaque */}
         <Section title="Coleções em destaque" titleAlign="center">
           <div className="flex justify-start min-[546px]:justify-center items-center gap-6 min-[546px]:gap-12 overflow-x-auto pb-4 -mx-4 px-4 min-[546px]:mx-0 min-[546px]:px-0 min-[546px]:overflow-visible min-[546px]:flex-wrap scrollbar-hide">
-            {/* Camisetas */}
-            <button
-              type="button"
-              onClick={() => {}}
-              className="flex flex-col items-center gap-3 group cursor-pointer"
-            >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center border-2 border-transparent group-hover:border-primary transition-all overflow-hidden duration-300">
-                <img
-                  src="/cat_tshirt_minimal.svg"
-                  alt="Camisetas"
-                  className="w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-110 transition-all duration-300"
-                />
-              </div>
-              <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
-                Camisetas
-              </span>
-            </button>
-
-            {/* Calças */}
-            <button
-              type="button"
-              onClick={() => {}}
-              className="flex flex-col items-center gap-3 group cursor-pointer"
-            >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center border-2 border-transparent group-hover:border-primary transition-all overflow-hidden duration-300">
-                <img
-                  src="/cat_pants_minimal.svg"
-                  alt="Calças"
-                  className="w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-110 transition-all duration-300"
-                />
-              </div>
-              <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
-                Calças
-              </span>
-            </button>
-
-            {/* Bonés */}
-            <button
-              type="button"
-              onClick={() => {}}
-              className="flex flex-col items-center gap-3 group cursor-pointer"
-            >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center border-2 border-transparent group-hover:border-primary transition-all overflow-hidden duration-300">
-                <img
-                  src="/cat_cap_minimal.svg"
-                  alt="Bonés"
-                  className="w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-110 transition-all duration-300"
-                />
-              </div>
-              <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
-                Bonés
-              </span>
-            </button>
-
-            {/* Headphones */}
-            <button
-              type="button"
-              onClick={() => {}}
-              className="flex flex-col items-center gap-3 group cursor-pointer"
-            >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center border-2 border-transparent group-hover:border-primary transition-all overflow-hidden duration-300">
-                <img
-                  src="/cat_headphones_minimal.svg"
-                  alt="Headphones"
-                  className="w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-110 transition-all duration-300"
-                />
-              </div>
-              <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
-                Headphones
-              </span>
-            </button>
-
-            {/* Tênis */}
-            <button
-              type="button"
-              onClick={() => {}}
-              className="flex flex-col items-center gap-3 group cursor-pointer"
-            >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center border-2 border-transparent group-hover:border-primary transition-all overflow-hidden duration-300">
-                <img
-                  src="/cat_sneakers_minimal.svg"
-                  alt="Tênis"
-                  className="w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-110 transition-all duration-300"
-                />
-              </div>
-              <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
-                Tênis
-              </span>
-            </button>
+            {categoriesData.map((category) => (
+              <RouterLink
+                key={category.slug}
+                to={`/products?category=${encodeURIComponent(category.name)}`}
+                className="flex flex-col items-center gap-3 group cursor-pointer"
+              >
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-light-gray-3 flex items-center justify-center border-2 border-transparent group-hover:border-primary transition-all overflow-hidden duration-300">
+                  <img
+                    src={category.icon}
+                    alt={category.name}
+                    className="w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-110 transition-all duration-300"
+                  />
+                </div>
+                <span className="text-dark-gray-2 text-sm font-medium group-hover:text-primary transition-colors">
+                  {category.name}
+                </span>
+              </RouterLink>
+            ))}
           </div>
         </Section>
 

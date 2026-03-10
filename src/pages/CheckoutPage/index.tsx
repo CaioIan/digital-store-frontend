@@ -545,7 +545,7 @@ export default function CheckoutPage() {
 
                   {paymentMethod === 'credit-card' && (
                     <div className="space-y-5 pt-2">
-                      <p className="text-sm text-light-gray-2 bg-light-gray-3 p-4 rounded-lg text-center font-medium">
+                      <p className="text-sm text-[#474747] bg-[#FEF6E8] p-4 rounded-lg text-center font-medium">  
                         🎉 Ambiente de Demonstração! <br /> Pagamentos via
                         Cartão de Crédito são aprovados automaticamente. Não é
                         necessário preencher dados reais do cartão.

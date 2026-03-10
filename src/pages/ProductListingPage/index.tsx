@@ -24,6 +24,7 @@ import { useSearchParams } from 'react-router-dom'
 export default function ProductListingPage() {
   const [searchParams] = useSearchParams()
   const filter = searchParams.get('filter') || ''
+  const categoryParam = searchParams.get('category') || ''
   const [filterBrand, setFilterBrand] = useState<string[]>([])
   const [filterCategory, setFilterCategory] = useState<string[]>([])
   const [filterGender, setFilterGender] = useState<string>('')
@@ -34,7 +35,7 @@ export default function ProductListingPage() {
   // Reseta para a página 1 ao mudar qualquer filtro
   useEffect(() => {
     setPage(1)
-  }, [filter, filterBrand, filterCategory, filterGender, sortOrder])
+  }, [filter, categoryParam, filterBrand, filterCategory, filterGender, sortOrder])
 
   const {
     data: response,
@@ -46,6 +47,7 @@ export default function ProductListingPage() {
       'products',
       page,
       filter,
+      categoryParam,
       filterBrand,
       filterCategory,
       filterGender,
@@ -64,6 +66,7 @@ export default function ProductListingPage() {
 
       // Aplica filtros se existirem
       if (filter) options.match = filter
+      else if (categoryParam) options.match = categoryParam
       if (filterGender) {
         options.gender = filterGender === 'Unissex' ? 'Unisex' : filterGender
       }
@@ -246,7 +249,7 @@ export default function ProductListingPage() {
         {/* Área Principal de Produtos */}
         <main>
           <h1 className="text-dark-gray-2 text-lg md:text-2xl font-bold mb-2 md:mb-4">
-            {filter ? `Resultados para "${filter}"` : 'Todos os produtos'}
+            {filter ? `Resultados para "${filter}"` : categoryParam ? `Categoria: ${categoryParam}` : 'Todos os produtos'}
           </h1>
           <p className="text-dark-gray-2 text-sm md:text-base mb-4 md:mb-6">
             {productCount}{' '}

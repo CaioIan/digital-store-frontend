@@ -15,11 +15,11 @@ const Footer = () => {
   ]
 
   const categoriasData = [
-    { text: 'Camisetas', link: '/category/camisetas' },
-    { text: 'Calças', link: '/category/calcas' },
-    { text: 'Bonés', link: '/category/bones' },
-    { text: 'Headphones', link: '/category/headphones' },
-    { text: 'Tênis', link: '/category/tenis' }
+    { text: 'Camisetas', link: '/products?category=Camisetas' },
+    { text: 'Calças', link: '/products?category=Cal%C3%A7as' },
+    { text: 'Bonés', link: '/products?category=Bon%C3%A9s' },
+    { text: 'Headphones', link: '/products?category=Headphones' },
+    { text: 'Tênis', link: '/products?category=T%C3%AAnis' }
   ]
 
   const contatoData = [

@@ -4,6 +4,7 @@ import LoginPage from '@/features/auth/pages/LoginPage'
 import RegisterFormPage from '@/features/auth/pages/RegisterFormPage'
 import RegisterPage from '@/features/auth/pages/RegisterPage'
 import CartPage from '@/pages/CartPage'
+import CategoryPage from '@/pages/CategoryPage'
 import CheckoutPage from '@/pages/CheckoutPage'
 import HomePage from '@/pages/HomePage'
 import Layout from '@/pages/Layout'
@@ -31,6 +32,7 @@ export function MainRouter() {
         <Routes>
           {/* Rotas Públicas */}
           <Route path="/" element={<HomePage />} />
+          <Route path="/categorias" element={<CategoryPage />} />
           <Route path="/products" element={<ProductListingPage />} />
           <Route path="/product/:id" element={<ProductViewPage />} />
           <Route path="/cadastro" element={<RegisterPage />} />
