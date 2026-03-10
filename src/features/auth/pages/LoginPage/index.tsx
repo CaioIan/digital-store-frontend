@@ -5,14 +5,14 @@ import axios from 'axios'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import LoginLoadingScreen from '../../components/LoginLoadingScreen'
 import { useLoginMutation } from '../../queries/useLoginMutation'
 import { type LoginFormData, loginSchema } from '../../utils/loginSchema'
 
 const LoginPage = () => {
-  const navigate = useNavigate()
   const { setUser } = useAuth()
   const [generalError, setGeneralError] = useState<string | null>(null)
+  const [showLoading, setShowLoading] = useState(false)
 
   const {
     register,
@@ -33,8 +33,8 @@ const LoginPage = () => {
       if (response && response.user) {
         setUser(response.user)
       }
-      // Login concluded via HttpOnly cookie setup automatically
-      navigate('/')
+      // Exibe tela de carregamento antes de redirecionar
+      setShowLoading(true)
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         setGeneralError('Email ou senha inválidos')
@@ -42,6 +42,11 @@ const LoginPage = () => {
         setGeneralError('Ocorreu um erro no servidor. Tente novamente.')
       }
     }
+  }
+
+  // Exibe a tela de loading em tela cheia após login bem-sucedido
+  if (showLoading) {
+    return <LoginLoadingScreen />
   }
 
   return (

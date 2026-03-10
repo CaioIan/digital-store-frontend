@@ -282,3 +282,107 @@
 .animate-pulse-form {
   animation: pulseGlow 1.5s ease-out 2;
 }
+
+/* ==========================================================
+   LOGIN LOADING SCREEN
+   ========================================================== */
+
+@keyframes loginFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes loginProgressBar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes loginShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes loginTextPulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.login-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+}
+
+.login-loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  animation: loginFadeInUp 0.6s ease-out both;
+}
+
+.login-loading-logo {
+  width: 220px;
+  animation: loginFadeInUp 0.6s ease-out both;
+}
+
+.login-loading-text {
+  color: #474747;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  animation: loginTextPulse 1.5s ease-in-out infinite;
+}
+
+.login-loading-bar-track {
+  width: 200px;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.login-loading-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #c92071, #b5b6f2, #c92071);
+  background-size: 200% 100%;
+  animation:
+    loginProgressBar 1.8s ease-in-out both,
+    loginShimmer 1.2s linear infinite;
+}
+
+/* ==========================================================
+   PRODUCT IMAGE HOVER ZOOM
+   ========================================================== */
+
+.product-image-hover-zoom {
+  cursor: zoom-in;
+  transition: transform 0.2s ease;
+}
+
+.product-image-hover-zoom:hover {
+  transform: scale(3.5);
+}

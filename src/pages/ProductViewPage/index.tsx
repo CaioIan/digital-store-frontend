@@ -135,7 +135,24 @@ export default function ProductViewPage() {
           className="w-full"
           objectFit="contain"
           imagePadding="p-4 lg:p-8"
-        />
+        >
+          {(slide, index) => (
+            <img
+              src={slide.src}
+              alt={slide.alt || `Slide ${index + 1}`}
+              className="max-w-full max-h-full object-contain p-4 lg:p-8 product-image-hover-zoom"
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect()
+                const x = ((e.clientX - rect.left) / rect.width) * 100
+                const y = ((e.clientY - rect.top) / rect.height) * 100
+                e.currentTarget.style.transformOrigin = `${x}% ${y}%`
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transformOrigin = 'center center'
+              }}
+            />
+          )}
+        </Gallery>
 
         {/* BuyBox com ProductOptions integrados */}
         <BuyBox
