@@ -17,6 +17,8 @@ interface BuyBoxProps {
   description: string
   selectedColor?: string
   selectedSize?: string
+  isColorRequired?: boolean
+  isSizeRequired?: boolean
   children?: ReactNode
 }
 
@@ -38,6 +40,8 @@ export function BuyBox({
   description,
   selectedColor,
   selectedSize,
+  isColorRequired = true,
+  isSizeRequired = true,
   children
 }: BuyBoxProps) {
   const navigate = useNavigate()
@@ -56,8 +60,12 @@ export function BuyBox({
   })
 
   const validate = (): boolean => {
-    if (!selectedColor || !selectedSize) {
-      toast.error('Selecione a cor e o tamanho antes de continuar.')
+    if (isColorRequired && !selectedColor) {
+      toast.error('Selecione uma cor antes de continuar.')
+      return false
+    }
+    if (isSizeRequired && !selectedSize) {
+      toast.error('Selecione um tamanho antes de continuar.')
       return false
     }
     return true

@@ -130,9 +130,9 @@ export default function ProductViewPage() {
           slides={productImages}
           showThumbs={true}
           width="100%"
-          height="auto"
+          height="var(--gallery-height)"
           radius="4px"
-          className="w-full"
+          className="w-full [--gallery-height:302px] lg:[--gallery-height:570px]"
           objectFit="contain"
           imagePadding="p-4 lg:p-8"
         >
@@ -140,7 +140,7 @@ export default function ProductViewPage() {
             <img
               src={slide.src}
               alt={slide.alt || `Slide ${index + 1}`}
-              className="max-w-full max-h-full object-contain p-4 lg:p-8 product-image-hover-zoom"
+              className="max-w-[85%] max-h-[85%] object-contain product-image-hover-zoom"
               onMouseMove={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect()
                 const x = ((e.clientX - rect.left) / rect.width) * 100
@@ -167,6 +167,8 @@ export default function ProductViewPage() {
           description={product.description || 'Descrição não disponível'}
           selectedColor={selectedColor}
           selectedSize={selectedSize}
+          isColorRequired={!!colorOption && colorOption.values.length > 0}
+          isSizeRequired={!!sizeOption && sizeOption.values.length > 0}
         >
           {/* Seletor de Tamanho (dinâmico via API) */}
           {sizeOption && sizeOption.values.length > 0 && (
