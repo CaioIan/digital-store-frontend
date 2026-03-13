@@ -37,28 +37,7 @@ export interface SearchResponse<T = ApiProduct> {
  */
 export function mapApiProduct(raw: ApiProduct): Product {
   const enabledImages = raw.images?.filter((img) => img.enabled) || []
-  // Fallback options se a API não retornar opções (útil para adicionar qualquer item no carrinho)
-  const defaultOptions = [
-    {
-      id: 991,
-      title: 'Tamanho',
-      shape: 'square' as const,
-      radius: 4,
-      type: 'text' as const,
-      values: ['39', '40', '41', '42', '43']
-    },
-    {
-      id: 992,
-      title: 'Cor',
-      shape: 'circle' as const,
-      radius: 50,
-      type: 'color' as const,
-      // Preto, Vermelho Claro, Cinza Claro
-      values: ['#000000', '#F08080', '#D3D3D3']
-    }
-  ]
-
-  const mappedOptions = raw.options && raw.options.length > 0 ? raw.options : defaultOptions
+  const mappedOptions = raw.options || []
 
   return {
     id: String(raw.id),
