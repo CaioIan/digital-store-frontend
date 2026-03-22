@@ -3,7 +3,8 @@ import {
   LoginPage,
   ProtectedRoute,
   RegisterFormPage,
-  RegisterPage
+  RegisterPage,
+  VerifyEmailPage
 } from '@/features/auth'
 import { CartPage } from '@/features/cart'
 import { CheckoutPage } from '@/features/checkout'
@@ -48,6 +49,7 @@ export function MainRouter() {
           <Route path="/cadastro" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register-form-page" element={<RegisterFormPage />} />
+          <Route path="/verificar-email" element={<VerifyEmailPage />} />
 
           {/* Rotas Seguras (Exigem Cookie Válido/Autenticação) */}
           {/* O componente ProtectedRoute encapsula as rotas que precisam de proteção */}

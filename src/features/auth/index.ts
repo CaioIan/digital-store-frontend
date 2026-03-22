@@ -17,6 +17,7 @@ export * from './contexts/AuthContext'
 export { default as LoginPage } from './pages/LoginPage'
 export { default as RegisterFormPage } from './pages/RegisterFormPage'
 export { default as RegisterPage } from './pages/RegisterPage'
+export { default as VerifyEmailPage } from './pages/VerifyEmailPage'
 
 // React Query Mutations
 export * from './queries/useLoginMutation'

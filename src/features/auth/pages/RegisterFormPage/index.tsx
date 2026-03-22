@@ -143,10 +143,18 @@ const RegisterFormPage = () => {
             <h2 className="text-2xl font-bold text-dark-gray mb-3">
               Cadastro Concluído!
             </h2>
-            <p className="text-dark-gray-3 mb-8 max-w-sm flex-1">
-              Sua conta foi criada com sucesso. Você já pode acessar a
-              plataforma.
-            </p>
+            
+            <div className="bg-amber-50 border-2 border-amber-400 p-6 rounded-lg mb-8 max-w-md w-full flex flex-col items-center gap-3 text-center shadow-sm animate-pulse-once">
+              <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl" aria-hidden="true">
+                ✉️
+              </div>
+              <h3 className="font-bold text-amber-800 text-lg uppercase tracking-wide">
+                Aviso Importante
+              </h3>
+              <p className="text-amber-900 text-[15px] leading-relaxed">
+                Enviamos um link de confirmação para o seu e-mail. <strong>Você precisa validar a sua conta</strong> acessando este link antes de tentar efetuar o login.
+              </p>
+            </div>
             <RouterLink
               to="/login"
               className="h-12 px-8 bg-primary text-white font-semibold text-sm rounded-md hover:brightness-90 transition-all flex items-center justify-center w-full max-w-xs"

@@ -35,3 +35,14 @@ export const registerUser = async (data: RegisterUserPayload) => {
     throw error // Erros genéricos de rede ou server error
   }
 }
+
+/**
+ * Verifica o e-mail do usuário no Backend usando o token.
+ *
+ * @param token - Token recebido por link de e-mail.
+ * @returns Resposta de sucesso do servidor.
+ */
+export const verifyEmail = async (token: string) => {
+  const response = await api.get('/user/verify-email', { params: { token } })
+  return response.data
+}
