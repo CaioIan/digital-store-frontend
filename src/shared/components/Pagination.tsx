@@ -7,6 +7,11 @@ interface PaginationProps {
   onPageChange: (page: number) => void
 }
 
+/**
+ * Componente de Paginação.
+ * 
+ * @param {PaginationProps} props - Dados para controle da paginação.
+ */
 export function Pagination({
   currentPage,
   totalItems,

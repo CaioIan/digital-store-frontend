@@ -18,11 +18,11 @@ export interface RegisterUserPayload {
 }
 
 /**
- * Envia os dados de um novo usuário para o Backend.
+ * Envia os dados de um novo usuário para o Backend para criação de conta.
  *
- * @param data - Objeto contendo dados pessoais, senha e endereço.
- * @returns Resposta de sucesso do servidor.
- * @throws Array de erros de validação vindos do Backend (Zod/Sequelize).
+ * @param {RegisterUserPayload} data - Objeto contendo dados pessoais (nome, cpf, email, celular), senha e dados opcionais de endereço.
+ * @returns {Promise<any>} Promessa com a resposta de sucesso do servidor (geralmente os dados do usuário criado).
+ * @throws {Array<string>} Arremessa um array de strings com os erros de validação vindos do Backend se a requisição falhar.
  */
 export const registerUser = async (data: RegisterUserPayload) => {
   try {
@@ -37,10 +37,10 @@ export const registerUser = async (data: RegisterUserPayload) => {
 }
 
 /**
- * Verifica o e-mail do usuário no Backend usando o token.
+ * Verifica o endereço de e-mail do usuário no sistema através de um token único.
  *
- * @param token - Token recebido por link de e-mail.
- * @returns Resposta de sucesso do servidor.
+ * @param {string} token - Token alfanumérico recebido pelo usuário via link em seu e-mail.
+ * @returns {Promise<any>} Promessa com a mensagem de confirmação de e-mail verificado.
  */
 export const verifyEmail = async (token: string) => {
   const response = await api.get('/user/verify-email', { params: { token } })

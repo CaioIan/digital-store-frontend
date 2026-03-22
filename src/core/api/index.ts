@@ -3,13 +3,23 @@ import { CONFIG } from '../config'
 
 /**
  * Instância global do Axios configurada para a Digital Store API.
+ * 
+ * @example
+ * ```ts
+ * const { data } = await api.get('/products')
+ * ```
  */
 export const api = axios.create({
   baseURL: CONFIG.API_URL,
   withCredentials: true
 })
 
-// Interceptador para tratar erros globais (ex: 401 Unauthorized)
+/**
+ * Interceptor de resposta global para tratamento de erros.
+ * 
+ * Atualmente lida com o erro 401 (Não autorizado), limpando a sessão
+ * do usuário e redirecionando para a página de login caso a rota seja privada.
+ */
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -25,7 +35,7 @@ api.interceptors.response.use(
       const publicPaths = ['/login', '/cadastro', '/register-form-page', '/']
 
       // Redireciona para o login apenas se estiver em uma rota privada
-      if (!publicPaths.includes(currentPath)) {
+      if (!publicPaths.includes(currentPath) && currentPath !== '/') {
         window.location.href = '/login'
       }
     }

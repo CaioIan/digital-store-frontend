@@ -2,8 +2,12 @@ import { z } from 'zod'
 import { isValidCEP, isValidCPF, isValidPhone } from '@/shared/utils'
 
 /**
- * Schema de validação do formulário de checkout.
- * Valida dados pessoais, endereço de entrega e método de pagamento.
+ * Schema de validação para o formulário de finalização de compra (Checkout).
+ * 
+ * Valida:
+ * 1. Informações Pessoais: Nome completo, CPF, e-mail e celular.
+ * 2. Entrega: Endereço completo, bairro, cidade, CEP e estado.
+ * 3. Pagamento: Atualmente suporta apenas a seleção do método de pagamento.
  */
 export const checkoutSchema = z.object({
   fullName: z

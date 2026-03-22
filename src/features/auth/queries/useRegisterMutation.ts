@@ -3,8 +3,11 @@ import type { RegisterUserPayload } from '../api/userService'
 import { registerUser } from '../api/userService'
 
 /**
- * Hook de mutação para cadastro de novo usuário.
- * Envia os dados de registro para a API e retorna o resultado.
+ * Hook customizado para registrar um novo usuário no sistema.
+ * 
+ * Envia o payload completo de cadastro para a API através da função `registerUser`.
+ * 
+ * @returns {UseMutationResult} Objeto da mutação do TanStack Query.
  */
 export const useRegisterMutation = () => {
   return useMutation({

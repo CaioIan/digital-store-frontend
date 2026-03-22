@@ -2,9 +2,13 @@ import { z } from 'zod'
 import { isValidCEP, isValidCPF, isValidPhone } from '@/shared/utils'
 
 /**
- * Schema de validação do formulário de cadastro completo.
- * Valida dados pessoais (nome, CPF, email, celular, senha) e endereço (opcional).
- * Se qualquer campo de endereço for preenchido, todos os campos principais se tornam obrigatórios.
+ * Schema de validação completo para o formulário de cadastro (Zod).
+ * 
+ * Realiza as seguintes validações:
+ * 1. Dados Pessoais: Nome, Sobrenome (máx 50), CPF (válido), Email (válido), Celular (válido).
+ * 2. Segurança: Senha (mín 6, máx 100) e confirmação de senha igual à senha.
+ * 3. Endereço: Campos opcionais, porém com validação de consistência (se preencher um campo 
+ *    do endereço, todos os campos principais de endereço tornam-se obrigatórios).
  */
 export const registerSchema = z
   .object({

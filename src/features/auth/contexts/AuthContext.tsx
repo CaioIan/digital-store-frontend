@@ -32,13 +32,23 @@ interface AuthContextType {
 
 /**
  * Contexto de Autenticação da Digital Store.
- * Centraliza o estado do usuário logado, persistência no localStorage
- * e métodos de login/logout para toda a aplicação.
+ * 
+ * Centraliza o estado do usuário logado (`user`), a persistência automática 
+ * no `localStorage`, o estado de carregamento inicial (`isInitialLoading`) 
+ * e métodos utilitários como `logout`.
  */
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 /**
- * Provider que envolve a aplicação para prover dados de autenticação.
+ * Provider de Autenticação.
+ * 
+ * Deve envolver a raiz da aplicação ou o roteador principal para prover 
+ * o contexto de autenticação a todos os componentes filhos. Sincroniza 
+ * o estado do usuário com o `localStorage` no carregamento e em mudanças.
+ * 
+ * @param {Object} props - Propriedades do componente.
+ * @param {ReactNode} props.children - Elementos React que serão envolvidos.
+ * @returns {JSX.Element} Provider do contexto de autenticação.
  */
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)

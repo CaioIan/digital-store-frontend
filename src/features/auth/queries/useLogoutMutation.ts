@@ -2,8 +2,11 @@ import { useMutation } from '@tanstack/react-query'
 import { api } from '@/core'
 
 /**
- * Hook de mutação para logout do usuário.
- * Invalida a sessão no servidor via endpoint de logout.
+ * Hook customizado para realizar o logout do usuário.
+ * 
+ * Invoca o endpoint de logout no backend para invalidar o cookie de sessão.
+ * 
+ * @returns {UseMutationResult} Objeto da mutação do TanStack Query.
  */
 export const useLogoutMutation = () => {
   return useMutation({
