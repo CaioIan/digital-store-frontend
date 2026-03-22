@@ -28,8 +28,12 @@ export const statusMap: Record<string, { label: string; className: string }> = {
 }
 
 /**
- * Retorna as informações de exibição (label + classe CSS) de um status de pedido.
- * Caso o status não seja reconhecido, retorna "Pago" como padrão.
+ * Retorna as informações de exibição (label amigável e classe CSS) de um status de pedido.
+ * 
+ * Se o status não for encontrado no `statusMap`, o padrão retornado é o status "Pago".
+ * 
+ * @param {string} status - O código do status técnico vindo da API.
+ * @returns {Object} Objeto com as propriedades `label` e `className`.
  */
 export function getStatusInfo(status: string) {
   return (

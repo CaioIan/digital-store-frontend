@@ -57,8 +57,16 @@ interface CartApiResponse {
 }
 
 /**
- * Provider que gerencia o estado do carrinho e a comunicação com o endpoint /cart.
- * Implementa "Optimistic Updates" para uma experiência de usuário instantânea.
+ * Provider do Carrinho de Compras.
+ * 
+ * Gerencia o estado global dos itens no carrinho seguindo o padrão de 
+ * "Optimistic Updates" para as operações de adicionar, remover e atualizar 
+ * quantidade. Sincroniza automaticamente com o backend (`/cart`) se o 
+ * usuário estiver autenticado.
+ * 
+ * @param {Object} props - Propriedades do componente.
+ * @param {ReactNode} props.children - Elementos filhos que terão acesso ao contexto.
+ * @returns {JSX.Element} Provider configurado.
  */
 export function CartProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth()
@@ -101,6 +109,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [fetchCart])
 
   const addToCart = useCallback(
+    /**
+     * Adiciona um produto ao carrinho.
+     * 
+     * Se o usuário não estiver autenticado, redireciona para o login.
+     * Realiza um "Optimistic Update" no estado local para feedback imediato e 
+     * depois sincroniza com a API.
+     * 
+     * @param {Product} product - Objeto do produto a ser adicionado.
+     * @param {number} [quantity=1] - Quantidade desejada.
+     * @param {string} [selectedColor] - Cor selecionada (opcional).
+     * @param {string} [selectedSize] - Tamanho selecionado (opcional).
+     */
     async (
       product: Product,
       quantity = 1,

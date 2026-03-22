@@ -13,6 +13,15 @@ interface CheckoutSummaryProps {
   showCTA?: boolean
 }
 
+/**
+ * Componente que exibe o resumo financeiro do Checkout.
+ * 
+ * Este componente lista os produtos que estão sendo comprados e detalha
+ * os valores de Subtotal, Frete, Descontos e o Total final.
+ * 
+ * @param {CheckoutSummaryProps} props - Propriedades do resumo financeiro.
+ * @returns {JSX.Element} Fragmento contendo a lista de itens e o resumo de valores.
+ */
 export const CheckoutSummary = ({
   items,
   subtotal,

@@ -1,8 +1,10 @@
 import { z } from 'zod'
 
 /**
- * Schema de validação do formulário de login.
- * Valida e-mail e senha com mensagens em português.
+ * Schema de validação do formulário de login utilizando Zod.
+ * 
+ * @property {string} email - Deve ser um e-mail válido e não vazio.
+ * @property {string} password - Deve ter pelo menos 6 caracteres.
  */
 export const loginSchema = z.object({
   email: z

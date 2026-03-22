@@ -52,10 +52,11 @@ O projeto **Digital Store** é composto por **3 repositórios independentes** qu
 ## 🚀 Funcionalidades Implementadas
 
 ### 🏠 Página Inicial (Home)
-- **Hero Carousel** com banners promocionais e autoplay
-- Seções de **coleções em destaque** e **produtos recomendados**
-- Categorias com ícones SVG customizados
-- Layout responsivo com galeria de imagens
+- **Hero Carousel** com banners promocionais e autoplay (configurável)
+- Seções de **coleções em destaque** e **produtos recomendados** com imagens otimizadas
+- Categorias com ícones SVG customizados e transições suaves
+- Layout responsivo adaptado para dispositivos móveis e desktop
+- Galeria de imagens com zoom interativo no desktop
 
 ### 🔍 Catálogo de Produtos
 - **Listagem com paginação** integrada à API
@@ -79,7 +80,8 @@ O projeto **Digital Store** é composto por **3 repositórios independentes** qu
 ### 👤 Autenticação & Perfil
 - Login e cadastro com validação completa via **Zod + React Hook Form**
 - Autenticação segura com **HTTP-Only Cookies** (sem tokens em localStorage)
-- **Interceptors Axios** automáticos para refresh de sessão
+- Fluxo de **Verificação de E-mail** para novos usuários
+- **Interceptors Axios** automáticos para refresh de sessão e tratamento de erros
 - **Rotas protegidas** (`<ProtectedRoute />`) para áreas restritas
 - Edição de perfil, gestão de endereços e métodos de pagamento
 
@@ -267,8 +269,9 @@ src/
 - Linting e formatação rigorosos com **BiomeJS** (regras customizadas em `biome.json`)
 - `noExplicitAny: error` — proibido uso de `any` no TypeScript
 - `noUnusedVariables: error` e `noUnusedImports: error` — código limpo garantido
-- Organização automática de imports
+- Organização automática de imports em cada salvamento
 - Arquitetura **Feature-Based** para escalabilidade e manutenibilidade
+- Documentação técnica completa via **JSDoc** em todos os módulos principais
 
 ---
 

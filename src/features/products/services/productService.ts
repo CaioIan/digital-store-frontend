@@ -32,8 +32,13 @@ export interface SearchResponse<T = ApiProduct> {
 }
 
 /**
- * Converte um produto da API para o formato que o Frontend já espera.
- * Toda a lógica de mapeamento de campos fica centralizada aqui.
+ * Converte um produto bruto da API (ApiProduct) para o formato esperado pelo Frontend (Product).
+ * 
+ * Centraliza a lógica de tratamento de caminhos de imagem, formatação de descontos
+ * e normalização de categorias/opções.
+ * 
+ * @param {ApiProduct} raw - O objeto do produto retornado pelo endpoint da API.
+ * @returns {Product} O objeto do produto mapeado e pronto para uso nos componentes.
  */
 export function mapApiProduct(raw: ApiProduct): Product {
   const enabledImages = raw.images?.filter((img) => img.enabled) || []
@@ -71,7 +76,10 @@ export interface GetProductsOptions {
 }
 
 /**
- * Busca todos os produtos da API com suporte a filtros avançados.
+ * Realiza a busca de produtos na API com suporte a múltiplos filtros e paginação.
+ * 
+ * @param {GetProductsOptions} [options] - Parâmetros de busca (filtros, paginação, match).
+ * @returns {Promise<SearchResponse<Product>>} Promessa com a lista de produtos mapeados e metadados.
  */
 export const getProducts = async (
   options?: GetProductsOptions

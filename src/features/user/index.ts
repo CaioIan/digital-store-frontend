@@ -1,6 +1,7 @@
 /**
  * Barrel file do módulo de Usuário.
- * Exporta o layout de perfil e as páginas da área do usuário.
+ * 
+ * Exporta o layout de perfil e as páginas da área logada do usuário.
  */
 
 // Componentes

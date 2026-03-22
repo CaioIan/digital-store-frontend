@@ -1,4 +1,9 @@
-/** Representa um item individual dentro de um pedido. */
+/** 
+ * Representa um item individual dentro de um pedido realizado.
+ * 
+ * Contém detalhes do produto, quantidade e o preço praticado no 
+ * momento da compra (snapshot).
+ */
 export interface OrderItem {
   id?: string
   product_id: string | number

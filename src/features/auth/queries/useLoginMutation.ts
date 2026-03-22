@@ -3,8 +3,12 @@ import { api } from '@/core'
 import type { LoginFormData } from '../utils/loginSchema'
 
 /**
- * Hook de mutação para login do usuário.
- * Envia credenciais (email/senha) para o endpoint de autenticação da API.
+ * Hook customizado utilizando `useMutation` (TanStack Query) para realizar o login.
+ * 
+ * Envia as credenciais (e-mail e senha) para o servidor. Em caso de sucesso,
+ * o backend responde com o cookie de autenticação HTTP-Only.
+ * 
+ * @returns {UseMutationResult} Objeto contendo o estado da mutação e a função `mutateAsync`.
  */
 export const useLoginMutation = () => {
   return useMutation({

@@ -9,6 +9,16 @@ interface CartItemProps {
   variant?: 'desktop' | 'mobile'
 }
 
+/**
+ * Componente que representa um item individual no carrinho.
+ * 
+ * Suporta dois modos de visualização (variantes):
+ * - `desktop`: Layout em grid para telas grandes.
+ * - `mobile`: Layout em coluna otimizado para telas pequenas.
+ * 
+ * @param {CartItemProps} props - Propriedades do item, funções de remoção e atualização.
+ * @returns {JSX.Element} Elemento renderizado do item do carrinho.
+ */
 export const CartItem = ({
   item,
   onRemove,

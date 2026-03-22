@@ -2,7 +2,10 @@ import type { ChangeEvent } from 'react'
 import { formatCEP, formatCPF, formatPhone, removeNonNumbers } from '../utils'
 
 /**
- * Hook para aplicar máscara de CPF
+ * Hook para aplicar máscara de CPF (000.000.000-00).
+ * 
+ * Retorna a função `applyMask` para ser usada no evento de mudança (onChange)
+ * e `getCleanValue` para obter apenas os números.
  */
 export const useCPFMask = () => {
   const applyMask = (e: ChangeEvent<HTMLInputElement>) => {

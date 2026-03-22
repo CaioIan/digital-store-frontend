@@ -4,7 +4,12 @@ import logoHeader from '@/assets/images/logo-header.svg'
 
 /**
  * Tela de carregamento exibida após login bem-sucedido.
- * Mostra a logo com animações premium por ~2s e depois redireciona à homepage.
+ * 
+ * Este componente mostra a logo da Digital Store com animações premium 
+ * por aproximadamente 2 segundos e depois redireciona o usuário para a 
+ * homepage automaticamente. É utilizado para dar feedback visual de sucesso.
+ * 
+ * @returns {JSX.Element} Tela de overlay com animação de loading.
  */
 const LoginLoadingScreen = () => {
   const navigate = useNavigate()
