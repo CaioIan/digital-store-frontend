@@ -42,7 +42,16 @@ const LoginPage = () => {
       setShowLoading(true)
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
-        setGeneralError('Email ou senha inválidos')
+        if (
+          error.response.data?.message ===
+          'Por favor, verifique seu email antes de fazer login'
+        ) {
+          setGeneralError(
+            'Sua conta ainda não foi ativada. Por favor, valide seu e-mail.'
+          )
+        } else {
+          setGeneralError('Email ou senha inválidos')
+        }
       } else {
         setGeneralError('Ocorreu um erro no servidor. Tente novamente.')
       }
@@ -116,7 +125,6 @@ const LoginPage = () => {
                   type="email"
                   placeholder="Insira seu login ou email"
                   disabled={loading}
-                  aria-required="true"
                   {...register('email')}
                   className={`h-11 rounded-md bg-light-gray-3 border-none px-3 text-sm text-dark-gray placeholder:text-light-gray outline-none focus:ring-2 focus:ring-primary/30 transition-all ${errors.email ? 'ring-2 ring-[#C92071]/50 bg-[#C92071]/5' : ''}`}
                 />
@@ -144,7 +152,6 @@ const LoginPage = () => {
                   type="password"
                   placeholder="Insira sua senha"
                   disabled={loading}
-                  aria-required="true"
                   {...register('password')}
                   className={`h-11 rounded-md bg-light-gray-3 border-none px-3 text-sm text-dark-gray placeholder:text-light-gray outline-none focus:ring-2 focus:ring-primary/30 transition-all ${errors.password ? 'ring-2 ring-[#C92071]/50 bg-[#C92071]/5' : ''}`}
                 />
