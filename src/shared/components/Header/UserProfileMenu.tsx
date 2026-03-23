@@ -40,7 +40,7 @@ export const UserProfileMenu = () => {
       setIsLogoutModalOpen(false)
       navigate('/login')
     } catch (error) {
-      console.error('Logout failed', error)
+      // Erro silencioso ao fazer logout
     }
   }
 

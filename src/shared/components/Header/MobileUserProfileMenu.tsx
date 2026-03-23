@@ -37,7 +37,7 @@ export const MobileUserProfileMenu = ({
       onCloseMobileMenu()
       navigate('/login')
     } catch (error) {
-      console.error('Logout failed', error)
+      // Erro silencioso ao fazer logout
     }
   }
 

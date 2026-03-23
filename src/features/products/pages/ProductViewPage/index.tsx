@@ -45,7 +45,10 @@ export default function ProductViewPage() {
           setRelatedProducts(related)
         }
       } catch (error) {
-        console.error('Erro ao carregar produto:', error)
+        // Erro silencioso ao carregar produto
+      } finally {
+        // Any cleanup or final actions can go here, if needed.
+        // For now, it's empty as per the instruction's example.
       }
     }
 

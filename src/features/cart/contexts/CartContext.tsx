@@ -98,7 +98,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setItems([])
       }
     } catch (error) {
-      console.error('Erro ao buscar carrinho:', error)
       setItems([])
     }
   }, [isAuthenticated])
@@ -172,7 +171,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
         // Sincroniza o estado com o banco de dados (recupera os IDs reais gerados pela API)
         await fetchCart()
       } catch (error) {
-        console.error('Erro ao adicionar produto:', error)
         // Em caso de erro, re-sincroniza com o banco para reverter o update otimista
         await fetchCart()
       }
@@ -192,7 +190,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
         // fetchCart() não é estritamente necessário após um delete bem-sucedido,
         // mas garante consistência do estado local com o banco de dados.
       } catch (error) {
-        console.error('Erro ao remover item:', error)
         await fetchCart() // Reverte alterações locais se a API falhar
       }
     },
@@ -211,7 +208,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       try {
         await api.put(`/cart/update/${itemId}`, { quantity })
       } catch (error) {
-        console.error('Erro ao atualizar quantidade:', error)
         await fetchCart()
       }
     },
@@ -229,7 +225,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       await api.delete('/cart/clear')
     } catch (error) {
-      console.error('Erro ao limpar carrinho:', error)
       await fetchCart()
     }
   }, [isAuthenticated, fetchCart])

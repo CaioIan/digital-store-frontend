@@ -123,13 +123,12 @@ export const getProducts = async (
  */
 export const getProductById = async (
   id: string
-): Promise<Product | undefined> => {
+): Promise<Product | null> => {
   try {
     const { data } = await api.get<ApiProduct>(`/product/${id}`)
     return mapApiProduct(data)
   } catch (error) {
-    console.error(`Erro ao buscar produto ${id}:`, error)
-    return undefined
+    return null
   }
 }
 
@@ -145,7 +144,6 @@ export const getRelatedProducts = async (
     const { data } = await getProducts({ limit: limit + 1 })
     return data.filter((p) => p.id !== productId).slice(0, limit)
   } catch (error) {
-    console.error('Erro ao buscar produtos relacionados:', error)
     return []
   }
 }

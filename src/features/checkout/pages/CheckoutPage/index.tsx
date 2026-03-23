@@ -84,7 +84,7 @@ export default function CheckoutPage() {
         const productData = await getProductById(id)
         if (productData) setSingleProduct(productData)
       } catch (error) {
-        console.error('Erro ao carregar produto:', error)
+        // Erro silencioso; o estado singleProduct permanece null
       }
     }
     fetchProduct()
@@ -126,7 +126,6 @@ export default function CheckoutPage() {
       const orderId = response.data.order_id || response.data.id
       navigate(`/order/${orderId}/success`)
     } catch (err: unknown) {
-      console.error(err)
       let errorMessage = 'Erro inesperado ao criar pedido. Tente novamente.'
       if (
         typeof err === 'object'

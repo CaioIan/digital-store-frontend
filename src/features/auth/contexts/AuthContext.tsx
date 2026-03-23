@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         setUser(JSON.parse(storedUser))
       } catch (e) {
-        console.warn('Erro ao restaurar usuário', e)
+        // Erro silencioso ao restaurar usuário
       }
     }
     setIsInitialLoading(false)
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem(CONFIG.STORAGE_KEYS.USER)
       }
     } catch (e) {
-      console.warn('Erro ao acessar localStorage', e)
+      // Erro silencioso ao acessar localStorage
     }
   }, [user, isInitialLoading])
 
