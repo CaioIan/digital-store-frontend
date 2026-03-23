@@ -154,7 +154,7 @@ export default function MyInfoPage() {
         const { data } = await api.get('/user/profile')
         setUser(data)
       } catch (err) {
-        console.error('Erro ao carregar perfil:', err)
+        // Erro silencioso ao carregar perfil
         setFetchError('Não foi possível carregar seu perfil.')
       } finally {
         setIsLoading(false)

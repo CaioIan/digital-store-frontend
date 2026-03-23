@@ -22,7 +22,7 @@ export default function OrderDetailPage() {
         const { data } = await api.get<Order>(`/orders/${id}`)
         setOrder(data)
       } catch (err) {
-        console.error('Erro ao carregar pedido:', err)
+        // Erro silencioso ao carregar pedido
         setError('Não foi possível carregar os detalhes deste pedido.')
       } finally {
         setIsLoading(false)

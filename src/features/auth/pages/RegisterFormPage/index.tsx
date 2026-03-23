@@ -110,7 +110,6 @@ const RegisterFormPage = () => {
         setGeneralError(
           'Ocorreu um erro inesperado ao tentar realizar o cadastro. Tente novamente mais tarde.'
         )
-        console.error('Registration failed:', error)
       }
     }
   }

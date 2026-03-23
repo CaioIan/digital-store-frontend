@@ -28,7 +28,7 @@ api.interceptors.response.use(
       try {
         localStorage.removeItem(CONFIG.STORAGE_KEYS.USER)
       } catch (e) {
-        console.warn('Erro ao limpar storage no 401', e)
+        // Erro silencioso ao limpar storage
       }
 
       const currentPath = window.location.pathname
