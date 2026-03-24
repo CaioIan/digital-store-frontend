@@ -6,14 +6,14 @@
 /**
  * Configurações globais da aplicação Digital Store.
  * 
- * Centraliza URLs da API, chaves de armazenamento do localStorage,
+ * Centraliza URLs da API, chaves de armazenamento do sessionStorage,
  * cupons de desconto válidos e outras constantes de sistema.
  */
 export const CONFIG = {
   /** URL base da API REST */
   API_URL: 'http://localhost:3000/v1',
   
-  /** Chaves utilizadas para persistência de dados no navegador */
+  /** Chaves utilizadas para persistência de dados no navegador (sessionStorage) */
   STORAGE_KEYS: {
     USER: '@DigitalStore:user'
   },

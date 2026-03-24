@@ -13,11 +13,15 @@ export * from './components/ProtectedRoute'
 // Contexto global de autenticação
 export * from './contexts/AuthContext'
 
+// Hooks
+export * from './hooks'
+
 // Páginas (default exports re-exportados como named exports)
 export { default as LoginPage } from './pages/LoginPage'
 export { default as RegisterFormPage } from './pages/RegisterFormPage'
 export { default as RegisterPage } from './pages/RegisterPage'
 export { default as VerifyEmailPage } from './pages/VerifyEmailPage'
+export { default as VerifyEmailSentPage } from './pages/VerifyEmailSentPage'
 
 // React Query Mutations
 export * from './queries/useLoginMutation'

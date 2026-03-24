@@ -1,20 +1,35 @@
+import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
-import { verifyEmail } from '../../api/userService'
+import { useAuth } from '@/features/auth'
 import { RouterLink } from '@/shared/components'
+import { verifyEmail } from '../../api/userService'
 
 /**
  * Página de Verificação de E-mail.
  * Captura o token da URL e faz a validação silenciosa com a API.
+ *
+ * Comportamento:
+ * - Se verificação habilitada: valida o token, marca usuário como verificado
+ * - Se verificação desabilitada: mostra mensagem informativa, redireciona para login
  */
 const VerifyEmailPage = () => {
   const [searchParams] = useSearchParams()
+  const { emailVerificationRequired } = useAuth()
   const token = searchParams.get('token')
-  
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
+
+  const [status, setStatus] = useState<
+    'loading' | 'success' | 'error' | 'disabled'
+  >('loading')
 
   useEffect(() => {
+    // Se verificação não está habilitada, mostra mensagem de desabilitado
+    if (!emailVerificationRequired) {
+      setStatus('disabled')
+      return
+    }
+
+    // Se não há token, erro
     if (!token) {
       setStatus('error')
       return
@@ -36,7 +51,7 @@ const VerifyEmailPage = () => {
     return () => {
       isMounted = false
     }
-  }, [token])
+  }, [token, emailVerificationRequired])
 
   return (
     <main className="flex-1 bg-[#FAFAFC] relative overflow-hidden flex flex-col items-center justify-center py-20 px-4">
@@ -72,14 +87,35 @@ const VerifyEmailPage = () => {
               E-mail verificado com sucesso!
             </h1>
             <p className="text-dark-gray-3 mb-8">
-              Sua conta foi ativada. Agora você já pode acessar a plataforma
-              com seus dados.
+              Sua conta foi ativada. Agora você já pode acessar a plataforma com
+              seus dados.
             </p>
             <RouterLink
               to="/login"
               className="h-12 w-full bg-primary text-white font-semibold text-sm rounded-md hover:brightness-90 transition-all flex items-center justify-center"
             >
               Fazer Login
+            </RouterLink>
+          </div>
+        )}
+
+        {status === 'disabled' && (
+          <div className="flex flex-col items-center animate-in fade-in zoom-in-95 duration-500">
+            <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mb-6">
+              <CheckCircle2 className="w-10 h-10 text-green-600" />
+            </div>
+            <h1 className="text-2xl font-bold text-dark-gray mb-3">
+              Você Já Está Verificado!
+            </h1>
+            <p className="text-dark-gray-3 mb-8">
+              A verificação de e-mail foi desabilitada neste ambiente. Sua conta
+              já está pronta para usar.
+            </p>
+            <RouterLink
+              to="/login"
+              className="h-12 w-full bg-primary text-white font-semibold text-sm rounded-md hover:brightness-90 transition-all flex items-center justify-center"
+            >
+              Ir para Login
             </RouterLink>
           </div>
         )}
@@ -93,8 +129,8 @@ const VerifyEmailPage = () => {
               Ops, algo deu errado!
             </h1>
             <p className="text-dark-gray-3 mb-8">
-              O link de verificação é inválido ou já expirou. Verifique se copiou
-              o link corretamente do seu e-mail.
+              O link de verificação é inválido ou já expirou. Verifique se
+              copiou o link corretamente do seu e-mail.
             </p>
             <RouterLink
               to="/cadastro"

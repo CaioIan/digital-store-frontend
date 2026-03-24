@@ -26,7 +26,7 @@ api.interceptors.response.use(
     // Se o backend retornar 401, a sessão expirou ou é inválida
     if (error.response?.status === 401) {
       try {
-        localStorage.removeItem(CONFIG.STORAGE_KEYS.USER)
+        sessionStorage.removeItem(CONFIG.STORAGE_KEYS.USER)
       } catch (e) {
         // Erro silencioso ao limpar storage
       }

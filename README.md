@@ -80,7 +80,10 @@ O projeto **Digital Store** é composto por **3 repositórios independentes** qu
 ### 👤 Autenticação & Perfil
 - Login e cadastro com validação completa via **Zod + React Hook Form**
 - Autenticação segura com **HTTP-Only Cookies** (sem tokens em localStorage)
-- Fluxo de **Verificação de E-mail** para novos usuários
+- **Fluxo de Verificação de E-mail** para novos usuários (com suporte a feature flag dinamicamente ativável/desativável)
+  - Detecta automaticamente se verificação está habilitada baseado na resposta do backend
+  - Mostra diferentes UIs conforme o modo (verificação obrigatória vs login imediato)
+  - Persistência de estado com sessionStorage
 - **Interceptors Axios** automáticos para refresh de sessão e tratamento de erros
 - **Rotas protegidas** (`<ProtectedRoute />`) para áreas restritas
 - Edição de perfil, gestão de endereços e métodos de pagamento
@@ -128,11 +131,11 @@ src/
 │   └── config/                # Configurações globais
 │
 ├── features/                  # 🎯 Módulos de domínio (Feature-Based)
-│   ├── auth/                  # Autenticação (Login, Cadastro, ProtectedRoute)
+│   ├── auth/                  # Autenticação (Login, Cadastro, ProtectedRoute, Email Verification)
 │   │   ├── api/               #   Chamadas HTTP de auth
 │   │   ├── components/        #   Formulários de login/cadastro
-│   │   ├── contexts/          #   AuthContext (estado global de sessão)
-│   │   ├── pages/             #   LoginPage, RegisterPage, RegisterFormPage
+│   │   ├── contexts/          #   AuthContext (estado global de sessão + emailVerificationRequired)
+│   │   ├── pages/             #   LoginPage, RegisterPage, RegisterFormPage, VerifyEmailPage, VerifyEmailSentPage
 │   │   ├── queries/           #   React Query hooks de auth
 │   │   ├── types/             #   Tipagens de User, Credentials, etc.
 │   │   └── utils/             #   Utilitários de auth
@@ -196,7 +199,9 @@ src/
 | `/carrinho` | `CartPage` | Carrinho de compras |
 | `/login` | `LoginPage` | Tela de login |
 | `/cadastro` | `RegisterPage` | Tela de cadastro (escolha) |
-| `/register-form-page` | `RegisterFormPage` | Formulário de cadastro |
+| `/register-form-page` | `RegisterFormPage` | Formulário de cadastro completo |
+| `/verify-email-sent` | `VerifyEmailSentPage` | Instrções após cadastro (quando verificação habilitada) |
+| `/verificar-email` | `VerifyEmailPage` | Validação de e-mail via token |
 
 ### Rotas Protegidas (requerem autenticação)
 | Rota | Página | Descrição |
@@ -281,6 +286,275 @@ src/
 - **Interceptors Axios** globais para renovação automática de sessão
 - Rotas sensíveis protegidas pelo componente `<ProtectedRoute />`
 - Validação de inputs no client-side com **Zod** e no server-side pela API
+
+---
+
+## 📧 Feature Flag: Email Verification (EMAIL_VERIFICATION_ENABLED)
+
+### 🎯 O Que É?
+
+O frontend implementa suporte para uma **feature flag de verificação de e-mail controlada pelo backend**. Isso permite ativar/desativar o fluxo de verificação de e-mail sem alterar código no frontend.
+
+**Casos de Uso:**
+- ✅ **Desenvolvimento/Produção**: `EMAIL_VERIFICATION_ENABLED=true` → Requer verificação de e-mail
+- ✅ **Demo/Vercel**: `EMAIL_VERIFICATION_ENABLED=false` → Login imediato sem verificação
+
+### 🔍 Como o Frontend Detecta?
+
+O frontend usa a **Opção C de Detecção**: observa a **presença/ausência do campo `message`** na resposta de `POST /v1/user`:
+
+#### Quando Verificação HABILITADA (`true`)
+```json
+POST /v1/user → Status 201
+{
+  "user": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "firstname": "João",
+    "email": "joao@example.com",
+    ...
+  },
+  "message": "Email de verificação enviado para joao@example.com..."
+}
+```
+
+**Frontend**:
+1. Detecta `!!response.message === true`
+2. Mostra spinner + "Criando sua conta..."
+3. Redireciona para `/verify-email-sent`
+4. Mostra card com **dicas em amarelo** de como validar o e-mail
+5. Na tela de login, se usuário não verificou, mostra erro: "Sua conta ainda não foi ativada"
+
+#### Quando Verificação DESABILITADA (`false`)
+```json
+POST /v1/user → Status 201
+{
+  "user": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "firstname": "João",
+    "email": "joao@example.com",
+    ...
+  }
+}
+```
+⚠️ **Nota**: Resposta **NÃO contém o campo `message`**
+
+**Frontend**:
+1. Detecta `!!response.message === false`
+2. Mostra spinner + "Criando sua conta..."
+3. Mostra card verde: **"Conta Criada com Sucesso!"**
+4. Redireciona diretamente para `/login`
+5. Login funciona imediatamente, sem validar e-mail
+
+### 🛠️ Arquitetura Técnica (Frontend)
+
+**Arquivo Principal**: [`src/features/auth/pages/RegisterFormPage/index.tsx`](src/features/auth/pages/RegisterFormPage/index.tsx)
+
+```typescript
+// useEffect que detecta o modo após sucesso na requisição
+useEffect(() => {
+  if (!isSuccess || !registerResponse) return
+
+  // 🎯 Detecta se verificação está habilitada (OPÇÃO C)
+  const isEmailVerificationRequired = !!registerResponse.message
+
+  // Atualiza o contexto global
+  setEmailVerificationRequired(isEmailVerificationRequired)
+
+  // Aguarda 3 segundos para o usuário ver o feedback visual
+  const timer = setTimeout(() => {
+    if (isEmailVerificationRequired) {
+      // Modo: Verificação HABILITADA
+      navigate('/verify-email-sent')
+    } else {
+      // Modo: Verificação DESABILITADA
+      navigate('/login')
+    }
+  }, 3000)
+
+  return () => clearTimeout(timer)
+}, [isSuccess, registerResponse, setEmailVerificationRequired, navigate])
+```
+
+**AuthContext** ([`src/features/auth/contexts/AuthContext.tsx`](src/features/auth/contexts/AuthContext.tsx)):
+```typescript
+const [emailVerificationRequired, setEmailVerificationRequired] = useState(true)
+
+// Sincroniza com sessionStorage para persistir dentro da sessão
+useEffect(() => {
+  try {
+    const stored = sessionStorage.getItem(CONFIG.STORAGE_KEYS.EMAIL_VERIFICATION_REQUIRED)
+    if (stored !== null) {
+      setEmailVerificationRequired(JSON.parse(stored))
+    }
+  } catch (error) {
+    // Fallback: mantém valor padrão (true = verificação habilitada)
+  }
+}, [])
+
+useEffect(() => {
+  sessionStorage.setItem(
+    CONFIG.STORAGE_KEYS.EMAIL_VERIFICATION_REQUIRED,
+    JSON.stringify(emailVerificationRequired)
+  )
+}, [emailVerificationRequired])
+```
+
+### 📱 Fluxos de UI
+
+#### Fluxo 1: Verificação HABILITADA (`enabled=true`)
+
+```
+┌─────────────────────────┐
+│  RegisterFormPage       │
+│  Preenche formulário    │
+│  Clica em "Cadastrar"   │
+└────────────┬────────────┘
+             │
+             ↓
+┌─────────────────────────┐
+│  Loading Spinner        │
+│  "Criando sua conta..." │
+│  (Requisição em curso)  │
+└────────────┬────────────┘
+             │ (3 segundos)
+             ↓
+┌─────────────────────────────────────┐
+│  VerifyEmailSentPage               │
+│  ✅ "Cadastro Concluído!"           │
+│  💡 Dicas em AMARELO                │
+│  "Confira sua caixa de entrada..."  │
+│                                     │
+│  [Já validei - Ir para Login]       │
+└────────────┬────────────────────────┘
+             │ (user clica ou espera)
+             ↓
+┌──────────────┐
+│   LoginPage  │
+│ (Ainda SEM   │
+│  validar!)   │
+└──────────────┘
+             │
+      (usuário tenta login sem validar)
+             ↓
+┌────────────────────────────────────┐
+│  ❌ Erro: "Sua conta ainda não      │
+│     foi ativada. Por favor, valide  │
+│     seu e-mail."                    │
+└────────────────────────────────────┘
+```
+
+#### Fluxo 2: Verificação DESABILITADA (`enabled=false`)
+
+```
+┌─────────────────────────┐
+│  RegisterFormPage       │
+│  Preenche formulário    │
+│  Clica em "Cadastrar"   │
+└────────────┬────────────┘
+             │
+             ↓
+┌─────────────────────────┐
+│  Loading Spinner        │
+│  "Criando sua conta..." │
+│  (Requisição em curso)  │
+└────────────┬────────────┘
+             │ (3 segundos)
+             ↓
+┌──────────────────────────────────────────┐
+│  RegisterFormPage (ainda)                │
+│  ✅ "Cadastro Concluído!"                │
+│  💚 Card VERDE: "Conta Criada com Êxito!"│
+│                                          │
+│  [Fazer login]                           │
+└────────────┬─────────────────────────────┘
+             │ (3 segundos)
+             ↓
+┌──────────────┐
+│   LoginPage  │
+│  (Pronto     │
+│   para usar) │
+└──────────────┘
+             │
+      (usuário faz login normalmente)
+             ↓
+┌────────────────────────────────────┐
+│  ✅ Login bem-sucedido             │
+│  Redireciona para HomePage         │
+└────────────────────────────────────┘
+```
+
+### 🔗 Componentes Afetados
+
+| Componente | Comportamento | Arquivo |
+|---|---|---|
+| **RegisterFormPage** | Detecta modo, mostra spinner/sucesso | `src/features/auth/pages/RegisterFormPage/` |
+| **VerifyEmailSentPage** | Mostra quando `enabled=true`, redireciona quando `enabled=false` | `src/features/auth/pages/VerifyEmailSentPage/` |
+| **VerifyEmailPage** | Valida token quando `enabled=true`, mostra "já verificado" quando `enabled=false` | `src/features/auth/pages/VerifyEmailPage/` |
+| **LoginPage** | Mostra mensagem específica de verificação apenas quando `enabled=true` | `src/features/auth/pages/LoginPage/` |
+| **AuthContext** | Gerencia `emailVerificationRequired` state | `src/features/auth/contexts/AuthContext.tsx` |
+
+### 🚨 Comportamento em Erros
+
+Se o backend retornar a estrutura **errada** de resposta:
+
+| Cenário | Impacto | Solução |
+|---|---|---|
+| Backend retorna `message` quando `enabled=false` | Frontend mostra alerta de verificação incorretamente | Backend deve condicionalizar resposta |
+| Backend omite `message` quando `enabled=true` | Frontend não detecta modo e pula verificação | Backend deve incluir `message` sempre |
+| Backend muda texto de `message` | Pode quebrar validações no LoginPage | Comunicar mudanças ao time frontend |
+
+### 📝 Para Desenvolvedores
+
+#### Testando Localmente
+
+1. **Com Verificação Habilitada**:
+   ```bash
+   # Backend: EMAIL_VERIFICATION_ENABLED=true
+   # Frontend: Verá VerifyEmailSentPage após cadastro
+   npm run dev
+   # → Register → Spinner → VerifyEmailSentPage com dicas
+   ```
+
+2. **Com Verificação Desabilitada**:
+   ```bash
+   # Backend: EMAIL_VERIFICATION_ENABLED=false
+   # Frontend: Irá diretamente para login
+   npm run dev
+   # → Register → Spinner → Card Verde → Redirect Login
+   ```
+
+#### Adicionando Nova Tela Condicional
+
+Se precisar adicionar uma tela baseada no estado de verificação:
+
+```typescript
+import { useAuth } from '@/features/auth'
+
+export const MeuComponente = () => {
+  const { emailVerificationRequired } = useAuth()
+
+  if (emailVerificationRequired) {
+    // Modo: verificação habilitada
+    return <div>Conteúdo para usuários com verificação</div>
+  } else {
+    // Modo: verificação desabilitada
+    return <div>Conteúdo para usuários sem verificação</div>
+  }
+}
+```
+
+#### Debugging Session Storage
+
+Para debugar o estado armazenado:
+
+```javascript
+// No DevTools Console:
+console.log(sessionStorage.getItem('emailVerificationRequired'))
+// → "true" ou "false"
+
+// Para limpar:
+sessionStorage.removeItem('emailVerificationRequired')
+```
 
 ---
 

@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import { CheckCircle2, Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/features/auth'
 import { CEPInput, CPFInput, PhoneInput } from '@/shared/components'
 import { RouterLink } from '@/shared/components/RouterLink'
 import { removeNonNumbers } from '@/shared/utils'
@@ -21,6 +22,8 @@ import {
  */
 const RegisterFormPage = () => {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { setEmailVerificationRequired } = useAuth()
   const initialEmail = location.state?.email || ''
 
   const [marketing, setMarketing] = useState(true)
@@ -54,8 +57,33 @@ const RegisterFormPage = () => {
   const {
     mutateAsync: registerUser,
     isPending: loading,
-    isSuccess
+    isSuccess,
+    data: registerResponse
   } = useRegisterMutation()
+
+  // Efeito para detectar modo de verificação e navegar quando registro for bem-sucedido
+  useEffect(() => {
+    if (!isSuccess || !registerResponse) return
+
+    // Detecta se verificação está habilitada baseado na presença de `message` na resposta
+    const isEmailVerificationRequired = !!registerResponse.message
+
+    // Atualiza o contexto global
+    setEmailVerificationRequired(isEmailVerificationRequired)
+
+    // Aguarda um pouco para o usuário ver a mensagem inicial, então navega
+    const timer = setTimeout(() => {
+      if (isEmailVerificationRequired) {
+        // Se verificação habilitada → página de aguardo de verificação
+        navigate('/verify-email-sent')
+      } else {
+        // Se desabilitada → redireciona direto para login
+        navigate('/login')
+      }
+    }, 3000) // Aguarda 3 segundos
+
+    return () => clearTimeout(timer)
+  }, [isSuccess, registerResponse, setEmailVerificationRequired, navigate])
 
   const onSubmit = async (data: RegisterFormData) => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -87,7 +115,6 @@ const RegisterFormPage = () => {
       }
 
       await registerUser(payload)
-      await new Promise((resolve) => setTimeout(resolve, 2500))
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data?.errors) {
         // Mapeia os erros retornados pela API de volta para os campos do formulário
@@ -124,7 +151,7 @@ const RegisterFormPage = () => {
   return (
     <section className="flex-1 bg-[#FAFAFC] py-8 lg:py-12 flex flex-col">
       <div className="max-w-160 mx-auto px-4 w-full">
-        {loading ? (
+        {loading || (isSuccess && registerResponse?.message) ? (
           <div className="bg-white rounded-lg p-8 lg:p-16 flex flex-col items-center justify-center text-center shadow-sm min-h-[50vh] animate-in fade-in duration-300">
             <Loader2 className="w-14 h-14 text-primary animate-spin mb-4" />
             <h2 className="text-xl font-bold text-dark-gray mb-2">
@@ -134,7 +161,7 @@ const RegisterFormPage = () => {
               Por favor, aguarde um instante.
             </p>
           </div>
-        ) : isSuccess ? (
+        ) : isSuccess && !registerResponse?.message ? (
           <div className="bg-white rounded-lg p-8 lg:p-16 flex flex-col items-center justify-center text-center shadow-sm min-h-[50vh] animate-in fade-in zoom-in-95 duration-500">
             <div className="w-20 h-20 bg-[#C92071]/10 rounded-full flex items-center justify-center mb-6">
               <CheckCircle2 className="w-10 h-10 text-primary" />
@@ -142,18 +169,23 @@ const RegisterFormPage = () => {
             <h2 className="text-2xl font-bold text-dark-gray mb-3">
               Cadastro Concluído!
             </h2>
-            
-            <div className="bg-amber-50 border-2 border-amber-400 p-6 rounded-lg mb-8 max-w-md w-full flex flex-col items-center gap-3 text-center shadow-sm animate-pulse-once">
-              <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl" aria-hidden="true">
-                ✉️
+
+            <div className="bg-green-50 border-2 border-green-400 p-6 rounded-lg mb-8 max-w-md w-full flex flex-col items-center gap-3 text-center shadow-sm">
+              <div
+                className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-2xl"
+                aria-hidden="true"
+              >
+                ✅
               </div>
-              <h3 className="font-bold text-amber-800 text-lg uppercase tracking-wide">
-                Aviso Importante
+              <h3 className="font-bold text-green-800 text-lg uppercase tracking-wide">
+                Conta Criada com Sucesso!
               </h3>
-              <p className="text-amber-900 text-[15px] leading-relaxed">
-                Enviamos um link de confirmação para o seu e-mail. <strong>Você precisa validar a sua conta</strong> acessando este link antes de tentar efetuar o login.
+              <p className="text-green-900 text-[15px] leading-relaxed">
+                Sua conta foi criada e <strong>já está pronta para usar</strong>
+                . Você já pode fazer login agora.
               </p>
             </div>
+
             <RouterLink
               to="/login"
               className="h-12 px-8 bg-primary text-white font-semibold text-sm rounded-md hover:brightness-90 transition-all flex items-center justify-center w-full max-w-xs"

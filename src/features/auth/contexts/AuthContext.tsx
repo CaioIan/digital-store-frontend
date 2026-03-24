@@ -28,24 +28,30 @@ interface AuthContextType {
   isAuthenticated: boolean
   isInitialLoading: boolean
   logout: () => void
+  emailVerificationRequired: boolean
+  setEmailVerificationRequired: (value: boolean) => void
 }
 
 /**
  * Contexto de Autenticação da Digital Store.
- * 
- * Centraliza o estado do usuário logado (`user`), a persistência automática 
- * no `localStorage`, o estado de carregamento inicial (`isInitialLoading`) 
+ *
+ * Centraliza o estado do usuário logado (`user`), a persistência automática
+ * no `sessionStorage`, o estado de carregamento inicial (`isInitialLoading`)
  * e métodos utilitários como `logout`.
  */
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+const STORAGE_KEYS = {
+  EMAIL_VERIFICATION_REQUIRED: 'emailVerificationRequired'
+}
+
 /**
  * Provider de Autenticação.
- * 
- * Deve envolver a raiz da aplicação ou o roteador principal para prover 
- * o contexto de autenticação a todos os componentes filhos. Sincroniza 
- * o estado do usuário com o `localStorage` no carregamento e em mudanças.
- * 
+ *
+ * Deve envolver a raiz da aplicação ou o roteador principal para prover
+ * o contexto de autenticação a todos os componentes filhos. Sincroniza
+ * o estado do usuário com o `sessionStorage` no carregamento e em mudanças.
+ *
  * @param {Object} props - Propriedades do componente.
  * @param {ReactNode} props.children - Elementos React que serão envolvidos.
  * @returns {JSX.Element} Provider do contexto de autenticação.
@@ -53,35 +59,64 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [isInitialLoading, setIsInitialLoading] = useState(true)
+  const [emailVerificationRequired, setEmailVerificationRequired] =
+    useState(true)
 
-  // Sincronização inicial com o localStorage
+  // Sincronização inicial com o sessionStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem(CONFIG.STORAGE_KEYS.USER)
+    const storedUser = sessionStorage.getItem(CONFIG.STORAGE_KEYS.USER)
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser))
-      } catch (e) {
+      } catch {
         // Erro silencioso ao restaurar usuário
       }
     }
+
+    // Restaura o estado de verificação de email
+    const storedEmailVerification = sessionStorage.getItem(
+      STORAGE_KEYS.EMAIL_VERIFICATION_REQUIRED
+    )
+    if (storedEmailVerification !== null) {
+      try {
+        setEmailVerificationRequired(JSON.parse(storedEmailVerification))
+      } catch {
+        // Erro silencioso ao restaurar verificação de email
+      }
+    }
+
     setIsInitialLoading(false)
   }, [])
 
-  // Atualiza o localStorage sempre que o objeto user mudar
+  // Atualiza o sessionStorage sempre que o objeto user mudar
   useEffect(() => {
     // Evita rodar antes do loading inicial estar pronto para não limpar o storage acidentalmente
     if (isInitialLoading) return
 
     try {
       if (user) {
-        localStorage.setItem(CONFIG.STORAGE_KEYS.USER, JSON.stringify(user))
+        sessionStorage.setItem(CONFIG.STORAGE_KEYS.USER, JSON.stringify(user))
       } else {
-        localStorage.removeItem(CONFIG.STORAGE_KEYS.USER)
+        sessionStorage.removeItem(CONFIG.STORAGE_KEYS.USER)
       }
-    } catch (e) {
-      // Erro silencioso ao acessar localStorage
+    } catch {
+      // Erro silencioso ao acessar sessionStorage
     }
   }, [user, isInitialLoading])
+
+  // Sincroniza o estado de verificação de email com sessionStorage
+  useEffect(() => {
+    if (isInitialLoading) return
+
+    try {
+      sessionStorage.setItem(
+        STORAGE_KEYS.EMAIL_VERIFICATION_REQUIRED,
+        JSON.stringify(emailVerificationRequired)
+      )
+    } catch {
+      // Erro silencioso ao acessar sessionStorage
+    }
+  }, [emailVerificationRequired, isInitialLoading])
 
   const logout = () => {
     setUser(null)
@@ -94,7 +129,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser,
         isAuthenticated: !!user,
         isInitialLoading,
-        logout
+        logout,
+        emailVerificationRequired,
+        setEmailVerificationRequired
       }}
     >
       {children}

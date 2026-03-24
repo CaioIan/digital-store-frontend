@@ -15,7 +15,7 @@ import { type LoginFormData, loginSchema } from '../../utils/loginSchema'
  * via React Query, e tela de carregamento animada após login bem-sucedido.
  */
 const LoginPage = () => {
-  const { setUser } = useAuth()
+  const { setUser, emailVerificationRequired } = useAuth()
   const [generalError, setGeneralError] = useState<string | null>(null)
   const [showLoading, setShowLoading] = useState(false)
 
@@ -42,9 +42,11 @@ const LoginPage = () => {
       setShowLoading(true)
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
+        // Somente mostra erro de verificação se verificação está habilitada
         if (
-          error.response.data?.message ===
-          'Por favor, verifique seu email antes de fazer login'
+          emailVerificationRequired
+          && error.response.data?.message
+            === 'Por favor, verifique seu email antes de fazer login'
         ) {
           setGeneralError(
             'Sua conta ainda não foi ativada. Por favor, valide seu e-mail.'
